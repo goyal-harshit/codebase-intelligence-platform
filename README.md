@@ -14,7 +14,7 @@ See `CODEBASE_INTELLIGENCE_MASTER_PLAN.md` for the full build spec.
 | 4 | Risk detection | **Done** |
 | 5 | Impact / blast radius | **Done** |
 | 6 | Hybrid retrieval + LLM Q&A | **Done** |
-| 7 | FastAPI backend | Not started |
+| 7 | FastAPI backend | **Done** |
 | 8 | Next.js frontend | Not started |
 | 9 | Docker / deployment | Not started |
 
@@ -26,9 +26,13 @@ Go, Rust, Java, and more.
 
 ### Setup
 
+Use a virtualenv — the pinned versions can otherwise clash with other
+globally-installed tools.
+
 ```bash
-cd backend
-pip install -r requirements.txt
+python -m venv .venv
+.venv\Scripts\activate        # Windows;  source .venv/bin/activate on Unix
+pip install -r backend/requirements.txt
 ```
 
 ### Run on a repo
@@ -217,3 +221,41 @@ cd backend && python -m pytest tests/test_retrieval.py -q
 
 Offline by default (fake LLM/graph/vectors). Set `OLLAMA_INTEGRATION=1` with a
 running Ollama for the live generation test.
+
+## Phase 7 — FastAPI Backend
+
+REST API wiring every layer together. The app **boots with no backends
+running** — `/health` always works, and data endpoints return a clear `503`
+(not a crash) until ArcadeDB/Chroma/Ollama are up.
+
+| Method | Path | Purpose |
+|---|---|---|
+| GET | `/health` | liveness |
+| POST | `/api/v1/ingest` | start ingestion (`{repo_url}` or `{repo_path}`) |
+| GET | `/api/v1/ingest/{job_id}` | ingestion job status |
+| GET | `/api/v1/query?q=` | natural-language Q&A |
+| GET | `/api/v1/impact/{file_path}?depth=` | blast radius |
+| GET | `/api/v1/risks?severity=` | architecture risks |
+| GET | `/api/v1/stats` | codebase counts |
+
+Ingestion runs in an in-process background task with a job-status store
+(`queued → running[cloning→parsing→building_graph→embedding→risk_analysis] →
+complete/failed`). This is swappable for Celery + Redis (master plan §10.5)
+for multi-worker production without changing the route contract.
+
+### Run
+
+```bash
+cd backend && uvicorn main:app --reload --port 8000
+```
+
+Swagger UI at http://localhost:8000/docs.
+
+### Test
+
+```bash
+cd backend && python -m pytest tests/test_api.py -q
+```
+
+Driven by Starlette's `TestClient`; asserts the app boots, lists all routes,
+validates input, and degrades to `503` with no backends.
