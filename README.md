@@ -12,7 +12,7 @@ See `CODEBASE_INTELLIGENCE_MASTER_PLAN.md` for the full build spec.
 | 2 | Graph database (ArcadeDB) | **Done** |
 | 3 | Vector DB + embeddings | **Done** |
 | 4 | Risk detection | **Done** |
-| 5 | Impact / blast radius | Not started |
+| 5 | Impact / blast radius | **Done** |
 | 6 | Hybrid retrieval + LLM Q&A | Not started |
 | 7 | FastAPI backend | Not started |
 | 8 | Next.js frontend | Not started |
@@ -159,3 +159,28 @@ cd backend && python -m pytest tests/test_risk_detection.py -q
 
 Offline by default (fake graph client returning canned rows). Set
 `ARCADEDB_INTEGRATION=1` with a populated graph to run against live data.
+
+## Phase 5 — Change Impact / Blast Radius
+
+Walks the `CALLS` graph backwards from a file (or single entity) to find every
+function transitively affected by a change, buckets them by hop distance
+(direct vs transitive, capped at 50), and scores the blast radius
+`low → critical` by affected count.
+
+`find_affected_tests` is implemented but needs `COVERED_BY` edges (test-coverage
+ingestion, not yet built) — it returns `[]` until then.
+
+### Run
+
+```bash
+python scripts/blast_radius.py path/to/file.py --depth 5
+```
+
+### Test
+
+```bash
+cd backend && python -m pytest tests/test_impact.py -q
+```
+
+Offline by default. Set `ARCADEDB_INTEGRATION=1` with a populated graph for the
+live smoke test.
