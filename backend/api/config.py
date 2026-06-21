@@ -8,6 +8,6 @@ import os
 class Settings:
     def __init__(self) -> None:
         self.cors_origins = os.getenv(
-            "CORS_ORIGINS", "http://localhost:3000"
+            "CORS_ORIGINS", "http://localhost:3000,http://localhost:3001"
         ).split(",")
         self.clone_dir = os.getenv("REPO_CLONE_DIR", "data/repos")

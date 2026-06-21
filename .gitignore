@@ -5,6 +5,8 @@ __pycache__/
 node_modules/
 .next/
 .env
+.env*.local
+.claude/
 data/
 *.log
 .pytest_cache/
