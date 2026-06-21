@@ -10,7 +10,7 @@ See `CODEBASE_INTELLIGENCE_MASTER_PLAN.md` for the full build spec.
 |---|---|---|
 | 1 | AST parsing engine | **Done** |
 | 2 | Graph database (ArcadeDB) | **Done** |
-| 3 | Vector DB + embeddings | Not started |
+| 3 | Vector DB + embeddings | **Done** |
 | 4 | Risk detection | Not started |
 | 5 | Impact / blast radius | Not started |
 | 6 | Hybrid retrieval + LLM Q&A | Not started |
@@ -84,3 +84,39 @@ cd backend && python -m pytest tests/test_graph_db.py -q
 
 Unit tests run offline against a recording fake client (no server needed). Set
 `ARCADEDB_INTEGRATION=1` with a live ArcadeDB to also run the round-trip test.
+
+## Phase 3 — Vector DB & Embeddings (ChromaDB)
+
+Embeds every parsed entity (AST-aware chunking — one chunk per
+function/class/method) with `BAAI/bge-small-en-v1.5` and stores the vectors in
+ChromaDB for semantic search ("where are passwords validated?"). The embedder
+and Chroma collection are both injectable, and heavy deps (`chromadb`,
+`sentence-transformers`/torch) are imported lazily, so the package loads — and
+its unit tests run — without them installed.
+
+### Run ChromaDB
+
+```bash
+docker run -d --name chroma -p 8000:8000 \
+  -v chroma_data:/chroma/chroma ghcr.io/chroma-core/chroma:latest
+```
+
+Connection via `CHROMA_HOST` (default `localhost`) and `CHROMA_PORT` (`8000`).
+
+### Embed a repo
+
+```bash
+python scripts/embed_repo.py /path/to/repo
+python scripts/embed_repo.py /path/to/repo --query "validate user password"
+```
+
+First run downloads the ~130MB embedding model to `~/.cache/huggingface`.
+
+### Test
+
+```bash
+cd backend && python -m pytest tests/test_vector_db.py -q
+```
+
+Offline by default (fake embedder + fake collection). Set `CHROMA_INTEGRATION=1`
+with a live Chroma to run the real model + semantic-search round trip.
