@@ -13,7 +13,7 @@ See `CODEBASE_INTELLIGENCE_MASTER_PLAN.md` for the full build spec.
 | 3 | Vector DB + embeddings | **Done** |
 | 4 | Risk detection | **Done** |
 | 5 | Impact / blast radius | **Done** |
-| 6 | Hybrid retrieval + LLM Q&A | Not started |
+| 6 | Hybrid retrieval + LLM Q&A | **Done** |
 | 7 | FastAPI backend | Not started |
 | 8 | Next.js frontend | Not started |
 | 9 | Docker / deployment | Not started |
@@ -184,3 +184,36 @@ cd backend && python -m pytest tests/test_impact.py -q
 
 Offline by default. Set `ARCADEDB_INTEGRATION=1` with a populated graph for the
 live smoke test.
+
+## Phase 6 — Hybrid Retrieval + LLM Q&A
+
+Answers plain-English questions by routing each one to the right backend:
+
+- **Structural** questions ("who calls X", "what depends on Y") → an LLM
+  translates them to Cypher (few-shot) and runs them on the graph.
+- **Semantic** questions ("where are passwords handled") → vector search.
+- Structural queries that error or return nothing **fall back** to semantic.
+
+`QueryEngine.answer()` is the single entry point (used by Phase 7): it
+retrieves, generates a cited answer, and returns
+`{strategy, answer, sources, cypher}`. The LLM is an injectable protocol
+(`OllamaClient`, model `mistral`), so the whole pipeline is unit-tested offline
+with fakes.
+
+### Run
+
+```bash
+python scripts/ask.py "what functions call validate_user?"
+```
+
+Requires a populated graph + vector store + a running Ollama (`ollama pull mistral`).
+Config via `OLLAMA_URL` (default `http://localhost:11434`) and `OLLAMA_MODEL`.
+
+### Test
+
+```bash
+cd backend && python -m pytest tests/test_retrieval.py -q
+```
+
+Offline by default (fake LLM/graph/vectors). Set `OLLAMA_INTEGRATION=1` with a
+running Ollama for the live generation test.
