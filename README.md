@@ -4,6 +4,19 @@ Open-source platform that ingests any Git repo, builds a knowledge graph + vecto
 
 See `CODEBASE_INTELLIGENCE_MASTER_PLAN.md` for the full build spec.
 
+## Quickstart (Docker)
+
+```bash
+git clone <this repo> && cd codebase_intelligence_project
+./scripts/setup.sh            # or  pwsh scripts/setup.ps1  on Windows
+```
+
+This builds the backend + frontend images, starts ArcadeDB / ChromaDB / Ollama,
+and pulls the `mistral` model. Then open the frontend at
+http://localhost:3000 and the API docs at http://localhost:8001/docs.
+
+Prefer running pieces locally for development? See the per-phase sections below.
+
 ## Status
 
 | Phase | Component | State |
@@ -16,7 +29,7 @@ See `CODEBASE_INTELLIGENCE_MASTER_PLAN.md` for the full build spec.
 | 6 | Hybrid retrieval + LLM Q&A | **Done** |
 | 7 | FastAPI backend | **Done** |
 | 8 | Next.js frontend | **Done** |
-| 9 | Docker / deployment | Not started |
+| 9 | Docker / deployment | **Done** |
 
 ## Phase 1 — AST Parser
 
@@ -293,3 +306,36 @@ npm run dev                         # http://localhost:3000
 ```
 
 `npm run build` is verified green (all routes compile, types check).
+
+## Phase 9 — Docker & Deployment
+
+One-command stack via [`docker-compose.yml`](docker-compose.yml):
+
+| Service | Image | Host port |
+|---|---|---|
+| arcadedb | `arcadedb/arcadedb` | 2480 / 2424 |
+| chroma | `ghcr.io/chroma-core/chroma` | 8000 |
+| ollama | `ollama/ollama` | 11434 |
+| backend | built from `backend/Dockerfile` | 8001 → 8000 |
+| frontend | built from `frontend/Dockerfile` | 3000 |
+
+Service hostnames are injected into the backend via env vars; the frontend's
+`NEXT_PUBLIC_API_URL` is baked at build time to the host-mapped backend port
+(`http://localhost:8001`). `docker compose config` is validated.
+
+**Deviation from the plan:** the plan's compose includes `redis` + a
+`celery_worker`. Phase 7 runs ingestion as in-process background tasks, so those
+two services would be dead weight — they're omitted here and can be added if/when
+ingestion moves to Celery.
+
+```bash
+./scripts/setup.sh        # bootstrap: pull model + bring up the stack
+docker compose up -d      # subsequent runs
+docker compose down       # stop
+```
+
+## Continuous Integration
+
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on every push/PR:
+`backend-tests` (pytest over `backend/tests`) and `frontend-build`
+(`npm ci && npm run build`).
