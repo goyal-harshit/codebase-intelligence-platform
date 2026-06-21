@@ -11,7 +11,7 @@ See `CODEBASE_INTELLIGENCE_MASTER_PLAN.md` for the full build spec.
 | 1 | AST parsing engine | **Done** |
 | 2 | Graph database (ArcadeDB) | **Done** |
 | 3 | Vector DB + embeddings | **Done** |
-| 4 | Risk detection | Not started |
+| 4 | Risk detection | **Done** |
 | 5 | Impact / blast radius | Not started |
 | 6 | Hybrid retrieval + LLM Q&A | Not started |
 | 7 | FastAPI backend | Not started |
@@ -120,3 +120,42 @@ cd backend && python -m pytest tests/test_vector_db.py -q
 
 Offline by default (fake embedder + fake collection). Set `CHROMA_INTEGRATION=1`
 with a live Chroma to run the real model + semantic-search round trip.
+
+## Phase 4 — Risk Detection Engine
+
+Runs architecture-smell rules as Cypher queries over the graph and ranks
+findings by severity. Each finding is `{type, severity, target, file, details}`;
+results can be persisted back as `SecurityIssue` nodes for queryability.
+
+| Rule | Severity | Backed by current data? |
+|---|---|---|
+| God object (class with too many methods) | high | ✅ |
+| Dead code (function with no incoming calls) | medium | ✅ |
+| High cyclomatic complexity | medium | ✅ |
+| Long method | low | ✅ |
+| Shotgun surgery (called from many files) | high | ✅ |
+| Circular dependency | high | ⏳ needs `IMPORTS` edges |
+| Deep inheritance | medium | ⏳ needs `INHERITS_FROM` edges |
+
+**Known data gaps:** the parser does not yet emit `IMPORTS` / `INHERITS_FROM`
+edges, so those two rules are implemented and forward-compatible but return
+nothing until that extraction lands. The dead-code rule also flags legitimate
+entry points (no in-graph caller) — expected until external/entry-point
+annotation is added.
+
+### Run
+
+```bash
+python scripts/detect_risks.py                  # list risks
+python scripts/detect_risks.py --severity high  # filter
+python scripts/detect_risks.py --persist        # also write SecurityIssue nodes
+```
+
+### Test
+
+```bash
+cd backend && python -m pytest tests/test_risk_detection.py -q
+```
+
+Offline by default (fake graph client returning canned rows). Set
+`ARCADEDB_INTEGRATION=1` with a populated graph to run against live data.
