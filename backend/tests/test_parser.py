@@ -36,6 +36,23 @@ def test_symbol_resolution_links_call():
     assert any(r.type == "calls" and r.target_id == helper_id for r in resolved)
 
 
+def test_extracts_inheritance():
+    entities, rels = _parse("sample.py")
+    resolved = SymbolResolver().resolve(entities, rels)
+    account_id = next(e.id for e in entities if e.name == "Account" and e.type == "class")
+    admin_id = next(e.id for e in entities if e.name == "AdminAccount")
+    assert any(
+        r.type == "inherits_from" and r.source_id == admin_id and r.target_id == account_id
+        for r in resolved
+    )
+
+
+def test_extracts_imports():
+    _, rels = _parse("sample.py")
+    imported = {r.target_id for r in rels if r.type == "imports"}
+    assert {"os", "collections"} <= imported
+
+
 def test_parses_javascript():
     entities, _ = _parse("sample.js")
     names = {e.name for e in entities}

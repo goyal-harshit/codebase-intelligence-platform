@@ -34,8 +34,8 @@ Prefer running pieces locally for development? See the per-phase sections below.
 ## Phase 1 — AST Parser
 
 Language-agnostic parser (tree-sitter) extracting `CodeEntity` (functions, classes,
-methods) and `CodeRelationship` (contains, calls) objects. Supports Python, JS/TS,
-Go, Rust, Java, and more.
+methods) and `CodeRelationship` (contains, calls, inherits_from, imports) objects.
+Supports Python, JS/TS, Go, Rust, Java, and more.
 
 ### Setup
 
@@ -151,14 +151,19 @@ results can be persisted back as `SecurityIssue` nodes for queryability.
 | High cyclomatic complexity | medium | ✅ |
 | Long method | low | ✅ |
 | Shotgun surgery (called from many files) | high | ✅ |
-| Circular dependency | high | ⏳ needs `IMPORTS` edges |
-| Deep inheritance | medium | ⏳ needs `INHERITS_FROM` edges |
+| Deep inheritance | medium | ✅ |
+| Circular dependency | high | ⏳ partial — see below |
 
-**Known data gaps:** the parser does not yet emit `IMPORTS` / `INHERITS_FROM`
-edges, so those two rules are implemented and forward-compatible but return
-nothing until that extraction lands. The dead-code rule also flags legitimate
-entry points (no in-graph caller) — expected until external/entry-point
-annotation is added.
+**`IMPORTS` / `INHERITS_FROM` now populated.** The parser extracts base classes
+(`INHERITS_FROM` between in-repo classes) and import statements (`File-[:IMPORTS]->Module`
+vertices). This makes the deep-inheritance rule live and powers the inheritance
+NL→Cypher example.
+
+**Remaining gaps:** circular-dependency detection needs *module-to-module*
+import edges, but imports are currently modeled as `File→Module` (external module
+names), which don't form module cycles — so that rule stays empty until imports
+are resolved to in-repo modules. The dead-code rule also flags legitimate entry
+points (no in-graph caller) — expected until entry-point annotation is added.
 
 ### Run
 

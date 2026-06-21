@@ -43,6 +43,14 @@ BRANCH_TYPES = {
 
 CALL_NODE_TYPES = {"call", "call_expression", "method_invocation"}
 
+IMPORT_NODE_TYPES = {
+    "python": {"import_statement", "import_from_statement"},
+    "javascript": {"import_statement"},
+    "typescript": {"import_statement"},
+    "tsx": {"import_statement"},
+    "java": {"import_declaration"},
+}
+
 
 @dataclass
 class CodeEntity:
@@ -123,12 +131,26 @@ class UniversalParser:
                 relationships.append(CodeRelationship(parent_id, entity_id, "contains"))
             parent_id = entity_id
 
+            if entity_types[node.type] == "class":
+                for base in self._base_class_names(node, source_code, language):
+                    relationships.append(CodeRelationship(
+                        entity_id, base, "inherits_from",
+                        metadata={"unresolved_name": base},
+                    ))
+
         if node.type in CALL_NODE_TYPES:
             callee = self._call_target(node, source_code)
             if callee and parent_id:
                 relationships.append(CodeRelationship(
                     parent_id, callee, "calls",
                     metadata={"unresolved_name": callee},
+                ))
+
+        if node.type in IMPORT_NODE_TYPES.get(language, set()):
+            for module in self._import_targets(node, source_code, language):
+                relationships.append(CodeRelationship(
+                    file_path, module, "imports",
+                    metadata={"unresolved_name": module, "import": True},
                 ))
 
         for child in node.children:
@@ -169,6 +191,64 @@ class UniversalParser:
             return None
         text = self._text(fn, source_code)
         return text.split(".")[-1].split("(")[0].strip() or None
+
+    def _base_class_names(self, node, source_code, language) -> list[str]:
+        """Names of classes this class extends (last path component only)."""
+        if language == "python":
+            sup = node.child_by_field_name("superclasses")
+            if not sup:
+                return []
+            return [
+                self._text(ch, source_code).split(".")[-1]
+                for ch in sup.children
+                if ch.type in ("identifier", "attribute")
+            ]
+        if language in ("javascript", "typescript", "tsx"):
+            for ch in node.children:
+                if ch.type == "class_heritage":
+                    ident = self._first_identifier(ch, source_code)
+                    return [ident] if ident else []
+            return []
+        if language == "java":
+            sup = node.child_by_field_name("superclass")
+            if sup:
+                ident = self._first_identifier(sup, source_code)
+                return [ident] if ident else []
+            return []
+        return []
+
+    def _import_targets(self, node, source_code, language) -> list[str]:
+        """Top-level module name(s) of an import statement."""
+        if language == "python":
+            if node.type == "import_statement":
+                names = []
+                for ch in node.children:
+                    if ch.type == "dotted_name":
+                        names.append(self._text(ch, source_code).split(".")[0])
+                    elif ch.type == "aliased_import":
+                        dn = ch.child_by_field_name("name")
+                        if dn:
+                            names.append(self._text(dn, source_code).split(".")[0])
+                return names
+            mod = node.child_by_field_name("module_name")
+            if mod:
+                return [self._text(mod, source_code).lstrip(".").split(".")[0]]
+            return []
+        if language in ("javascript", "typescript", "tsx"):
+            src = node.child_by_field_name("source")
+            if src:
+                return [self._text(src, source_code).strip("\"'")]
+            return []
+        return []
+
+    def _first_identifier(self, node, source_code):
+        if node.type in ("identifier", "type_identifier"):
+            return self._text(node, source_code)
+        for ch in node.children:
+            found = self._first_identifier(ch, source_code)
+            if found:
+                return found
+        return None
 
     @staticmethod
     def _complexity(node) -> int:

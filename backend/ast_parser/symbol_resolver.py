@@ -13,7 +13,7 @@ class SymbolResolver:
 
         resolved: list[CodeRelationship] = []
         for rel in relationships:
-            if rel.type == "calls" and "unresolved_name" in rel.metadata:
+            if rel.type in ("calls", "inherits_from") and "unresolved_name" in rel.metadata:
                 candidates = name_index.get(rel.metadata["unresolved_name"], [])
                 if len(candidates) == 1:
                     rel.target_id = candidates[0]

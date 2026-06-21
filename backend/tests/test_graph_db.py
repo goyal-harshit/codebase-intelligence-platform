@@ -106,6 +106,36 @@ def test_edge_match_is_typed():
     assert all("MATCH (a:" in c and "(b:" in c for c in edge_calls)
 
 
+def test_imports_create_module_vertices_and_edges():
+    client = FakeClient()
+    builder = GraphBuilder(client)
+    entities = [CodeEntity(id="g1", type="function", name="g", file_path="a.py",
+                           language="python", line_start=1, line_end=2)]
+    rels = [CodeRelationship("a.py", "os", "imports", metadata={"import": True}),
+            CodeRelationship("a.py", "os", "imports", metadata={"import": True})]  # dup
+    builder.ingest_entities(entities)
+    builder.ingest_files(entities, rels)
+    n = builder.ingest_imports(rels)
+    assert n == 1  # deduped
+    assert builder.id_labels["module:os"] == "Module"
+    assert any("CREATE (n:Module" in c[0] for c in client.calls)
+    assert any("[:IMPORTS]" in c[0] for c in client.calls)
+
+
+def test_inherits_from_edge_created():
+    client = FakeClient()
+    builder = GraphBuilder(client)
+    entities = [
+        CodeEntity(id="base", type="class", name="Base", file_path="a.py",
+                   language="python", line_start=1, line_end=3),
+        CodeEntity(id="sub", type="class", name="Sub", file_path="a.py",
+                   language="python", line_start=5, line_end=8),
+    ]
+    builder.ingest_entities(entities)
+    builder.ingest_relationships([CodeRelationship("sub", "base", "inherits_from")])
+    assert any("[:INHERITS_FROM]" in c[0] for c in client.calls)
+
+
 @pytest.mark.skipif(
     not os.getenv("ARCADEDB_INTEGRATION"),
     reason="set ARCADEDB_INTEGRATION=1 with a live ArcadeDB to run",

@@ -1,4 +1,6 @@
 """Sample module for parser tests."""
+import os
+from collections import OrderedDict
 
 
 def helper(x):
@@ -20,3 +22,8 @@ class Account:
 
     def login(self, password):
         return validate_user(self.owner, password)
+
+
+class AdminAccount(Account):
+    def login(self, password):
+        return super().login(password) and self.owner == "root"
