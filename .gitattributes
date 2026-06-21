@@ -1,0 +1,18 @@
+# Normalize line endings: LF in the repo for everything text.
+* text=auto eol=lf
+
+# Shell scripts MUST be LF (CRLF breaks the shebang on Linux/in Docker).
+*.sh text eol=lf
+
+# Windows-native scripts stay CRLF.
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Common binaries — never touch.
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
