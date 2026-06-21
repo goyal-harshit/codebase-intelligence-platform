@@ -15,7 +15,7 @@ See `CODEBASE_INTELLIGENCE_MASTER_PLAN.md` for the full build spec.
 | 5 | Impact / blast radius | **Done** |
 | 6 | Hybrid retrieval + LLM Q&A | **Done** |
 | 7 | FastAPI backend | **Done** |
-| 8 | Next.js frontend | Not started |
+| 8 | Next.js frontend | **Done** |
 | 9 | Docker / deployment | Not started |
 
 ## Phase 1 — AST Parser
@@ -259,3 +259,37 @@ cd backend && python -m pytest tests/test_api.py -q
 
 Driven by Starlette's `TestClient`; asserts the app boots, lists all routes,
 validates input, and degrades to `503` with no backends.
+
+## Phase 8 — Next.js Frontend
+
+Next.js 14 (App Router, TypeScript, Tailwind) talking to the Phase 7 API. Every
+page is wired to a real endpoint:
+
+| Route | Backend endpoint |
+|---|---|
+| `/` | `POST /api/v1/ingest` (+ live job-status polling) |
+| `/dashboard` | `GET /api/v1/stats` + `GET /api/v1/risks` |
+| `/query` | `GET /api/v1/query` |
+| `/risks` | `GET /api/v1/risks?severity=` |
+| `/impact` | `GET /api/v1/impact/{file}` + force-graph blast-radius viz |
+
+The dependency graph is visualized with `react-force-graph-2d` (dynamically
+imported, client-only). Pages degrade gracefully when the backend is down.
+
+**Deviation from the master plan:** the plan lists 7 pages including a standalone
+`/graph` and `/function/[id]`. Those need `GET /api/v1/graph/{id}` and
+`GET /api/v1/function/{id}` endpoints that Phase 7 doesn't expose yet, so rather
+than ship broken pages the graph visualization is folded into `/impact` (a real,
+working blast-radius graph). The two extra pages can be added once those
+endpoints exist.
+
+### Setup & run
+
+```bash
+cd frontend
+npm install
+cp .env.local.example .env.local   # NEXT_PUBLIC_API_URL=http://localhost:8000
+npm run dev                         # http://localhost:3000
+```
+
+`npm run build` is verified green (all routes compile, types check).
