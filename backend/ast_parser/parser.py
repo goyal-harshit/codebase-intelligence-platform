@@ -112,7 +112,9 @@ class UniversalParser:
         if node.type in entity_types:
             name_node = node.child_by_field_name("name")
             name = self._text(name_node, source_code) if name_node else "anonymous"
-            entity_id = self._make_id(file_path, name, node.start_point[0])
+            entity_id = self._make_id(
+                file_path, name, node.start_point[0], node.start_point[1]
+            )
             entities.append(CodeEntity(
                 id=entity_id,
                 type=entity_types[node.type],
@@ -164,8 +166,12 @@ class UniversalParser:
         return source_code[node.start_byte:node.end_byte].decode("utf-8", errors="replace")
 
     @staticmethod
-    def _make_id(file_path: str, name: str, line: int) -> str:
-        return hashlib.sha256(f"{file_path}:{name}:{line}".encode()).hexdigest()[:16]
+    def _make_id(file_path: str, name: str, line: int, col: int = 0) -> str:
+        # Include the column so two entities starting on the same line (e.g.
+        # chained anonymous arrow functions) get distinct ids instead of
+        # colliding on file:name:line.
+        raw = f"{file_path}:{name}:{line}:{col}"
+        return hashlib.sha256(raw.encode()).hexdigest()[:16]
 
     def _signature(self, node, source_code) -> str:
         params = node.child_by_field_name("parameters")

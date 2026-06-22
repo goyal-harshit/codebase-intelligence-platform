@@ -64,6 +64,8 @@ class GraphBuilder:
     def ingest_entities(self, entities: Iterable[CodeEntity]) -> None:
         by_label: dict[str, list[dict]] = defaultdict(list)
         for e in entities:
+            if e.id in self.id_labels:
+                continue  # dedup: same id already queued (collision safety-net)
             label = label_for(e.type)
             self.id_labels[e.id] = label
             by_label[label].append({p: getattr(e, p) for p in ENTITY_PROPS})
