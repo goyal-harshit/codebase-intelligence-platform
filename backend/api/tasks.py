@@ -48,6 +48,10 @@ def run_ingestion(jobs: JobManager, job_id: str,
             jobs.update(job_id, status="failed", error=f"repo path not found: {path}")
             return
 
+        # Full ingest is a clean rebuild: drop any prior graph so re-ingesting
+        # the same repo doesn't hit duplicate-key errors (builder uses CREATE).
+        if graph.database_exists():
+            graph.drop_database()
         graph.create_database()
         apply_schema(graph)
 
