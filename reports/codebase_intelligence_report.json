@@ -1,0 +1,2626 @@
+{
+  "repo_path": "/sessions/trusting-wonderful-lamport/mnt/codebase_intelligence_project/backend",
+  "overview": {
+    "files_analyzed": 44,
+    "total_entities": 305,
+    "functions_and_methods": 266,
+    "classes": 39,
+    "interfaces": 0,
+    "total_lines_of_code": 3798,
+    "avg_entities_per_file": 6.9
+  },
+  "languages": {
+    "python": {
+      "entities": 300,
+      "files": 43
+    },
+    "javascript": {
+      "entities": 5,
+      "files": 1
+    }
+  },
+  "complexity": {
+    "average": 2.59,
+    "median": 2.0,
+    "max": 26,
+    "distribution": {
+      "1-5 (simple)": 241,
+      "6-10 (moderate)": 17,
+      "11-20 (complex)": 5,
+      "21+ (very complex)": 3
+    },
+    "most_complex": [
+      {
+        "name": "_risks",
+        "file": "analysis/engine.py",
+        "line": 302,
+        "complexity": 26,
+        "loc": 80
+      },
+      {
+        "name": "_graph_view",
+        "file": "analysis/engine.py",
+        "line": 439,
+        "complexity": 24,
+        "loc": 76
+      },
+      {
+        "name": "parse_python_source",
+        "file": "ast_parser/py_ast_parser.py",
+        "line": 44,
+        "complexity": 21,
+        "loc": 67
+      },
+      {
+        "name": "collect_git_insights",
+        "file": "analysis/git_insights.py",
+        "line": 31,
+        "complexity": 18,
+        "loc": 79
+      },
+      {
+        "name": "_dependencies",
+        "file": "analysis/engine.py",
+        "line": 236,
+        "complexity": 14,
+        "loc": 49
+      },
+      {
+        "name": "visit",
+        "file": "ast_parser/py_ast_parser.py",
+        "line": 71,
+        "complexity": 14,
+        "loc": 33
+      },
+      {
+        "name": "_walk",
+        "file": "ast_parser/parser.py",
+        "line": 120,
+        "complexity": 12,
+        "loc": 51
+      },
+      {
+        "name": "extract_sources",
+        "file": "retrieval/engine.py",
+        "line": 35,
+        "complexity": 11,
+        "loc": 17
+      },
+      {
+        "name": "_base_class_names",
+        "file": "ast_parser/parser.py",
+        "line": 211,
+        "complexity": 10,
+        "loc": 24
+      },
+      {
+        "name": "_import_targets",
+        "file": "ast_parser/parser.py",
+        "line": 236,
+        "complexity": 10,
+        "loc": 23
+      },
+      {
+        "name": "simple_cycles",
+        "file": "analysis/_graph.py",
+        "line": 80,
+        "complexity": 9,
+        "loc": 29
+      },
+      {
+        "name": "run_ingestion",
+        "file": "api/tasks.py",
+        "line": 26,
+        "complexity": 9,
+        "loc": 59
+      },
+      {
+        "name": "_maintainability",
+        "file": "analysis/engine.py",
+        "line": 166,
+        "complexity": 8,
+        "loc": 26
+      },
+      {
+        "name": "_build_call_graph",
+        "file": "analysis/engine.py",
+        "line": 194,
+        "complexity": 8,
+        "loc": 11
+      },
+      {
+        "name": "dfs",
+        "file": "analysis/_graph.py",
+        "line": 90,
+        "complexity": 8,
+        "loc": 15
+      },
+      {
+        "name": "_hotspots",
+        "file": "analysis/engine.py",
+        "line": 399,
+        "complexity": 7,
+        "loc": 15
+      },
+      {
+        "name": "_docstring",
+        "file": "ast_parser/parser.py",
+        "line": 192,
+        "complexity": 7,
+        "loc": 11
+      },
+      {
+        "name": "resolve",
+        "file": "ast_parser/symbol_resolver.py",
+        "line": 8,
+        "complexity": 7,
+        "loc": 19
+      },
+      {
+        "name": "_load_env_local",
+        "file": "main.py",
+        "line": 23,
+        "complexity": 6,
+        "loc": 16
+      },
+      {
+        "name": "_complexity",
+        "file": "analysis/engine.py",
+        "line": 140,
+        "complexity": 6,
+        "loc": 24
+      }
+    ]
+  },
+  "maintainability": {
+    "average_index": 55.8,
+    "grade_distribution": {
+      "C (<65, needs attention)": 32,
+      "B (65-85)": 12
+    },
+    "lowest_files": [
+      {
+        "file": "analysis/engine.py",
+        "mi": 22.9,
+        "avg_complexity": 6.4,
+        "loc": 442
+      },
+      {
+        "file": "analysis/report.py",
+        "mi": 33.8,
+        "avg_complexity": 2.2,
+        "loc": 193
+      },
+      {
+        "file": "ast_parser/parser.py",
+        "mi": 34.0,
+        "avg_complexity": 4.2,
+        "loc": 186
+      },
+      {
+        "file": "ast_parser/py_ast_parser.py",
+        "mi": 36.6,
+        "avg_complexity": 6.9,
+        "loc": 146
+      },
+      {
+        "file": "graph_db/builder.py",
+        "mi": 37.8,
+        "avg_complexity": 2.9,
+        "loc": 139
+      },
+      {
+        "file": "risk_detection/detector.py",
+        "mi": 39.6,
+        "avg_complexity": 1.1,
+        "loc": 122
+      },
+      {
+        "file": "analysis/git_insights.py",
+        "mi": 42.6,
+        "avg_complexity": 7,
+        "loc": 90
+      },
+      {
+        "file": "analysis/_graph.py",
+        "mi": 42.9,
+        "avg_complexity": 2.1,
+        "loc": 93
+      },
+      {
+        "file": "tests/test_graph_db.py",
+        "mi": 42.9,
+        "avg_complexity": 1.5,
+        "loc": 93
+      },
+      {
+        "file": "tests/test_retrieval.py",
+        "mi": 44.5,
+        "avg_complexity": 1.4,
+        "loc": 82
+      },
+      {
+        "file": "tests/test_risk_detection.py",
+        "mi": 46.1,
+        "avg_complexity": 1.6,
+        "loc": 72
+      },
+      {
+        "file": "api/tasks.py",
+        "mi": 46.3,
+        "avg_complexity": 5.5,
+        "loc": 68
+      },
+      {
+        "file": "graph_db/incremental.py",
+        "mi": 46.6,
+        "avg_complexity": 1.7,
+        "loc": 69
+      },
+      {
+        "file": "graph_db/client.py",
+        "mi": 48.8,
+        "avg_complexity": 2.5,
+        "loc": 57
+      },
+      {
+        "file": "tests/test_vector_db.py",
+        "mi": 49.3,
+        "avg_complexity": 1.1,
+        "loc": 56
+      },
+      {
+        "file": "impact/analyzer.py",
+        "mi": 50.8,
+        "avg_complexity": 1.5,
+        "loc": 49
+      },
+      {
+        "file": "vector_db/store.py",
+        "mi": 51.3,
+        "avg_complexity": 2.2,
+        "loc": 47
+      },
+      {
+        "file": "tests/test_impact.py",
+        "mi": 51.6,
+        "avg_complexity": 1.3,
+        "loc": 46
+      },
+      {
+        "file": "tests/test_parser.py",
+        "mi": 52.7,
+        "avg_complexity": 1.6,
+        "loc": 42
+      },
+      {
+        "file": "tests/test_analysis.py",
+        "mi": 54.0,
+        "avg_complexity": 1.4,
+        "loc": 38
+      }
+    ]
+  },
+  "risks": {
+    "god_objects": [],
+    "dead_code": {
+      "count": 4,
+      "items": [
+        {
+          "name": "_load_env_local",
+          "file": "main.py",
+          "line": 23,
+          "loc": 16
+        },
+        {
+          "name": "_complexity",
+          "file": "ast_parser/parser.py",
+          "line": 270,
+          "loc": 12
+        },
+        {
+          "name": "_signature",
+          "file": "ast_parser/py_ast_parser.py",
+          "line": 32,
+          "loc": 10
+        },
+        {
+          "name": "_complexity",
+          "file": "ast_parser/py_ast_parser.py",
+          "line": 22,
+          "loc": 8
+        }
+      ],
+      "unused_public_api": 25,
+      "public_items": [
+        {
+          "name": "run_ingestion",
+          "file": "api/tasks.py",
+          "line": 26,
+          "loc": 59
+        },
+        {
+          "name": "visit",
+          "file": "ast_parser/py_ast_parser.py",
+          "line": 71,
+          "loc": 33
+        },
+        {
+          "name": "update",
+          "file": "graph_db/incremental.py",
+          "line": 65,
+          "loc": 18
+        },
+        {
+          "name": "stats",
+          "file": "api/routes_stats.py",
+          "line": 11,
+          "loc": 14
+        },
+        {
+          "name": "generate",
+          "file": "llm/ollama.py",
+          "line": 33,
+          "loc": 14
+        },
+        {
+          "name": "collection",
+          "file": "vector_db/store.py",
+          "line": 38,
+          "loc": 11
+        },
+        {
+          "name": "risks",
+          "file": "api/routes_risks.py",
+          "line": 15,
+          "loc": 8
+        },
+        {
+          "name": "search",
+          "file": "vector_db/store.py",
+          "line": 66,
+          "loc": 7
+        },
+        {
+          "name": "start_ingest",
+          "file": "api/routes_ingest.py",
+          "line": 20,
+          "loc": 6
+        },
+        {
+          "name": "query",
+          "file": "graph_db/client.py",
+          "line": 74,
+          "loc": 6
+        },
+        {
+          "name": "impact",
+          "file": "api/routes_impact.py",
+          "line": 13,
+          "loc": 5
+        },
+        {
+          "name": "ingest_status",
+          "file": "api/routes_ingest.py",
+          "line": 29,
+          "loc": 5
+        },
+        {
+          "name": "get",
+          "file": "graph_db/incremental.py",
+          "line": 33,
+          "loc": 5
+        },
+        {
+          "name": "generate",
+          "file": "retrieval/answer.py",
+          "line": 25,
+          "loc": 4
+        },
+        {
+          "name": "write_json",
+          "file": "analysis/report.py",
+          "line": 12,
+          "loc": 3
+        },
+        {
+          "name": "write_html",
+          "file": "analysis/report.py",
+          "line": 17,
+          "loc": 3
+        },
+        {
+          "name": "encode",
+          "file": "vector_db/embedder.py",
+          "line": 14,
+          "loc": 3
+        },
+        {
+          "name": "encode",
+          "file": "vector_db/embedder.py",
+          "line": 33,
+          "loc": 3
+        },
+        {
+          "name": "health",
+          "file": "main.py",
+          "line": 65,
+          "loc": 2
+        },
+        {
+          "name": "nodes",
+          "file": "analysis/_graph.py",
+          "line": 39,
+          "loc": 2
+        }
+      ]
+    },
+    "long_methods": [
+      {
+        "name": "render_html",
+        "file": "analysis/report.py",
+        "line": 58,
+        "loc": 161
+      }
+    ],
+    "high_complexity": [
+      {
+        "name": "_risks",
+        "file": "analysis/engine.py",
+        "line": 302,
+        "complexity": 26
+      },
+      {
+        "name": "_graph_view",
+        "file": "analysis/engine.py",
+        "line": 439,
+        "complexity": 24
+      },
+      {
+        "name": "parse_python_source",
+        "file": "ast_parser/py_ast_parser.py",
+        "line": 44,
+        "complexity": 21
+      },
+      {
+        "name": "collect_git_insights",
+        "file": "analysis/git_insights.py",
+        "line": 31,
+        "complexity": 18
+      }
+    ],
+    "shotgun_surgery": [],
+    "deep_inheritance": [],
+    "summary": {
+      "god_objects": 0,
+      "dead_code": 4,
+      "unused_public_api": 25,
+      "long_methods": 1,
+      "high_complexity": 4,
+      "shotgun_surgery": 0,
+      "deep_inheritance": 0
+    }
+  },
+  "dependencies": {
+    "internal_modules": 43,
+    "internal_dependency_edges": 41,
+    "external_dependencies": 33,
+    "circular_dependencies": [
+      [
+        "ast_parser.parser",
+        "ast_parser.py_ast_parser"
+      ]
+    ],
+    "circular_dependency_count": 1,
+    "most_depended_on": [
+      {
+        "module": "ast_parser",
+        "depended_on_by": 10
+      },
+      {
+        "module": "api.deps",
+        "depended_on_by": 4
+      },
+      {
+        "module": "ast_parser.parser",
+        "depended_on_by": 4
+      },
+      {
+        "module": "graph_db.client",
+        "depended_on_by": 3
+      },
+      {
+        "module": "api.jobs",
+        "depended_on_by": 2
+      },
+      {
+        "module": "retrieval.cypher_generator",
+        "depended_on_by": 2
+      },
+      {
+        "module": "retrieval.router",
+        "depended_on_by": 2
+      },
+      {
+        "module": "retrieval.engine",
+        "depended_on_by": 1
+      },
+      {
+        "module": "vector_db.embedder",
+        "depended_on_by": 1
+      },
+      {
+        "module": "ast_parser.repo_walker",
+        "depended_on_by": 1
+      },
+      {
+        "module": "api.tasks",
+        "depended_on_by": 1
+      },
+      {
+        "module": "ast_parser.symbol_resolver",
+        "depended_on_by": 1
+      },
+      {
+        "module": "retrieval.retriever",
+        "depended_on_by": 1
+      },
+      {
+        "module": "graph_db.builder",
+        "depended_on_by": 1
+      },
+      {
+        "module": "analysis.git_insights",
+        "depended_on_by": 1
+      },
+      {
+        "module": "retrieval.answer",
+        "depended_on_by": 1
+      },
+      {
+        "module": "analysis._graph",
+        "depended_on_by": 1
+      },
+      {
+        "module": "vector_db.chunker",
+        "depended_on_by": 1
+      },
+      {
+        "module": "main",
+        "depended_on_by": 1
+      },
+      {
+        "module": "api.config",
+        "depended_on_by": 1
+      }
+    ],
+    "most_dependencies": [
+      {
+        "module": "retrieval.engine",
+        "imports": 4
+      },
+      {
+        "module": "ast_parser",
+        "imports": 3
+      },
+      {
+        "module": "graph_db.incremental",
+        "imports": 3
+      },
+      {
+        "module": "vector_db.store",
+        "imports": 3
+      },
+      {
+        "module": "api.tasks",
+        "imports": 3
+      },
+      {
+        "module": "analysis.engine",
+        "imports": 3
+      },
+      {
+        "module": "retrieval.retriever",
+        "imports": 2
+      },
+      {
+        "module": "graph_db.builder",
+        "imports": 2
+      },
+      {
+        "module": "api.routes_ingest",
+        "imports": 2
+      },
+      {
+        "module": "analysis.report",
+        "imports": 1
+      },
+      {
+        "module": "api.routes_stats",
+        "imports": 1
+      },
+      {
+        "module": "tests.test_vector_db",
+        "imports": 1
+      },
+      {
+        "module": "api.routes_query",
+        "imports": 1
+      },
+      {
+        "module": "tests.test_api",
+        "imports": 1
+      },
+      {
+        "module": "ast_parser.repo_walker",
+        "imports": 1
+      },
+      {
+        "module": "graph_db.schema",
+        "imports": 1
+      },
+      {
+        "module": "ast_parser.symbol_resolver",
+        "imports": 1
+      },
+      {
+        "module": "analysis.git_insights",
+        "imports": 1
+      },
+      {
+        "module": "tests.test_graph_db",
+        "imports": 1
+      },
+      {
+        "module": "api.routes_risks",
+        "imports": 1
+      }
+    ],
+    "top_external": [
+      {
+        "package": "os",
+        "import_sites": 21
+      },
+      {
+        "package": "typing",
+        "import_sites": 19
+      },
+      {
+        "package": "graph_db",
+        "import_sites": 9
+      },
+      {
+        "package": "fastapi",
+        "import_sites": 8
+      },
+      {
+        "package": "pytest",
+        "import_sites": 6
+      },
+      {
+        "package": "collections",
+        "import_sites": 4
+      },
+      {
+        "package": "llm",
+        "import_sites": 4
+      },
+      {
+        "package": "vector_db",
+        "import_sites": 4
+      },
+      {
+        "package": "risk_detection",
+        "import_sites": 3
+      },
+      {
+        "package": "hashlib",
+        "import_sites": 3
+      },
+      {
+        "package": "api",
+        "import_sites": 2
+      },
+      {
+        "package": "dataclasses",
+        "import_sites": 2
+      },
+      {
+        "package": "retrieval",
+        "import_sites": 2
+      },
+      {
+        "package": "impact",
+        "import_sites": 2
+      },
+      {
+        "package": "requests",
+        "import_sites": 2
+      },
+      {
+        "package": "analysis",
+        "import_sites": 2
+      },
+      {
+        "package": "pathlib",
+        "import_sites": 1
+      },
+      {
+        "package": "math",
+        "import_sites": 1
+      },
+      {
+        "package": "statistics",
+        "import_sites": 1
+      },
+      {
+        "package": "subprocess",
+        "import_sites": 1
+      }
+    ],
+    "dependency_heavy_files": [
+      {
+        "file": "analysis/engine.py",
+        "external_imports": 5
+      },
+      {
+        "file": "api/deps.py",
+        "external_imports": 5
+      },
+      {
+        "file": "api/tasks.py",
+        "external_imports": 5
+      },
+      {
+        "file": "ast_parser/parser.py",
+        "external_imports": 5
+      },
+      {
+        "file": "main.py",
+        "external_imports": 4
+      },
+      {
+        "file": "analysis/report.py",
+        "external_imports": 4
+      },
+      {
+        "file": "tests/test_impact.py",
+        "external_imports": 4
+      },
+      {
+        "file": "tests/test_retrieval.py",
+        "external_imports": 4
+      },
+      {
+        "file": "tests/test_risk_detection.py",
+        "external_imports": 4
+      },
+      {
+        "file": "analysis/git_insights.py",
+        "external_imports": 3
+      },
+      {
+        "file": "api/jobs.py",
+        "external_imports": 3
+      },
+      {
+        "file": "api/routes_ingest.py",
+        "external_imports": 3
+      },
+      {
+        "file": "api/routes_risks.py",
+        "external_imports": 3
+      },
+      {
+        "file": "ast_parser/repo_walker.py",
+        "external_imports": 3
+      },
+      {
+        "file": "graph_db/builder.py",
+        "external_imports": 3
+      },
+      {
+        "file": "graph_db/client.py",
+        "external_imports": 3
+      },
+      {
+        "file": "graph_db/incremental.py",
+        "external_imports": 3
+      },
+      {
+        "file": "llm/ollama.py",
+        "external_imports": 3
+      },
+      {
+        "file": "tests/test_graph_db.py",
+        "external_imports": 3
+      },
+      {
+        "file": "tests/test_vector_db.py",
+        "external_imports": 3
+      }
+    ]
+  },
+  "call_graph": {
+    "edges": 447,
+    "most_called_functions": [
+      {
+        "name": "get",
+        "file": "api/jobs.py",
+        "line": 33,
+        "called_by": 28
+      },
+      {
+        "name": "FakeClient",
+        "file": "tests/test_graph_db.py",
+        "line": 17,
+        "called_by": 20
+      },
+      {
+        "name": "query",
+        "file": "api/routes_query.py",
+        "line": 11,
+        "called_by": 15
+      },
+      {
+        "name": "GraphBuilder",
+        "file": "graph_db/builder.py",
+        "line": 41,
+        "called_by": 10
+      },
+      {
+        "name": "set",
+        "file": "graph_db/incremental.py",
+        "line": 39,
+        "called_by": 9
+      },
+      {
+        "name": "RiskDetector",
+        "file": "risk_detection/detector.py",
+        "line": 19,
+        "called_by": 9
+      },
+      {
+        "name": "analyze_repository",
+        "file": "analysis/engine.py",
+        "line": 80,
+        "called_by": 8
+      },
+      {
+        "name": "ImpactAnalyzer",
+        "file": "impact/analyzer.py",
+        "line": 17,
+        "called_by": 8
+      },
+      {
+        "name": "add",
+        "file": "retrieval/engine.py",
+        "line": 39,
+        "called_by": 8
+      },
+      {
+        "name": "_text",
+        "file": "ast_parser/parser.py",
+        "line": 173,
+        "called_by": 7
+      },
+      {
+        "name": "_parse",
+        "file": "tests/test_parser.py",
+        "line": 8,
+        "called_by": 7
+      },
+      {
+        "name": "FakeLLM",
+        "file": "tests/test_retrieval.py",
+        "line": 21,
+        "called_by": 7
+      },
+      {
+        "name": "ingest_entities",
+        "file": "graph_db/builder.py",
+        "line": 64,
+        "called_by": 6
+      },
+      {
+        "name": "command",
+        "file": "graph_db/client.py",
+        "line": 81,
+        "called_by": 6
+      },
+      {
+        "name": "analyze_file_impact",
+        "file": "impact/analyzer.py",
+        "line": 21,
+        "called_by": 6
+      },
+      {
+        "name": "CypherGenerator",
+        "file": "retrieval/cypher_generator.py",
+        "line": 30,
+        "called_by": 6
+      },
+      {
+        "name": "_e",
+        "file": "analysis/report.py",
+        "line": 22,
+        "called_by": 5
+      },
+      {
+        "name": "CodeRelationship",
+        "file": "ast_parser/parser.py",
+        "line": 77,
+        "called_by": 5
+      },
+      {
+        "name": "resolve",
+        "file": "ast_parser/symbol_resolver.py",
+        "line": 8,
+        "called_by": 5
+      },
+      {
+        "name": "build",
+        "file": "graph_db/builder.py",
+        "line": 51,
+        "called_by": 5
+      }
+    ],
+    "highest_fan_out": [
+      {
+        "name": "run_ingestion",
+        "file": "api/tasks.py",
+        "line": 26,
+        "calls_out": 17
+      },
+      {
+        "name": "analyze_repository",
+        "file": "analysis/engine.py",
+        "line": 80,
+        "calls_out": 16
+      },
+      {
+        "name": "_walk",
+        "file": "ast_parser/parser.py",
+        "line": 120,
+        "calls_out": 12
+      },
+      {
+        "name": "_dependencies",
+        "file": "analysis/engine.py",
+        "line": 236,
+        "calls_out": 10
+      },
+      {
+        "name": "update",
+        "file": "graph_db/incremental.py",
+        "line": 65,
+        "calls_out": 9
+      },
+      {
+        "name": "test_integration_roundtrip",
+        "file": "tests/test_graph_db.py",
+        "line": 143,
+        "calls_out": 8
+      },
+      {
+        "name": "render_html",
+        "file": "analysis/report.py",
+        "line": 58,
+        "calls_out": 7
+      },
+      {
+        "name": "run_all_checks",
+        "file": "risk_detection/detector.py",
+        "line": 131,
+        "calls_out": 7
+      },
+      {
+        "name": "test_imports_create_module_vertices_and_edges",
+        "file": "tests/test_graph_db.py",
+        "line": 109,
+        "calls_out": 7
+      },
+      {
+        "name": "_call_graph_metrics",
+        "file": "analysis/engine.py",
+        "line": 207,
+        "calls_out": 6
+      },
+      {
+        "name": "_reindex_file",
+        "file": "graph_db/incremental.py",
+        "line": 86,
+        "calls_out": 6
+      },
+      {
+        "name": "test_inherits_from_edge_created",
+        "file": "tests/test_graph_db.py",
+        "line": 125,
+        "calls_out": 6
+      },
+      {
+        "name": "test_structural_query_used_when_it_returns_rows",
+        "file": "tests/test_retrieval.py",
+        "line": 74,
+        "calls_out": 6
+      },
+      {
+        "name": "test_falls_back_to_semantic_when_graph_errors",
+        "file": "tests/test_retrieval.py",
+        "line": 82,
+        "calls_out": 6
+      },
+      {
+        "name": "test_falls_back_when_structural_empty",
+        "file": "tests/test_retrieval.py",
+        "line": 91,
+        "calls_out": 6
+      },
+      {
+        "name": "test_semantic_question_skips_graph",
+        "file": "tests/test_retrieval.py",
+        "line": 99,
+        "calls_out": 6
+      },
+      {
+        "name": "_risks",
+        "file": "analysis/engine.py",
+        "line": 302,
+        "calls_out": 5
+      },
+      {
+        "name": "_graph_view",
+        "file": "analysis/engine.py",
+        "line": 439,
+        "calls_out": 5
+      },
+      {
+        "name": "emit",
+        "file": "ast_parser/py_ast_parser.py",
+        "line": 53,
+        "calls_out": 5
+      },
+      {
+        "name": "visit",
+        "file": "ast_parser/py_ast_parser.py",
+        "line": 71,
+        "calls_out": 5
+      }
+    ],
+    "blast_radius_top": [
+      {
+        "name": "get",
+        "file": "api/jobs.py",
+        "line": 33,
+        "directly_affected": 28,
+        "transitively_affected": 122
+      },
+      {
+        "name": "add",
+        "file": "retrieval/engine.py",
+        "line": 39,
+        "directly_affected": 8,
+        "transitively_affected": 62
+      },
+      {
+        "name": "query",
+        "file": "api/routes_query.py",
+        "line": 11,
+        "directly_affected": 15,
+        "transitively_affected": 40
+      },
+      {
+        "name": "set",
+        "file": "graph_db/incremental.py",
+        "line": 39,
+        "directly_affected": 9,
+        "transitively_affected": 36
+      },
+      {
+        "name": "_text",
+        "file": "ast_parser/parser.py",
+        "line": 173,
+        "directly_affected": 7,
+        "transitively_affected": 32
+      },
+      {
+        "name": "CodeRelationship",
+        "file": "ast_parser/parser.py",
+        "line": 77,
+        "directly_affected": 5,
+        "transitively_affected": 28
+      },
+      {
+        "name": "command",
+        "file": "graph_db/client.py",
+        "line": 81,
+        "directly_affected": 6,
+        "transitively_affected": 23
+      },
+      {
+        "name": "FakeClient",
+        "file": "tests/test_graph_db.py",
+        "line": 17,
+        "directly_affected": 20,
+        "transitively_affected": 20
+      },
+      {
+        "name": "resolve",
+        "file": "ast_parser/symbol_resolver.py",
+        "line": 8,
+        "directly_affected": 5,
+        "transitively_affected": 16
+      },
+      {
+        "name": "ingest_entities",
+        "file": "graph_db/builder.py",
+        "line": 64,
+        "directly_affected": 6,
+        "transitively_affected": 12
+      },
+      {
+        "name": "GraphBuilder",
+        "file": "graph_db/builder.py",
+        "line": 41,
+        "directly_affected": 10,
+        "transitively_affected": 11
+      },
+      {
+        "name": "RiskDetector",
+        "file": "risk_detection/detector.py",
+        "line": 19,
+        "directly_affected": 9,
+        "transitively_affected": 9
+      },
+      {
+        "name": "analyze_repository",
+        "file": "analysis/engine.py",
+        "line": 80,
+        "directly_affected": 8,
+        "transitively_affected": 8
+      },
+      {
+        "name": "ImpactAnalyzer",
+        "file": "impact/analyzer.py",
+        "line": 17,
+        "directly_affected": 8,
+        "transitively_affected": 8
+      },
+      {
+        "name": "_parse",
+        "file": "tests/test_parser.py",
+        "line": 8,
+        "directly_affected": 7,
+        "transitively_affected": 7
+      },
+      {
+        "name": "FakeLLM",
+        "file": "tests/test_retrieval.py",
+        "line": 21,
+        "directly_affected": 7,
+        "transitively_affected": 7
+      },
+      {
+        "name": "_e",
+        "file": "analysis/report.py",
+        "line": 22,
+        "directly_affected": 5,
+        "transitively_affected": 7
+      },
+      {
+        "name": "analyze_file_impact",
+        "file": "impact/analyzer.py",
+        "line": 21,
+        "directly_affected": 6,
+        "transitively_affected": 6
+      },
+      {
+        "name": "CypherGenerator",
+        "file": "retrieval/cypher_generator.py",
+        "line": 30,
+        "directly_affected": 6,
+        "transitively_affected": 6
+      },
+      {
+        "name": "build",
+        "file": "graph_db/builder.py",
+        "line": 51,
+        "directly_affected": 5,
+        "transitively_affected": 6
+      }
+    ]
+  },
+  "documentation": {
+    "python_functions": 262,
+    "documented": 26,
+    "coverage_pct": 9.9,
+    "undocumented_complex": [
+      {
+        "name": "_risks",
+        "file": "analysis/engine.py",
+        "line": 302,
+        "complexity": 26
+      },
+      {
+        "name": "parse_python_source",
+        "file": "ast_parser/py_ast_parser.py",
+        "line": 44,
+        "complexity": 21
+      },
+      {
+        "name": "collect_git_insights",
+        "file": "analysis/git_insights.py",
+        "line": 31,
+        "complexity": 18
+      },
+      {
+        "name": "_dependencies",
+        "file": "analysis/engine.py",
+        "line": 236,
+        "complexity": 14
+      },
+      {
+        "name": "visit",
+        "file": "ast_parser/py_ast_parser.py",
+        "line": 71,
+        "complexity": 14
+      },
+      {
+        "name": "_walk",
+        "file": "ast_parser/parser.py",
+        "line": 120,
+        "complexity": 12
+      },
+      {
+        "name": "run_ingestion",
+        "file": "api/tasks.py",
+        "line": 26,
+        "complexity": 9
+      },
+      {
+        "name": "_maintainability",
+        "file": "analysis/engine.py",
+        "line": 166,
+        "complexity": 8
+      },
+      {
+        "name": "_build_call_graph",
+        "file": "analysis/engine.py",
+        "line": 194,
+        "complexity": 8
+      },
+      {
+        "name": "dfs",
+        "file": "analysis/_graph.py",
+        "line": 90,
+        "complexity": 8
+      },
+      {
+        "name": "_hotspots",
+        "file": "analysis/engine.py",
+        "line": 399,
+        "complexity": 7
+      },
+      {
+        "name": "_docstring",
+        "file": "ast_parser/parser.py",
+        "line": 192,
+        "complexity": 7
+      },
+      {
+        "name": "resolve",
+        "file": "ast_parser/symbol_resolver.py",
+        "line": 8,
+        "complexity": 7
+      },
+      {
+        "name": "_complexity",
+        "file": "analysis/engine.py",
+        "line": 140,
+        "complexity": 6
+      },
+      {
+        "name": "_all_paths_to_roots",
+        "file": "analysis/engine.py",
+        "line": 384,
+        "complexity": 6
+      },
+      {
+        "name": "_health_score",
+        "file": "analysis/engine.py",
+        "line": 416,
+        "complexity": 6
+      },
+      {
+        "name": "format_context",
+        "file": "retrieval/answer.py",
+        "line": 31,
+        "complexity": 6
+      },
+      {
+        "name": "_module_of",
+        "file": "analysis/engine.py",
+        "line": 72,
+        "complexity": 5
+      },
+      {
+        "name": "render_html",
+        "file": "analysis/report.py",
+        "line": 58,
+        "complexity": 5
+      },
+      {
+        "name": "emit",
+        "file": "ast_parser/py_ast_parser.py",
+        "line": 53,
+        "complexity": 5
+      }
+    ]
+  },
+  "git": {
+    "available": true,
+    "total_commits": 17,
+    "contributors": 1,
+    "first_commit": "2026-06-21",
+    "last_commit": "2026-06-22",
+    "project_bus_factor": 1,
+    "top_contributors": [
+      {
+        "author": "goyal-harshit",
+        "commits": 17
+      }
+    ],
+    "file_churn": [],
+    "knowledge_risk_files": []
+  },
+  "hotspots": [
+    {
+      "file": "analysis/engine.py",
+      "max_complexity": 26,
+      "commits": 0,
+      "hotspot_score": 26
+    },
+    {
+      "file": "ast_parser/py_ast_parser.py",
+      "max_complexity": 21,
+      "commits": 0,
+      "hotspot_score": 21
+    },
+    {
+      "file": "analysis/git_insights.py",
+      "max_complexity": 18,
+      "commits": 0,
+      "hotspot_score": 18
+    },
+    {
+      "file": "ast_parser/parser.py",
+      "max_complexity": 12,
+      "commits": 0,
+      "hotspot_score": 12
+    },
+    {
+      "file": "retrieval/engine.py",
+      "max_complexity": 11,
+      "commits": 0,
+      "hotspot_score": 11
+    },
+    {
+      "file": "analysis/_graph.py",
+      "max_complexity": 9,
+      "commits": 0,
+      "hotspot_score": 9
+    },
+    {
+      "file": "api/tasks.py",
+      "max_complexity": 9,
+      "commits": 0,
+      "hotspot_score": 9
+    },
+    {
+      "file": "ast_parser/symbol_resolver.py",
+      "max_complexity": 7,
+      "commits": 0,
+      "hotspot_score": 7
+    },
+    {
+      "file": "main.py",
+      "max_complexity": 6,
+      "commits": 0,
+      "hotspot_score": 6
+    },
+    {
+      "file": "graph_db/builder.py",
+      "max_complexity": 6,
+      "commits": 0,
+      "hotspot_score": 6
+    },
+    {
+      "file": "retrieval/answer.py",
+      "max_complexity": 6,
+      "commits": 0,
+      "hotspot_score": 6
+    },
+    {
+      "file": "analysis/report.py",
+      "max_complexity": 5,
+      "commits": 0,
+      "hotspot_score": 5
+    },
+    {
+      "file": "ast_parser/repo_walker.py",
+      "max_complexity": 5,
+      "commits": 0,
+      "hotspot_score": 5
+    },
+    {
+      "file": "graph_db/client.py",
+      "max_complexity": 5,
+      "commits": 0,
+      "hotspot_score": 5
+    },
+    {
+      "file": "graph_db/incremental.py",
+      "max_complexity": 4,
+      "commits": 0,
+      "hotspot_score": 4
+    },
+    {
+      "file": "graph_db/schema.py",
+      "max_complexity": 4,
+      "commits": 0,
+      "hotspot_score": 4
+    },
+    {
+      "file": "impact/analyzer.py",
+      "max_complexity": 4,
+      "commits": 0,
+      "hotspot_score": 4
+    },
+    {
+      "file": "retrieval/retriever.py",
+      "max_complexity": 4,
+      "commits": 0,
+      "hotspot_score": 4
+    },
+    {
+      "file": "tests/test_parser.py",
+      "max_complexity": 4,
+      "commits": 0,
+      "hotspot_score": 4
+    },
+    {
+      "file": "vector_db/store.py",
+      "max_complexity": 4,
+      "commits": 0,
+      "hotspot_score": 4
+    }
+  ],
+  "health_score": {
+    "overall": 60.9,
+    "grade": "C",
+    "components": {
+      "maintainability": 55.8,
+      "structure": 89.5,
+      "documentation": 9.9
+    }
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "api/jobs.py",
+        "label": "jobs.py",
+        "group": "api",
+        "entities": 5,
+        "loc": 19,
+        "max_complexity": 2,
+        "degree": 15
+      },
+      {
+        "id": "ast_parser/__init__.py",
+        "label": "__init__.py",
+        "group": "ast_parser",
+        "entities": 1,
+        "loc": 14,
+        "max_complexity": 3,
+        "degree": 13
+      },
+      {
+        "id": "ast_parser/parser.py",
+        "label": "parser.py",
+        "group": "ast_parser",
+        "entities": 19,
+        "loc": 186,
+        "max_complexity": 12,
+        "degree": 12
+      },
+      {
+        "id": "retrieval/engine.py",
+        "label": "engine.py",
+        "group": "retrieval",
+        "entities": 5,
+        "loc": 36,
+        "max_complexity": 11,
+        "degree": 12
+      },
+      {
+        "id": "graph_db/client.py",
+        "label": "client.py",
+        "group": "graph_db",
+        "entities": 12,
+        "loc": 57,
+        "max_complexity": 5,
+        "degree": 11
+      },
+      {
+        "id": "graph_db/incremental.py",
+        "label": "incremental.py",
+        "group": "graph_db",
+        "entities": 12,
+        "loc": 69,
+        "max_complexity": 4,
+        "degree": 11
+      },
+      {
+        "id": "analysis/engine.py",
+        "label": "engine.py",
+        "group": "analysis",
+        "entities": 22,
+        "loc": 442,
+        "max_complexity": 26,
+        "degree": 10
+      },
+      {
+        "id": "api/tasks.py",
+        "label": "tasks.py",
+        "group": "api",
+        "entities": 2,
+        "loc": 68,
+        "max_complexity": 9,
+        "degree": 9
+      },
+      {
+        "id": "api/routes_query.py",
+        "label": "routes_query.py",
+        "group": "api",
+        "entities": 1,
+        "loc": 9,
+        "max_complexity": 2,
+        "degree": 9
+      },
+      {
+        "id": "tests/test_retrieval.py",
+        "label": "test_retrieval.py",
+        "group": "tests",
+        "entities": 19,
+        "loc": 82,
+        "max_complexity": 2,
+        "degree": 8
+      },
+      {
+        "id": "tests/test_graph_db.py",
+        "label": "test_graph_db.py",
+        "group": "tests",
+        "entities": 14,
+        "loc": 93,
+        "max_complexity": 3,
+        "degree": 8
+      },
+      {
+        "id": "tests/test_vector_db.py",
+        "label": "test_vector_db.py",
+        "group": "tests",
+        "entities": 12,
+        "loc": 56,
+        "max_complexity": 2,
+        "degree": 8
+      },
+      {
+        "id": "vector_db/store.py",
+        "label": "store.py",
+        "group": "vector_db",
+        "entities": 5,
+        "loc": 47,
+        "max_complexity": 4,
+        "degree": 8
+      },
+      {
+        "id": "api/deps.py",
+        "label": "deps.py",
+        "group": "api",
+        "entities": 4,
+        "loc": 8,
+        "max_complexity": 1,
+        "degree": 8
+      },
+      {
+        "id": "graph_db/builder.py",
+        "label": "builder.py",
+        "group": "graph_db",
+        "entities": 13,
+        "loc": 139,
+        "max_complexity": 6,
+        "degree": 6
+      },
+      {
+        "id": "risk_detection/detector.py",
+        "label": "detector.py",
+        "group": "risk_detection",
+        "entities": 11,
+        "loc": 122,
+        "max_complexity": 2,
+        "degree": 6
+      },
+      {
+        "id": "retrieval/retriever.py",
+        "label": "retriever.py",
+        "group": "retrieval",
+        "entities": 3,
+        "loc": 22,
+        "max_complexity": 4,
+        "degree": 6
+      },
+      {
+        "id": "ast_parser/symbol_resolver.py",
+        "label": "symbol_resolver.py",
+        "group": "ast_parser",
+        "entities": 2,
+        "loc": 19,
+        "max_complexity": 7,
+        "degree": 6
+      },
+      {
+        "id": "llm/ollama.py",
+        "label": "ollama.py",
+        "group": "llm",
+        "entities": 5,
+        "loc": 26,
+        "max_complexity": 3,
+        "degree": 5
+      },
+      {
+        "id": "ast_parser/repo_walker.py",
+        "label": "repo_walker.py",
+        "group": "ast_parser",
+        "entities": 2,
+        "loc": 15,
+        "max_complexity": 5,
+        "degree": 5
+      },
+      {
+        "id": "analysis/_graph.py",
+        "label": "_graph.py",
+        "group": "analysis",
+        "entities": 19,
+        "loc": 93,
+        "max_complexity": 9,
+        "degree": 4
+      },
+      {
+        "id": "ast_parser/py_ast_parser.py",
+        "label": "py_ast_parser.py",
+        "group": "ast_parser",
+        "entities": 8,
+        "loc": 146,
+        "max_complexity": 21,
+        "degree": 4
+      },
+      {
+        "id": "retrieval/answer.py",
+        "label": "answer.py",
+        "group": "retrieval",
+        "entities": 4,
+        "loc": 18,
+        "max_complexity": 6,
+        "degree": 4
+      },
+      {
+        "id": "retrieval/cypher_generator.py",
+        "label": "cypher_generator.py",
+        "group": "retrieval",
+        "entities": 4,
+        "loc": 12,
+        "max_complexity": 2,
+        "degree": 4
+      },
+      {
+        "id": "tests/test_impact.py",
+        "label": "test_impact.py",
+        "group": "tests",
+        "entities": 12,
+        "loc": 46,
+        "max_complexity": 2,
+        "degree": 3
+      },
+      {
+        "id": "tests/test_risk_detection.py",
+        "label": "test_risk_detection.py",
+        "group": "tests",
+        "entities": 12,
+        "loc": 72,
+        "max_complexity": 3,
+        "degree": 3
+      },
+      {
+        "id": "tests/test_parser.py",
+        "label": "test_parser.py",
+        "group": "tests",
+        "entities": 9,
+        "loc": 42,
+        "max_complexity": 4,
+        "degree": 3
+      },
+      {
+        "id": "analysis/report.py",
+        "label": "report.py",
+        "group": "analysis",
+        "entities": 8,
+        "loc": 193,
+        "max_complexity": 5,
+        "degree": 3
+      },
+      {
+        "id": "impact/analyzer.py",
+        "label": "analyzer.py",
+        "group": "impact",
+        "entities": 7,
+        "loc": 49,
+        "max_complexity": 4,
+        "degree": 3
+      },
+      {
+        "id": "analysis/git_insights.py",
+        "label": "git_insights.py",
+        "group": "analysis",
+        "entities": 3,
+        "loc": 90,
+        "max_complexity": 18,
+        "degree": 3
+      },
+      {
+        "id": "graph_db/schema.py",
+        "label": "schema.py",
+        "group": "graph_db",
+        "entities": 2,
+        "loc": 15,
+        "max_complexity": 4,
+        "degree": 3
+      },
+      {
+        "id": "retrieval/router.py",
+        "label": "router.py",
+        "group": "retrieval",
+        "entities": 2,
+        "loc": 5,
+        "max_complexity": 2,
+        "degree": 3
+      },
+      {
+        "id": "vector_db/chunker.py",
+        "label": "chunker.py",
+        "group": "vector_db",
+        "entities": 2,
+        "loc": 21,
+        "max_complexity": 1,
+        "degree": 3
+      },
+      {
+        "id": "tests/test_analysis.py",
+        "label": "test_analysis.py",
+        "group": "tests",
+        "entities": 8,
+        "loc": 38,
+        "max_complexity": 2,
+        "degree": 2
+      },
+      {
+        "id": "tests/test_api.py",
+        "label": "test_api.py",
+        "group": "tests",
+        "entities": 7,
+        "loc": 32,
+        "max_complexity": 2,
+        "degree": 2
+      },
+      {
+        "id": "vector_db/embedder.py",
+        "label": "embedder.py",
+        "group": "vector_db",
+        "entities": 6,
+        "loc": 15,
+        "max_complexity": 2,
+        "degree": 2
+      },
+      {
+        "id": "api/routes_ingest.py",
+        "label": "routes_ingest.py",
+        "group": "api",
+        "entities": 3,
+        "loc": 11,
+        "max_complexity": 3,
+        "degree": 2
+      },
+      {
+        "id": "api/routes_stats.py",
+        "label": "routes_stats.py",
+        "group": "api",
+        "entities": 2,
+        "loc": 17,
+        "max_complexity": 3,
+        "degree": 2
+      },
+      {
+        "id": "main.py",
+        "label": "main.py",
+        "group": "(root)",
+        "entities": 2,
+        "loc": 18,
+        "max_complexity": 6,
+        "degree": 2
+      },
+      {
+        "id": "api/routes_impact.py",
+        "label": "routes_impact.py",
+        "group": "api",
+        "entities": 1,
+        "loc": 5,
+        "max_complexity": 2,
+        "degree": 2
+      },
+      {
+        "id": "api/routes_risks.py",
+        "label": "routes_risks.py",
+        "group": "api",
+        "entities": 1,
+        "loc": 8,
+        "max_complexity": 3,
+        "degree": 2
+      },
+      {
+        "id": "tests/samples/sample.py",
+        "label": "sample.py",
+        "group": "tests",
+        "entities": 7,
+        "loc": 15,
+        "max_complexity": 3,
+        "degree": 1
+      },
+      {
+        "id": "tests/samples/sample.js",
+        "label": "sample.js",
+        "group": "tests",
+        "entities": 5,
+        "loc": 14,
+        "max_complexity": 3,
+        "degree": 1
+      },
+      {
+        "id": "api/config.py",
+        "label": "config.py",
+        "group": "api",
+        "entities": 2,
+        "loc": 5,
+        "max_complexity": 1,
+        "degree": 1
+      }
+    ],
+    "links": [
+      {
+        "source": "main.py",
+        "target": "ast_parser/symbol_resolver.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "analysis/engine.py",
+        "target": "ast_parser/__init__.py",
+        "type": "import",
+        "weight": 2
+      },
+      {
+        "source": "analysis/engine.py",
+        "target": "analysis/git_insights.py",
+        "type": "import",
+        "weight": 2
+      },
+      {
+        "source": "analysis/engine.py",
+        "target": "retrieval/engine.py",
+        "type": "call",
+        "weight": 3
+      },
+      {
+        "source": "analysis/engine.py",
+        "target": "analysis/_graph.py",
+        "type": "call",
+        "weight": 18
+      },
+      {
+        "source": "analysis/engine.py",
+        "target": "graph_db/incremental.py",
+        "type": "call",
+        "weight": 3
+      },
+      {
+        "source": "analysis/engine.py",
+        "target": "api/jobs.py",
+        "type": "call",
+        "weight": 11
+      },
+      {
+        "source": "analysis/git_insights.py",
+        "target": "ast_parser/repo_walker.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "analysis/report.py",
+        "target": "analysis/engine.py",
+        "type": "call",
+        "weight": 3
+      },
+      {
+        "source": "analysis/report.py",
+        "target": "api/jobs.py",
+        "type": "call",
+        "weight": 27
+      },
+      {
+        "source": "analysis/_graph.py",
+        "target": "api/jobs.py",
+        "type": "call",
+        "weight": 3
+      },
+      {
+        "source": "analysis/_graph.py",
+        "target": "graph_db/incremental.py",
+        "type": "call",
+        "weight": 6
+      },
+      {
+        "source": "analysis/_graph.py",
+        "target": "retrieval/engine.py",
+        "type": "call",
+        "weight": 5
+      },
+      {
+        "source": "api/deps.py",
+        "target": "graph_db/client.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "api/deps.py",
+        "target": "vector_db/store.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "api/deps.py",
+        "target": "llm/ollama.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "api/deps.py",
+        "target": "retrieval/engine.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "api/routes_impact.py",
+        "target": "impact/analyzer.py",
+        "type": "call",
+        "weight": 2
+      },
+      {
+        "source": "api/routes_ingest.py",
+        "target": "api/jobs.py",
+        "type": "call",
+        "weight": 3
+      },
+      {
+        "source": "api/routes_query.py",
+        "target": "retrieval/engine.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "api/routes_risks.py",
+        "target": "risk_detection/detector.py",
+        "type": "call",
+        "weight": 2
+      },
+      {
+        "source": "api/routes_stats.py",
+        "target": "api/routes_query.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "api/tasks.py",
+        "target": "api/jobs.py",
+        "type": "call",
+        "weight": 13
+      },
+      {
+        "source": "api/tasks.py",
+        "target": "graph_db/client.py",
+        "type": "call",
+        "weight": 5
+      },
+      {
+        "source": "api/tasks.py",
+        "target": "api/config.py",
+        "type": "import",
+        "weight": 2
+      },
+      {
+        "source": "api/tasks.py",
+        "target": "graph_db/schema.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "api/tasks.py",
+        "target": "ast_parser/__init__.py",
+        "type": "import",
+        "weight": 2
+      },
+      {
+        "source": "api/tasks.py",
+        "target": "graph_db/builder.py",
+        "type": "call",
+        "weight": 2
+      },
+      {
+        "source": "api/tasks.py",
+        "target": "vector_db/store.py",
+        "type": "call",
+        "weight": 2
+      },
+      {
+        "source": "api/tasks.py",
+        "target": "risk_detection/detector.py",
+        "type": "call",
+        "weight": 3
+      },
+      {
+        "source": "ast_parser/parser.py",
+        "target": "api/jobs.py",
+        "type": "call",
+        "weight": 3
+      },
+      {
+        "source": "ast_parser/parser.py",
+        "target": "ast_parser/py_ast_parser.py",
+        "type": "import",
+        "weight": 2
+      },
+      {
+        "source": "ast_parser/parser.py",
+        "target": "analysis/engine.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "ast_parser/parser.py",
+        "target": "graph_db/incremental.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "ast_parser/parser.py",
+        "target": "tests/test_vector_db.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "ast_parser/py_ast_parser.py",
+        "target": "tests/test_vector_db.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "ast_parser/py_ast_parser.py",
+        "target": "ast_parser/parser.py",
+        "type": "call",
+        "weight": 9
+      },
+      {
+        "source": "ast_parser/py_ast_parser.py",
+        "target": "analysis/engine.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "ast_parser/repo_walker.py",
+        "target": "api/jobs.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "ast_parser/symbol_resolver.py",
+        "target": "api/jobs.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "ast_parser/__init__.py",
+        "target": "ast_parser/parser.py",
+        "type": "call",
+        "weight": 3
+      },
+      {
+        "source": "ast_parser/__init__.py",
+        "target": "ast_parser/repo_walker.py",
+        "type": "import",
+        "weight": 2
+      },
+      {
+        "source": "ast_parser/__init__.py",
+        "target": "ast_parser/symbol_resolver.py",
+        "type": "call",
+        "weight": 3
+      },
+      {
+        "source": "graph_db/builder.py",
+        "target": "api/jobs.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "graph_db/builder.py",
+        "target": "graph_db/client.py",
+        "type": "call",
+        "weight": 3
+      },
+      {
+        "source": "graph_db/client.py",
+        "target": "api/jobs.py",
+        "type": "call",
+        "weight": 3
+      },
+      {
+        "source": "graph_db/client.py",
+        "target": "api/routes_query.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "graph_db/incremental.py",
+        "target": "ast_parser/parser.py",
+        "type": "call",
+        "weight": 2
+      },
+      {
+        "source": "graph_db/incremental.py",
+        "target": "ast_parser/repo_walker.py",
+        "type": "call",
+        "weight": 2
+      },
+      {
+        "source": "graph_db/incremental.py",
+        "target": "retrieval/engine.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "graph_db/incremental.py",
+        "target": "api/jobs.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "graph_db/incremental.py",
+        "target": "ast_parser/symbol_resolver.py",
+        "type": "call",
+        "weight": 2
+      },
+      {
+        "source": "graph_db/incremental.py",
+        "target": "graph_db/builder.py",
+        "type": "call",
+        "weight": 4
+      },
+      {
+        "source": "graph_db/incremental.py",
+        "target": "graph_db/client.py",
+        "type": "call",
+        "weight": 3
+      },
+      {
+        "source": "graph_db/schema.py",
+        "target": "graph_db/client.py",
+        "type": "import",
+        "weight": 2
+      },
+      {
+        "source": "impact/analyzer.py",
+        "target": "api/routes_query.py",
+        "type": "call",
+        "weight": 3
+      },
+      {
+        "source": "retrieval/answer.py",
+        "target": "llm/ollama.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "retrieval/answer.py",
+        "target": "api/jobs.py",
+        "type": "call",
+        "weight": 7
+      },
+      {
+        "source": "retrieval/cypher_generator.py",
+        "target": "llm/ollama.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "retrieval/engine.py",
+        "target": "retrieval/retriever.py",
+        "type": "call",
+        "weight": 3
+      },
+      {
+        "source": "retrieval/engine.py",
+        "target": "retrieval/cypher_generator.py",
+        "type": "import",
+        "weight": 2
+      },
+      {
+        "source": "retrieval/engine.py",
+        "target": "retrieval/router.py",
+        "type": "import",
+        "weight": 2
+      },
+      {
+        "source": "retrieval/engine.py",
+        "target": "retrieval/answer.py",
+        "type": "import",
+        "weight": 2
+      },
+      {
+        "source": "retrieval/engine.py",
+        "target": "llm/ollama.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "retrieval/engine.py",
+        "target": "api/jobs.py",
+        "type": "call",
+        "weight": 8
+      },
+      {
+        "source": "retrieval/retriever.py",
+        "target": "retrieval/router.py",
+        "type": "call",
+        "weight": 3
+      },
+      {
+        "source": "retrieval/retriever.py",
+        "target": "retrieval/cypher_generator.py",
+        "type": "import",
+        "weight": 2
+      },
+      {
+        "source": "retrieval/retriever.py",
+        "target": "api/routes_query.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "retrieval/retriever.py",
+        "target": "tests/test_retrieval.py",
+        "type": "call",
+        "weight": 2
+      },
+      {
+        "source": "risk_detection/detector.py",
+        "target": "api/routes_query.py",
+        "type": "call",
+        "weight": 7
+      },
+      {
+        "source": "risk_detection/detector.py",
+        "target": "api/jobs.py",
+        "type": "call",
+        "weight": 2
+      },
+      {
+        "source": "risk_detection/detector.py",
+        "target": "graph_db/client.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "tests/test_analysis.py",
+        "target": "analysis/engine.py",
+        "type": "call",
+        "weight": 8
+      },
+      {
+        "source": "tests/test_analysis.py",
+        "target": "analysis/report.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "tests/test_api.py",
+        "target": "api/jobs.py",
+        "type": "call",
+        "weight": 6
+      },
+      {
+        "source": "tests/test_graph_db.py",
+        "target": "graph_db/builder.py",
+        "type": "call",
+        "weight": 28
+      },
+      {
+        "source": "tests/test_graph_db.py",
+        "target": "graph_db/schema.py",
+        "type": "call",
+        "weight": 2
+      },
+      {
+        "source": "tests/test_graph_db.py",
+        "target": "ast_parser/parser.py",
+        "type": "call",
+        "weight": 6
+      },
+      {
+        "source": "tests/test_graph_db.py",
+        "target": "graph_db/client.py",
+        "type": "call",
+        "weight": 5
+      },
+      {
+        "source": "tests/test_graph_db.py",
+        "target": "api/routes_query.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "tests/test_impact.py",
+        "target": "tests/test_graph_db.py",
+        "type": "call",
+        "weight": 6
+      },
+      {
+        "source": "tests/test_impact.py",
+        "target": "impact/analyzer.py",
+        "type": "call",
+        "weight": 15
+      },
+      {
+        "source": "tests/test_impact.py",
+        "target": "graph_db/client.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "tests/test_parser.py",
+        "target": "ast_parser/parser.py",
+        "type": "call",
+        "weight": 4
+      },
+      {
+        "source": "tests/test_parser.py",
+        "target": "ast_parser/symbol_resolver.py",
+        "type": "call",
+        "weight": 4
+      },
+      {
+        "source": "tests/test_retrieval.py",
+        "target": "retrieval/router.py",
+        "type": "call",
+        "weight": 4
+      },
+      {
+        "source": "tests/test_retrieval.py",
+        "target": "retrieval/cypher_generator.py",
+        "type": "call",
+        "weight": 6
+      },
+      {
+        "source": "tests/test_retrieval.py",
+        "target": "retrieval/retriever.py",
+        "type": "call",
+        "weight": 8
+      },
+      {
+        "source": "tests/test_retrieval.py",
+        "target": "retrieval/answer.py",
+        "type": "call",
+        "weight": 3
+      },
+      {
+        "source": "tests/test_retrieval.py",
+        "target": "retrieval/engine.py",
+        "type": "call",
+        "weight": 3
+      },
+      {
+        "source": "tests/test_retrieval.py",
+        "target": "llm/ollama.py",
+        "type": "call",
+        "weight": 2
+      },
+      {
+        "source": "tests/test_risk_detection.py",
+        "target": "tests/test_graph_db.py",
+        "type": "call",
+        "weight": 7
+      },
+      {
+        "source": "tests/test_risk_detection.py",
+        "target": "risk_detection/detector.py",
+        "type": "call",
+        "weight": 15
+      },
+      {
+        "source": "tests/test_risk_detection.py",
+        "target": "graph_db/client.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "tests/test_vector_db.py",
+        "target": "vector_db/chunker.py",
+        "type": "call",
+        "weight": 2
+      },
+      {
+        "source": "tests/test_vector_db.py",
+        "target": "vector_db/store.py",
+        "type": "call",
+        "weight": 5
+      },
+      {
+        "source": "tests/test_vector_db.py",
+        "target": "tests/test_retrieval.py",
+        "type": "call",
+        "weight": 2
+      },
+      {
+        "source": "tests/samples/sample.py",
+        "target": "tests/samples/sample.js",
+        "type": "call",
+        "weight": 2
+      },
+      {
+        "source": "vector_db/embedder.py",
+        "target": "tests/test_vector_db.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "vector_db/store.py",
+        "target": "vector_db/embedder.py",
+        "type": "import",
+        "weight": 2
+      },
+      {
+        "source": "vector_db/store.py",
+        "target": "vector_db/chunker.py",
+        "type": "call",
+        "weight": 3
+      },
+      {
+        "source": "vector_db/store.py",
+        "target": "tests/test_vector_db.py",
+        "type": "call",
+        "weight": 3
+      },
+      {
+        "source": "vector_db/store.py",
+        "target": "api/routes_query.py",
+        "type": "call",
+        "weight": 1
+      },
+      {
+        "source": "analysis/git_insights.py",
+        "target": "ast_parser/__init__.py",
+        "type": "import",
+        "weight": 1
+      },
+      {
+        "source": "api/routes_impact.py",
+        "target": "api/deps.py",
+        "type": "import",
+        "weight": 1
+      },
+      {
+        "source": "api/routes_ingest.py",
+        "target": "api/tasks.py",
+        "type": "import",
+        "weight": 1
+      },
+      {
+        "source": "api/routes_query.py",
+        "target": "api/deps.py",
+        "type": "import",
+        "weight": 1
+      },
+      {
+        "source": "api/routes_risks.py",
+        "target": "api/deps.py",
+        "type": "import",
+        "weight": 1
+      },
+      {
+        "source": "api/routes_stats.py",
+        "target": "api/deps.py",
+        "type": "import",
+        "weight": 1
+      },
+      {
+        "source": "ast_parser/repo_walker.py",
+        "target": "ast_parser/parser.py",
+        "type": "import",
+        "weight": 1
+      },
+      {
+        "source": "ast_parser/symbol_resolver.py",
+        "target": "ast_parser/parser.py",
+        "type": "import",
+        "weight": 1
+      },
+      {
+        "source": "graph_db/builder.py",
+        "target": "ast_parser/__init__.py",
+        "type": "import",
+        "weight": 1
+      },
+      {
+        "source": "graph_db/incremental.py",
+        "target": "ast_parser/__init__.py",
+        "type": "import",
+        "weight": 1
+      },
+      {
+        "source": "tests/test_api.py",
+        "target": "main.py",
+        "type": "import",
+        "weight": 1
+      },
+      {
+        "source": "tests/test_graph_db.py",
+        "target": "ast_parser/__init__.py",
+        "type": "import",
+        "weight": 1
+      },
+      {
+        "source": "tests/test_parser.py",
+        "target": "ast_parser/__init__.py",
+        "type": "import",
+        "weight": 1
+      },
+      {
+        "source": "tests/test_vector_db.py",
+        "target": "ast_parser/__init__.py",
+        "type": "import",
+        "weight": 1
+      },
+      {
+        "source": "vector_db/chunker.py",
+        "target": "ast_parser/__init__.py",
+        "type": "import",
+        "weight": 1
+      },
+      {
+        "source": "vector_db/store.py",
+        "target": "ast_parser/__init__.py",
+        "type": "import",
+        "weight": 1
+      }
+    ],
+    "node_count": 44,
+    "link_count": 119,
+    "truncated": false
+  }
+}

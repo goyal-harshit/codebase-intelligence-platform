@@ -10,7 +10,12 @@ import os
 from dataclasses import dataclass, field
 from typing import Optional
 
-from tree_sitter_languages import get_parser
+try:
+    from tree_sitter_languages import get_parser as _get_ts_parser
+    _TREE_SITTER_OK = True
+except Exception:
+    _get_ts_parser = None
+    _TREE_SITTER_OK = False
 
 LANGUAGE_MAP = {
     ".py": "python", ".js": "javascript", ".jsx": "javascript",
@@ -82,7 +87,7 @@ class UniversalParser:
 
     def _get_parser(self, language: str):
         if language not in self._parser_cache:
-            self._parser_cache[language] = get_parser(language)
+            self._parser_cache[language] = _get_ts_parser(language)
         return self._parser_cache[language]
 
     def detect_language(self, file_path: str) -> Optional[str]:
@@ -98,6 +103,11 @@ class UniversalParser:
 
     def parse_source(self, source_code: bytes, file_path: str,
                      language: str) -> tuple[list[CodeEntity], list[CodeRelationship]]:
+        if not _TREE_SITTER_OK:
+            if language == "python":
+                from .py_ast_parser import parse_python_source
+                return parse_python_source(source_code, file_path)
+            return [], []
         parser = self._get_parser(language)
         tree = parser.parse(source_code)
         entities: list[CodeEntity] = []
