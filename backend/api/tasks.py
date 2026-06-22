@@ -29,7 +29,17 @@ def run_ingestion(jobs: JobManager, job_id: str,
     from graph_db import ArcadeDBClient, GraphBuilder, apply_schema
 
     try:
-        jobs.update(job_id, status="running", step="resolving")
+        # Check the graph DB BEFORE cloning — otherwise a large repo clones for
+        # minutes only to fail because ArcadeDB isn't up.
+        jobs.update(job_id, status="running", step="checking_services")
+        graph = ArcadeDBClient()
+        if not graph.is_alive():
+            jobs.update(job_id, status="failed",
+                        error=f"ArcadeDB not reachable at {graph.base_url}. "
+                              f"Start the backing services (e.g. `docker compose up -d "
+                              f"arcadedb chroma ollama`) before ingesting.")
+            return
+
         path = repo_path
         if repo_url:
             jobs.update(job_id, step="cloning")
@@ -38,11 +48,6 @@ def run_ingestion(jobs: JobManager, job_id: str,
             jobs.update(job_id, status="failed", error=f"repo path not found: {path}")
             return
 
-        graph = ArcadeDBClient()
-        if not graph.is_alive():
-            jobs.update(job_id, status="failed",
-                        error=f"ArcadeDB not reachable at {graph.base_url}")
-            return
         graph.create_database()
         apply_schema(graph)
 
