@@ -52,6 +52,9 @@ def schema_statements() -> list[str]:
     """Return the ordered list of DDL statements that define the schema."""
     stmts = [f"CREATE VERTEX TYPE {v} IF NOT EXISTS" for v in VERTEX_TYPES]
     stmts += [f"CREATE EDGE TYPE {e} IF NOT EXISTS" for e in EDGE_TYPES]
+    # ArcadeDB requires a property to exist before it can be indexed.
+    for vtype, prop, _ in INDEXES:
+        stmts.append(f"CREATE PROPERTY {vtype}.{prop} IF NOT EXISTS STRING")
     for vtype, prop, unique in INDEXES:
         kind = "UNIQUE" if unique else "NOTUNIQUE"
         stmts.append(f"CREATE INDEX IF NOT EXISTS ON {vtype} ({prop}) {kind}")

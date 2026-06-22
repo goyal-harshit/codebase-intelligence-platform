@@ -1,6 +1,6 @@
 services:
   arcadedb:
-    image: arcadedb/arcadedb:latest
+    image: arcadedata/arcadedb:latest
     ports: ["2480:2480", "2424:2424"]
     environment:
       JAVA_OPTS: >-
@@ -14,7 +14,8 @@ services:
       retries: 6
 
   chroma:
-    image: ghcr.io/chroma-core/chroma:latest
+    # pinned to match the chromadb client in requirements.txt (0.4.24)
+    image: ghcr.io/chroma-core/chroma:0.4.24
     ports: ["8000:8000"]
     volumes: ["chroma_data:/chroma/chroma"]
 
