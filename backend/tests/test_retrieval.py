@@ -128,7 +128,16 @@ def test_extract_sources_dedupes():
 
 def test_engine_answer_end_to_end():
     graph = FakeGraph(rows=[{"name": "f", "file": "a.py"}])
-    engine = QueryEngine(graph, FakeVectors(), FakeLLM(response="It is in a.py"))
+
+    class _PromptAwareLLM:
+        # The Cypher step must now return a valid read-only query (it is
+        # validated before execution); the answer step returns prose.
+        def generate(self, prompt, temperature=0.2):
+            if "into Cypher" in prompt:
+                return "MATCH (f:Function)-[:CALLS]->(t:Function {name:'f'}) RETURN f.name AS name, f.file_path AS file"
+            return "It is in a.py"
+
+    engine = QueryEngine(graph, FakeVectors(), _PromptAwareLLM())
     result = engine.answer("who calls f?")
     assert result["strategy"] == "structural"
     assert result["answer"] == "It is in a.py"

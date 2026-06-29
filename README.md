@@ -219,8 +219,8 @@ Answers plain-English questions by routing each one to the right backend:
 `QueryEngine.answer()` is the single entry point (used by Phase 7): it
 retrieves, generates a cited answer, and returns
 `{strategy, answer, sources, cypher}`. The LLM is an injectable protocol
-(`OllamaClient`, model `mistral`), so the whole pipeline is unit-tested offline
-with fakes.
+(`OllamaClient`, default model `qwen2.5-coder:7b`), so the whole pipeline is
+unit-tested offline with fakes.
 
 ### Run
 
@@ -228,8 +228,10 @@ with fakes.
 python scripts/ask.py "what functions call validate_user?"
 ```
 
-Requires a populated graph + vector store + a running Ollama (`ollama pull mistral`).
-Config via `OLLAMA_URL` (default `http://localhost:11434`) and `OLLAMA_MODEL`.
+Requires a populated graph + vector store + a running Ollama (`ollama pull qwen2.5-coder:7b`).
+Config via the shared `LLM_BASE_URL` (default `http://localhost:11434`) and
+`LLM_MODEL` (default `qwen2.5-coder:7b`); `OLLAMA_URL` / `OLLAMA_MODEL` are still
+accepted as fallbacks. A trailing `/v1` on the base URL is handled either way.
 
 ### Test
 

@@ -115,8 +115,11 @@ class RiskDetector:
         ]
 
     def detect_deep_inheritance(self) -> list[dict]:
+        # The threshold is interpolated into a variable-length quantifier
+        # (cannot be a bind parameter), so coerce + bound it to a safe int.
+        depth = max(1, min(int(self.deep_inheritance), 50))
         rows = self.client.query(
-            f"MATCH p=(c:Class)-[:INHERITS_FROM*{self.deep_inheritance}..]->(b:Class) "
+            f"MATCH p=(c:Class)-[:INHERITS_FROM*{depth}..]->(b:Class) "
             "RETURN c.name AS name, c.file_path AS file, length(p) AS depth "
             "ORDER BY depth DESC"
         )

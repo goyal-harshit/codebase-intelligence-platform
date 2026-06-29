@@ -11,3 +11,6 @@ class Settings:
             "CORS_ORIGINS", "http://localhost:3000,http://localhost:3001"
         ).split(",")
         self.clone_dir = os.getenv("REPO_CLONE_DIR", "data/repos")
+        # When set, every data route requires a matching X-API-Key header.
+        # When unset, the API is open (dev mode) and main.py logs a warning.
+        self.api_key = os.getenv("API_KEY") or None

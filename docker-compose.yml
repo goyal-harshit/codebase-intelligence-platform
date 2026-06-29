@@ -8,16 +8,98 @@ services:
       # Mount the code you want to analyze at /data (use the path box: "/data/<repo>").
       - ./:/data:ro
     environment:
-      # Point at a local Ollama for AI explanations (optional).
+      # Point at a local Ollama for AI explanations (optional). Both LLM clients
+      # honour LLM_BASE_URL / LLM_MODEL; the /v1 suffix is fine for either (the
+      # native client strips it, the OpenAI-compatible client keeps it).
+      # host.docker.internal reaches an Ollama running on the host (see below).
+      LLM_BASE_URL: "http://host.docker.internal:11434/v1"
+      LLM_MODEL: "qwen2.5-coder:7b"
+      # Relational metadata store (users, jobs, repos, audit log). Omit this to
+      # fall back to a local SQLite file (single-node dev).
+      DATABASE_URL: "postgresql+psycopg2://codeintel:codeintel@db:5432/codeintel"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: codeintel
+      POSTGRES_PASSWORD: codeintel
+      POSTGRES_DB: codeintel
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U codeintel -d codeintel"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # FastAPI ingestion/query API. Runs DB migrations on boot, then serves.
+  backend:
+    build: ./backend
+    image: codebase-intelligence-api
+    command: sh -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000"
+    ports:
+      - "8001:8000"
+    environment:
+      DATABASE_URL: "postgresql+psycopg2://codeintel:codeintel@db:5432/codeintel"
+      CELERY_BROKER_URL: "redis://redis:6379/0"
+      CELERY_TASK_ALWAYS_EAGER: "false"
+      # Strong random secret for JWT signing — override in prod.
+      AUTH_SECRET: "${AUTH_SECRET:-change-me-in-prod}"
+      # Set API_KEY to require X-API-Key on data routes (service-to-service).
       LLM_BASE_URL: "http://host.docker.internal:11434/v1"
       LLM_MODEL: "qwen2.5-coder:7b"
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
-  # Optional: run a local LLM alongside. Uncomment to enable.
+  # Celery worker: durable execution of ingestion jobs (same image as backend).
+  worker:
+    build: ./backend
+    image: codebase-intelligence-api
+    command: celery -A celery_app worker --loglevel=info
+    environment:
+      DATABASE_URL: "postgresql+psycopg2://codeintel:codeintel@db:5432/codeintel"
+      CELERY_BROKER_URL: "redis://redis:6379/0"
+      CELERY_TASK_ALWAYS_EAGER: "false"
+      LLM_BASE_URL: "http://host.docker.internal:11434/v1"
+      LLM_MODEL: "qwen2.5-coder:7b"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # By default this stack expects Ollama on the *host* (reached via
+  # host.docker.internal above). To run Ollama in-compose instead, uncomment the
+  # service below and point LLM_BASE_URL at "http://ollama:11434/v1".
   # ollama:
   #   image: ollama/ollama
   #   ports: ["11434:11434"]
   #   volumes: ["ollama:/root/.ollama"]
-# volumes:
+
+volumes:
+  pgdata:
 #   ollama:

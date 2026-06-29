@@ -2,10 +2,13 @@
 semantic (vector) fallback; semantic-only otherwise."""
 from __future__ import annotations
 
+import logging
 from typing import Optional
 
 from .cypher_generator import CypherGenerator
 from .router import QueryRouter
+
+logger = logging.getLogger(__name__)
 
 
 class HybridRetriever:
@@ -24,8 +27,14 @@ class HybridRetriever:
                 results = self.graph.query(cypher)
                 if results:
                     return {"strategy": "structural", "cypher": cypher, "results": results}
-            except Exception:
-                pass  # fall through to semantic on any generation/query failure
+            except Exception as exc:
+                # Fall through to semantic on any generation/query failure, but
+                # never silently: log so unsafe-Cypher rejections and backend
+                # errors are visible instead of masquerading as "no results".
+                logger.warning(
+                    "structural retrieval failed (cypher=%r); falling back to semantic: %s",
+                    cypher, exc,
+                )
             # structural produced nothing usable -> semantic fallback
             sem = self.vectors.search(question, top_k=top_k)
             return {"strategy": "semantic", "fallback_from": "structural",

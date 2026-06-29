@@ -12,6 +12,18 @@ if TYPE_CHECKING:
     from graph_db import ArcadeDBClient
 
 TRANSITIVE_CAP = 50  # cap returned transitive rows to keep responses bounded
+MAX_DEPTH = 50  # hard cap on the variable-length path bound (see _bounded_depth)
+
+
+def _bounded_depth(value: int) -> int:
+    """Coerce a traversal depth to a safe, bounded int.
+
+    The depth is interpolated into a Cypher variable-length quantifier
+    (``[:CALLS*1..N]``), which cannot be a bind parameter, so it must be proven
+    to be an integer in range here. Out-of-range/garbage values are clamped
+    rather than passed through.
+    """
+    return max(1, min(int(value), MAX_DEPTH))
 
 
 class ImpactAnalyzer:
@@ -19,7 +31,7 @@ class ImpactAnalyzer:
         self.client = client
 
     def analyze_file_impact(self, file_path: str, max_depth: int = 5) -> dict:
-        depth = max(1, int(max_depth))
+        depth = _bounded_depth(max_depth)
         rows = self.client.query(
             "MATCH (f:File {path: $path})-[:CONTAINS]->(entity) "
             f"MATCH p = (entity)<-[:CALLS*1..{depth}]-(affected) "
@@ -30,7 +42,7 @@ class ImpactAnalyzer:
         return self._summarize(file_path, rows)
 
     def analyze_entity_impact(self, entity_id: str, max_depth: int = 5) -> dict:
-        depth = max(1, int(max_depth))
+        depth = _bounded_depth(max_depth)
         rows = self.client.query(
             f"MATCH p = ({{id: $id}})<-[:CALLS*1..{depth}]-(affected) "
             "RETURN DISTINCT affected.name AS name, "

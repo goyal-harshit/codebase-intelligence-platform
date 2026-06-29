@@ -1,0 +1,4 @@
+reports/
+.obsidian/
+*.log
+jobid.tmp

@@ -2,10 +2,14 @@
 endpoint works). Pure stdlib HTTP - no SDK required. Degrades gracefully:
 if no model is reachable, callers fall back to the built-in Q&A.
 
-Config via env:
+Config via env (shared with backend/llm/ollama.py):
   LLM_BASE_URL   default http://localhost:11434/v1   (Ollama OpenAI-compatible)
   LLM_MODEL      default qwen2.5-coder:7b
   LLM_API_KEY    optional (for hosted OpenAI-compatible endpoints)
+
+OLLAMA_URL / OLLAMA_MODEL are accepted as fallbacks for older configs. This
+client speaks the OpenAI-compatible API, so the base URL is normalised to end
+in ``/v1`` whether or not the configured value already includes it.
 """
 from __future__ import annotations
 
@@ -14,8 +18,17 @@ import os
 import urllib.error
 import urllib.request
 
-BASE_URL = os.environ.get("LLM_BASE_URL", "http://localhost:11434/v1").rstrip("/")
-MODEL = os.environ.get("LLM_MODEL", "qwen2.5-coder:7b")
+
+def _resolve_base_url() -> str:
+    raw = (os.environ.get("LLM_BASE_URL") or os.environ.get("OLLAMA_URL")
+           or "http://localhost:11434/v1").rstrip("/")
+    if not raw.endswith("/v1"):
+        raw += "/v1"
+    return raw
+
+
+BASE_URL = _resolve_base_url()
+MODEL = os.environ.get("LLM_MODEL") or os.environ.get("OLLAMA_MODEL") or "qwen2.5-coder:7b"
 API_KEY = os.environ.get("LLM_API_KEY", "")
 
 

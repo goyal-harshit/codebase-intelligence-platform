@@ -151,11 +151,15 @@ class UniversalParser:
                     ))
 
         if node.type in CALL_NODE_TYPES:
-            callee = self._call_target(node, source_code)
+            callee, receiver = self._call_target(node, source_code)
             if callee and parent_id:
+                meta = {"unresolved_name": callee}
+                if receiver:
+                    # The immediate receiver (e.g. "self"/"this" or a class
+                    # name) lets the resolver disambiguate same-named methods.
+                    meta["receiver"] = receiver
                 relationships.append(CodeRelationship(
-                    parent_id, callee, "calls",
-                    metadata={"unresolved_name": callee},
+                    parent_id, callee, "calls", metadata=meta,
                 ))
 
         if node.type in IMPORT_NODE_TYPES.get(language, set()):
@@ -201,12 +205,24 @@ class UniversalParser:
             return self._text(first.children[0], source_code).strip("\"'")[:500]
         return ""
 
-    def _call_target(self, node, source_code) -> Optional[str]:
+    def _call_target(self, node, source_code) -> tuple[Optional[str], Optional[str]]:
+        """Return (callee_name, receiver) for a call node.
+
+        ``receiver`` is the segment immediately before the method name
+        (``self``/``this`` for intra-object calls, or a class/module name for
+        ``Foo.bar()``); ``None`` for a bare ``foo()``. The resolver uses it to
+        pick the right target when several entities share a name.
+        """
         fn = node.child_by_field_name("function") or node.child_by_field_name("name")
         if fn is None:
-            return None
-        text = self._text(fn, source_code)
-        return text.split(".")[-1].split("(")[0].strip() or None
+            return None, None
+        text = self._text(fn, source_code).split("(")[0].strip()
+        if not text:
+            return None, None
+        parts = text.split(".")
+        name = parts[-1].strip() or None
+        receiver = parts[-2].strip() if len(parts) > 1 and parts[-2].strip() else None
+        return name, receiver
 
     def _base_class_names(self, node, source_code, language) -> list[str]:
         """Names of classes this class extends (last path component only)."""
