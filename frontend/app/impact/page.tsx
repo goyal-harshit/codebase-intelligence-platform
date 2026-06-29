@@ -1,14 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import { Network } from "lucide-react";
 import { getImpact, ImpactResult } from "@/lib/api";
 import CodeGraph, { GraphData } from "@/components/CodeGraph";
+import PageHeader from "@/components/PageHeader";
+import StateBlock from "@/components/StateBlock";
 
 const RISK_COLOR: Record<string, string> = {
   critical: "text-red-700",
   high: "text-orange-700",
   medium: "text-yellow-700",
-  low: "text-gray-600",
+  low: "text-slate-600",
 };
 
 function toGraph(result: ImpactResult): GraphData {
@@ -35,7 +38,7 @@ export default function ImpactPage() {
   const [loading, setLoading] = useState(false);
 
   const run = async () => {
-    if (!filePath) return;
+    if (!filePath.trim()) return;
     setLoading(true);
     setError(null);
     try {
@@ -49,47 +52,77 @@ export default function ImpactPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">Change impact / blast radius</h1>
-      <div className="flex gap-2 mb-6">
-        <input
-          className="flex-1 border rounded-lg px-4 py-2"
-          placeholder="path/to/file.py"
-          value={filePath}
-          onChange={(e) => setFilePath(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && run()}
-        />
-        <input
-          type="number"
-          className="w-20 border rounded-lg px-3 py-2"
-          value={depth}
-          min={1}
-          onChange={(e) => setDepth(Number(e.target.value))}
-        />
-        <button
-          onClick={run}
-          className="bg-black text-white px-6 py-2 rounded-lg"
-        >
-          {loading ? "…" : "Analyze"}
-        </button>
-      </div>
+      <PageHeader
+        eyebrow="Blast radius"
+        title="Change impact"
+        description="Inspect direct and transitive callers affected by a file-level change."
+      />
 
-      {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
-
-      {result && (
-        <div className="space-y-6">
-          <div className="flex gap-8 text-sm">
-            <span>
-              Risk:{" "}
-              <span className={`font-semibold ${RISK_COLOR[result.risk_level]}`}>
-                {result.risk_level}
-              </span>
-            </span>
-            <span>direct: {result.directly_affected_count}</span>
-            <span>transitive: {result.transitively_affected_count}</span>
-          </div>
-          <CodeGraph data={toGraph(result)} />
+      <section className="rounded-lg border border-slate-200 bg-white p-5">
+        <div className="grid gap-3 lg:grid-cols-[1fr_120px_auto]">
+          <input
+            className="rounded-lg border border-slate-300 px-4 py-3 text-slate-950 outline-none ring-slate-300 placeholder:text-slate-400 focus:ring-2"
+            placeholder="path/to/file.py"
+            value={filePath}
+            onChange={(e) => setFilePath(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && run()}
+          />
+          <input
+            type="number"
+            className="rounded-lg border border-slate-300 px-3 py-3"
+            value={depth}
+            min={1}
+            max={10}
+            onChange={(e) => setDepth(Number(e.target.value))}
+          />
+          <button
+            onClick={run}
+            disabled={loading || !filePath.trim()}
+            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-slate-950 px-6 py-2 text-sm font-medium text-white disabled:opacity-40"
+          >
+            <Network size={16} />
+            {loading ? "Analyzing" : "Analyze"}
+          </button>
         </div>
-      )}
+      </section>
+
+      <div className="mt-6">
+        {loading && <StateBlock state="loading" title="Tracing impact graph" />}
+        {error && <StateBlock state="error" title="Impact analysis unavailable" detail={error} />}
+        {!loading && !error && !result && (
+          <StateBlock
+            state="empty"
+            title="No file selected"
+            detail="Enter a repo-relative file path from the currently ingested repository."
+          />
+        )}
+
+        {result && !loading && (
+          <div className="space-y-5">
+            <div className="grid gap-3 sm:grid-cols-3">
+              <div className="rounded-lg border border-slate-200 bg-white p-4">
+                <p className="text-sm text-slate-500">Risk level</p>
+                <p className={`mt-1 text-2xl font-semibold ${RISK_COLOR[result.risk_level]}`}>
+                  {result.risk_level}
+                </p>
+              </div>
+              <div className="rounded-lg border border-slate-200 bg-white p-4">
+                <p className="text-sm text-slate-500">Directly affected</p>
+                <p className="mt-1 text-2xl font-semibold text-slate-950">
+                  {result.directly_affected_count}
+                </p>
+              </div>
+              <div className="rounded-lg border border-slate-200 bg-white p-4">
+                <p className="text-sm text-slate-500">Transitively affected</p>
+                <p className="mt-1 text-2xl font-semibold text-slate-950">
+                  {result.transitively_affected_count}
+                </p>
+              </div>
+            </div>
+            <CodeGraph data={toGraph(result)} />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

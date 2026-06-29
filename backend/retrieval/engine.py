@@ -20,9 +20,9 @@ class QueryEngine:
         )
         self.answerer = AnswerGenerator(llm)
 
-    def answer(self, question: str, top_k: int = 10) -> dict:
+    def answer(self, question: str, top_k: int = 10, history: str = "") -> dict:
         retrieval = self.retriever.retrieve(question, top_k=top_k)
-        answer = self.answerer.generate(question, retrieval)
+        answer = self.answerer.generate(question, retrieval, history=history)
         return {
             "question": question,
             "strategy": retrieval["strategy"],

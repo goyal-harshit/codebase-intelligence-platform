@@ -4,6 +4,8 @@ from __future__ import annotations
 import re
 from typing import TYPE_CHECKING
 
+import prompts as _prompts
+
 if TYPE_CHECKING:
     from llm import LLMClient
 
@@ -41,25 +43,10 @@ def assert_read_only(cypher: str) -> str:
         raise UnsafeCypherError("write/admin clauses are not allowed")
     return text.rstrip(";").strip()
 
-CYPHER_FEWSHOT = """You translate English questions about a codebase into Cypher graph queries.
-Schema: (:File)-[:CONTAINS]->(:Function|:Class)
-        (:Function)-[:CALLS]->(:Function)
-        (:File)-[:IMPORTS]->(:Module)
-        (:Class)-[:INHERITS_FROM]->(:Class)
-
-Examples:
-Q: "What functions call validate_user?"
-A: MATCH (f:Function)-[:CALLS]->(t:Function {name:'validate_user'}) RETURN f.name AS name, f.file_path AS file
-
-Q: "Which classes inherit from BaseModel?"
-A: MATCH (c:Class)-[:INHERITS_FROM]->(b:Class {name:'BaseModel'}) RETURN c.name AS name
-
-Q: "What does auth.py import?"
-A: MATCH (f:File {path:'auth.py'})-[:IMPORTS]->(m:Module) RETURN m.name AS name
-
-Now translate this question. Return ONLY the Cypher query, nothing else.
-Q: "{question}"
-A:"""
+# Loaded from backend/prompt_templates/cypher_fewshot.txt (Phase 4, bug #4). The
+# few-shot schema examples contain literal braces, so callers substitute the
+# question via str.replace, never str.format.
+CYPHER_FEWSHOT = _prompts.load("cypher_fewshot")
 
 
 class CypherGenerator:

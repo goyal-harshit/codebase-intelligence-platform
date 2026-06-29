@@ -9,12 +9,12 @@ const SEVERITY_COLOR: Record<string, string> = {
 
 export default function RiskTable({ risks }: { risks: Risk[] }) {
   if (risks.length === 0)
-    return <p className="text-gray-500 text-sm">No risks found.</p>;
+    return <p className="text-sm text-slate-500">No risks found.</p>;
 
   return (
-    <div className="overflow-x-auto border rounded-lg bg-white">
+    <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
       <table className="w-full text-sm">
-        <thead className="bg-gray-50 text-left text-gray-500">
+        <thead className="bg-slate-50 text-left text-slate-500">
           <tr>
             <th className="px-3 py-2">Severity</th>
             <th className="px-3 py-2">Type</th>
@@ -25,7 +25,7 @@ export default function RiskTable({ risks }: { risks: Risk[] }) {
         </thead>
         <tbody>
           {risks.map((r, i) => (
-            <tr key={i} className="border-t">
+            <tr key={i} className="border-t border-slate-100">
               <td className="px-3 py-2">
                 <span
                   className={`px-2 py-0.5 rounded text-xs ${
@@ -36,9 +36,9 @@ export default function RiskTable({ risks }: { risks: Risk[] }) {
                 </span>
               </td>
               <td className="px-3 py-2">{r.type}</td>
-              <td className="px-3 py-2 font-medium">{r.target}</td>
-              <td className="px-3 py-2 text-gray-500">{r.file}</td>
-              <td className="px-3 py-2 text-gray-500">{r.details}</td>
+              <td className="px-3 py-2 font-medium text-slate-950">{r.target}</td>
+              <td className="px-3 py-2 text-slate-500">{r.file}</td>
+              <td className="px-3 py-2 text-slate-500">{r.details}</td>
             </tr>
           ))}
         </tbody>

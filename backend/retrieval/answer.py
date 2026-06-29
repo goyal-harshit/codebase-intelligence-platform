@@ -3,28 +3,24 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+import prompts as _prompts
+
 if TYPE_CHECKING:
     from llm import LLMClient
 
-ANSWER_PROMPT = """You are a senior software architect analyzing a codebase.
-Answer the question using ONLY the provided context. Cite file paths and function names.
-If the context doesn't contain the answer, say so clearly.
-
-Question: {question}
-
-Context:
-{context}
-
-Answer (be concise, cite sources):"""
+# Loaded from backend/prompt_templates/answer.txt (Phase 4, bug #4).
+ANSWER_PROMPT = _prompts.load("answer")
 
 
 class AnswerGenerator:
     def __init__(self, llm: "LLMClient") -> None:
         self.llm = llm
 
-    def generate(self, question: str, retrieval_result: dict) -> str:
+    def generate(self, question: str, retrieval_result: dict, history: str = "") -> str:
         context = self.format_context(retrieval_result)
-        prompt = ANSWER_PROMPT.format(question=question, context=context)
+        prompt = _prompts.render(
+            "answer", question=question, context=context, history=history
+        )
         return self.llm.generate(prompt, temperature=0.3)
 
     @staticmethod

@@ -1,0 +1,17 @@
+You are a senior software architect. Summarize the following code unit for an
+engineer who is new to this codebase.
+
+Cover, concisely:
+- What this {kind} is responsible for (its purpose).
+- The key functions/classes it defines and what they do.
+- Notable dependencies or risks worth knowing.
+
+Use plain prose and short bullet points. Do not invent anything not present in
+the provided context.
+
+Target: {target}
+
+Context:
+{context}
+
+Summary:

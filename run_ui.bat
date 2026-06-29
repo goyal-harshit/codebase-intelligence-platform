@@ -1,36 +1,65 @@
 @echo off
 setlocal
-title Codebase Intelligence UI
+title Codebase Intelligence Product UI
 cd /d "%~dp0"
 
 set "ROOT=%~dp0"
 if "%ROOT:~-1%"=="\" set "ROOT=%ROOT:~0,-1%"
+set "BACKEND_PORT=8000"
+set "FRONTEND_PORT=3000"
+set "API_URL=http://127.0.0.1:%BACKEND_PORT%"
 
-where python >nul 2>nul
+where npm >nul 2>nul
 if errorlevel 1 (
-  echo [ERROR] Python was not found on PATH.
-  echo Install Python 3.10+ from https://www.python.org/downloads/
-  echo and tick "Add python.exe to PATH" during setup, then re-run this file.
+  echo [ERROR] Node.js / npm was not found on PATH.
+  echo Install Node.js 20+ from https://nodejs.org/ and re-run this file.
   pause
   exit /b 1
 )
 
-REM No third-party packages are required - the analyzer runs on the Python
-REM standard library alone. (tree-sitter only adds multi-language support and
-REM is optional; Python projects work without it.)
+if exist "%ROOT%\.venv\Scripts\python.exe" (
+  set "PYTHON=%ROOT%\.venv\Scripts\python.exe"
+) else (
+  where python >nul 2>nul
+  if errorlevel 1 (
+    echo [ERROR] Python was not found on PATH and .venv is missing.
+    pause
+    exit /b 1
+  )
+  set "PYTHON=python"
+)
 
-start "" /b cmd /c "timeout /t 4 >nul & start "" http://127.0.0.1:8500"
+if not exist "%ROOT%\frontend\node_modules" (
+  echo [INFO] Installing frontend dependencies...
+  pushd "%ROOT%\frontend"
+  call npm install
+  if errorlevel 1 (
+    popd
+    echo [ERROR] npm install failed.
+    pause
+    exit /b 1
+  )
+  popd
+)
 
 echo.
 echo ============================================================
-echo   Codebase Intelligence UI
-echo   Open in your browser:  http://127.0.0.1:8500
-echo   (Keep this window open. Press Ctrl+C here to stop.)
+echo   Codebase Intelligence Product UI
+echo   Frontend: %FRONTEND_PORT%  http://127.0.0.1:%FRONTEND_PORT%
+echo   Backend:  %BACKEND_PORT%  %API_URL%
+echo.
+echo   Keep both opened command windows running.
+echo   If graph data is unavailable, start the backing services:
+echo   docker compose up -d arcadedb chroma ollama postgres redis
 echo ============================================================
 echo.
 
-python scripts\serve.py --port 8500 --host 127.0.0.1 --root "%ROOT%"
+start "Codebase Intelligence API" /D "%ROOT%\backend" cmd /k ""%PYTHON%" -m uvicorn main:app --reload --host 127.0.0.1 --port %BACKEND_PORT%"
+start "Codebase Intelligence Frontend" /D "%ROOT%\frontend" cmd /k "set "NEXT_PUBLIC_API_URL=%API_URL%" && npm run dev -- -p %FRONTEND_PORT%"
 
-echo.
-echo Server stopped. If you saw an error above, copy it and send it over.
+timeout /t 5 >nul
+start "" "http://127.0.0.1:%FRONTEND_PORT%"
+
+echo Product UI launched at http://127.0.0.1:%FRONTEND_PORT%
+echo Close the API and Frontend command windows to stop the project.
 pause

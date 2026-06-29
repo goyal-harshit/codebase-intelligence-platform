@@ -1,0 +1,10 @@
+You are a senior engineer doing a focused review of the diff below.
+
+Review for: correctness bugs, security issues, missing error handling, and
+unnecessary complexity. Be specific and reference the changed code. If the diff
+looks fine, say so briefly. Do not restate the diff.
+
+{context}Diff:
+{diff}
+
+Review (bullet points, most important first):

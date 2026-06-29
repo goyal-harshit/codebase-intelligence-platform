@@ -49,6 +49,26 @@ services:
       timeout: 3s
       retries: 10
 
+  # Object storage for uploaded repo archives (S3-compatible, self-hosted, no
+  # usage caps). The backend/worker use it when MINIO_ENDPOINT is set; otherwise
+  # they fall back to the local filesystem (single-node dev). Console on :9001.
+  minio:
+    image: minio/minio
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: "${MINIO_ACCESS_KEY:-minioadmin}"
+      MINIO_ROOT_PASSWORD: "${MINIO_SECRET_KEY:-minioadmin}"
+    volumes:
+      - miniodata:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
   # FastAPI ingestion/query API. Runs DB migrations on boot, then serves.
   backend:
     build: ./backend
@@ -63,6 +83,10 @@ services:
       # Strong random secret for JWT signing — override in prod.
       AUTH_SECRET: "${AUTH_SECRET:-change-me-in-prod}"
       # Set API_KEY to require X-API-Key on data routes (service-to-service).
+      # Object storage for uploaded archives (omit to use the local filesystem).
+      MINIO_ENDPOINT: "minio:9000"
+      MINIO_ACCESS_KEY: "${MINIO_ACCESS_KEY:-minioadmin}"
+      MINIO_SECRET_KEY: "${MINIO_SECRET_KEY:-minioadmin}"
       LLM_BASE_URL: "http://host.docker.internal:11434/v1"
       LLM_MODEL: "qwen2.5-coder:7b"
     extra_hosts:
@@ -71,6 +95,8 @@ services:
       db:
         condition: service_healthy
       redis:
+        condition: service_healthy
+      minio:
         condition: service_healthy
 
   # Celery worker: durable execution of ingestion jobs (same image as backend).
@@ -82,6 +108,9 @@ services:
       DATABASE_URL: "postgresql+psycopg2://codeintel:codeintel@db:5432/codeintel"
       CELERY_BROKER_URL: "redis://redis:6379/0"
       CELERY_TASK_ALWAYS_EAGER: "false"
+      MINIO_ENDPOINT: "minio:9000"
+      MINIO_ACCESS_KEY: "${MINIO_ACCESS_KEY:-minioadmin}"
+      MINIO_SECRET_KEY: "${MINIO_SECRET_KEY:-minioadmin}"
       LLM_BASE_URL: "http://host.docker.internal:11434/v1"
       LLM_MODEL: "qwen2.5-coder:7b"
     extra_hosts:
@@ -90,6 +119,8 @@ services:
       db:
         condition: service_healthy
       redis:
+        condition: service_healthy
+      minio:
         condition: service_healthy
 
   # By default this stack expects Ollama on the *host* (reached via
@@ -102,4 +133,5 @@ services:
 
 volumes:
   pgdata:
+  miniodata:
 #   ollama:

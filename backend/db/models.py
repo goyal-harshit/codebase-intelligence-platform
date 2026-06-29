@@ -142,6 +142,63 @@ class RepoMember(Base):
     user: Mapped["User"] = relationship()
 
 
+class Conversation(Base):
+    """A multi-turn Q&A session (Phase 4). Keyed by user (nullable for anonymous
+    dev-mode sessions); messages hang off it in order."""
+
+    __tablename__ = "conversations"
+
+    id: Mapped[str] = mapped_column(String(32), primary_key=True, default=_uuid)
+    user_id: Mapped[str | None] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), index=True, nullable=True
+    )
+    title: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
+
+    messages: Mapped[list["ConversationMessage"]] = relationship(
+        back_populates="conversation", cascade="all, delete-orphan"
+    )
+
+
+class ConversationMessage(Base):
+    __tablename__ = "conversation_messages"
+
+    # Integer autoincrement PK gives a monotonic, gap-free ordering key — message
+    # order can't rely on created_at alone (coarse OS clock resolution lets quick
+    # successive inserts share a timestamp).
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    conversation_id: Mapped[str] = mapped_column(
+        ForeignKey("conversations.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    role: Mapped[str] = mapped_column(String(16), nullable=False)  # "user" | "assistant"
+    content: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
+
+    conversation: Mapped["Conversation"] = relationship(back_populates="messages")
+
+
+class Notification(Base):
+    """In-app notification (Phase 3). Durable + cross-process: the worker writes
+    a row on job completion and the API serves it over REST and pushes it over
+    WebSocket. ``read`` tracks whether the user has seen it."""
+
+    __tablename__ = "notifications"
+
+    id: Mapped[str] = mapped_column(String(32), primary_key=True, default=_uuid)
+    user_id: Mapped[str | None] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), index=True, nullable=True
+    )
+    type: Mapped[str] = mapped_column(String(32), default="job", nullable=False)
+    level: Mapped[str] = mapped_column(String(16), default="info", nullable=False)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    body: Mapped[str | None] = mapped_column(Text, nullable=True)
+    detail: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    read: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False, index=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=_utcnow, index=True
+    )
+
+
 class AuditLog(Base):
     __tablename__ = "audit_log"
 

@@ -1,16 +1,16 @@
 # Graph Report - codebase_intelligence_project  (2026-06-29)
 
 ## Corpus Check
-- 117 files · ~43,908 words
+- 145 files · ~51,386 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1016 nodes · 1619 edges · 68 communities (53 shown, 15 thin omitted)
-- Extraction: 92% EXTRACTED · 8% INFERRED · 0% AMBIGUOUS · INFERRED: 125 edges (avg confidence: 0.74)
+- 1244 nodes · 2081 edges · 95 communities (77 shown, 18 thin omitted)
+- Extraction: 92% EXTRACTED · 8% INFERRED · 0% AMBIGUOUS · INFERRED: 163 edges (avg confidence: 0.73)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `f210c145`
+- Built from commit: `6a2f47e4`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -78,18 +78,43 @@
 - [[_COMMUNITY_Community 64|Community 64]]
 - [[_COMMUNITY_Community 66|Community 66]]
 - [[_COMMUNITY_Community 67|Community 67]]
+- [[_COMMUNITY_Community 68|Community 68]]
+- [[_COMMUNITY_Community 69|Community 69]]
+- [[_COMMUNITY_Community 70|Community 70]]
+- [[_COMMUNITY_Community 71|Community 71]]
+- [[_COMMUNITY_Community 73|Community 73]]
+- [[_COMMUNITY_Community 74|Community 74]]
+- [[_COMMUNITY_Community 75|Community 75]]
+- [[_COMMUNITY_Community 76|Community 76]]
+- [[_COMMUNITY_Community 77|Community 77]]
+- [[_COMMUNITY_Community 78|Community 78]]
+- [[_COMMUNITY_Community 79|Community 79]]
+- [[_COMMUNITY_Community 80|Community 80]]
+- [[_COMMUNITY_Community 81|Community 81]]
+- [[_COMMUNITY_Community 82|Community 82]]
+- [[_COMMUNITY_Community 83|Community 83]]
+- [[_COMMUNITY_Community 84|Community 84]]
+- [[_COMMUNITY_Community 85|Community 85]]
+- [[_COMMUNITY_Community 86|Community 86]]
+- [[_COMMUNITY_Community 87|Community 87]]
+- [[_COMMUNITY_Community 88|Community 88]]
+- [[_COMMUNITY_Community 89|Community 89]]
+- [[_COMMUNITY_Community 90|Community 90]]
+- [[_COMMUNITY_Community 91|Community 91]]
+- [[_COMMUNITY_Community 92|Community 92]]
+- [[_COMMUNITY_Community 93|Community 93]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `analyze_repository()` - 34 edges
 2. `ArcadeDBClient` - 27 edges
-3. `GraphBuilder` - 25 edges
-4. `RiskDetector` - 24 edges
-5. `CodeRelationship` - 23 edges
-6. `UniversalParser` - 21 edges
-7. `ImpactAnalyzer` - 21 edges
-8. `CypherGenerator` - 19 edges
-9. `2. Gap Table by Category` - 18 edges
-10. `DiGraph` - 17 edges
+3. `record_audit()` - 26 edges
+4. `RiskDetector` - 26 edges
+5. `GraphBuilder` - 25 edges
+6. `CodeRelationship` - 23 edges
+7. `ImpactAnalyzer` - 22 edges
+8. `UniversalParser` - 21 edges
+9. `CypherGenerator` - 19 edges
+10. `2. Gap Table by Category` - 18 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `main()` --calls--> `analyze_repository()`  [INFERRED]
@@ -106,27 +131,27 @@
 ## Import Cycles
 - None detected.
 
-## Communities (68 total, 15 thin omitted)
+## Communities (95 total, 18 thin omitted)
 
 ### Community 0 - "CodeEntity · CodeRelationship · builder."
-Cohesion: 0.23
-Nodes (12): GraphBuilder, FakeClient, Phase 2 tests.  The unit tests run offline against a recording fake client — the, Records every command(...) call instead of hitting a server., test_edge_match_is_typed(), test_entities_grouped_by_label(), test_external_call_edge_dropped(), test_file_nodes_and_contains_edges() (+4 more)
+Cohesion: 0.21
+Nodes (12): _is_blocked_ip(), Allow-list a clone URL and block SSRF to internal/loopback ranges.      Fails cl, validate_repo_url(), Resolver, Tests for the SSRF / path-traversal input validators (offline)., test_allows_public_https_repo(), test_rejects_internal_targets(), test_rejects_non_http_schemes() (+4 more)
 
 ### Community 1 - "CypherGenerator · answer.py · QueryRoute"
-Cohesion: 0.06
-Nodes (40): AnswerGenerator, Turns retrieved context into a cited natural-language answer via the LLM., assert_read_only(), CypherGenerator, LLM-backed English->Cypher translation with few-shot prompting., The generated Cypher is not a safe, read-only query., Reject anything that is not a single read-only query.      Defends against a jai, UnsafeCypherError (+32 more)
+Cohesion: 0.07
+Nodes (39): AnswerGenerator, Turns retrieved context into a cited natural-language answer via the LLM., assert_read_only(), CypherGenerator, LLM-backed English->Cypher translation with few-shot prompting., The generated Cypher is not a safe, read-only query., Reject anything that is not a single read-only query.      Defends against a jai, UnsafeCypherError (+31 more)
 
 ### Community 2 - "_all_paths_to_roots( · _build_index() · "
-Cohesion: 0.05
-Nodes (47): _all_paths_to_roots(), analyze_repository(), _build_call_graph(), _build_index(), _call_graph_metrics(), CodebaseAnalysis, _complexity(), _dependencies() (+39 more)
+Cohesion: 0.14
+Nodes (4): _build_call_graph(), _DegreeView, DiGraph, Iterable of (node, degree) pairs that is also callable: dv(n) -> degree.
 
 ### Community 3 - ".__init__() · Settings · jobs.py · App-l"
-Cohesion: 0.05
-Nodes (42): App-level settings. Service clients read their own env vars in their own constru, Settings, get_graph_client(), get_llm(), get_query_engine(), get_vector_store(), Lazily-constructed singleton service clients for dependency injection.  Construc, JobManager (+34 more)
+Cohesion: 0.10
+Nodes (27): App-level settings. Service clients read their own env vars in their own constru, Settings, JobManager, Durable ingestion-job tracking, backed by the relational store.  Job state lives, ingest_upload(), Repo ingestion via uploaded ZIP (Phase 3): an alternative to a Git URL.  Flow: r, _safe_extract(), clone_repo() (+19 more)
 
 ### Community 4 - "Parse an entire repo · AST parsing engin"
-Cohesion: 0.06
-Nodes (39): parse_repository(), AST parsing engine (Phase 1)., Parse an entire repo: returns (entities, resolved_relationships)., CodeEntity, CodeRelationship, Language-agnostic AST parser built on tree-sitter.  Extracts CodeEntity (functio, Return (callee_name, receiver) for a call node.          ``receiver`` is the seg, Names of classes this class extends (last path component only). (+31 more)
+Cohesion: 0.12
+Nodes (15): parse_repository(), AST parsing engine (Phase 1)., Parse an entire repo: returns (entities, resolved_relationships)., CodeEntity, Language-agnostic AST parser built on tree-sitter.  Extracts CodeEntity (functio, parse_python_source(), Pure-stdlib Python parser using the built-in `ast` module.  Fallback for when tr, file_hash() (+7 more)
 
 ### Community 5 - "Home() · CodeGraph.tsx · AnswerCard.tsx "
 Cohesion: 0.09
@@ -142,7 +167,7 @@ Nodes (29): graph_widget(), _layout(), Static, pre-laid-out dependency-graph wid
 
 ### Community 8 - "detector.py · Architecture-risk de · Wri"
 Cohesion: 0.11
-Nodes (16): persist_risks(), Architecture-risk detection over the code graph.  Each rule is a Cypher query ag, Write detected risks back to the graph as SecurityIssue vertices., RiskDetector, Risk detection engine (Phase 4): architecture-smell detection over the graph., main(), FakeClient, Phase 4 tests.  Offline against a fake graph client that returns canned query ro (+8 more)
+Nodes (17): persist_risks(), Architecture-risk detection over the code graph.  Each rule is a Cypher query ag, Write detected risks back to the graph as SecurityIssue vertices., RiskDetector, Risk detection engine (Phase 4): architecture-smell detection over the graph., main(), FakeClient, Phase 4 tests.  Offline against a fake graph client that returns canned query ro (+9 more)
 
 ### Community 9 - ".analyze_entity_impa · analyzer.py · Imp"
 Cohesion: 0.09
@@ -166,7 +191,7 @@ Nodes (7): BaseHTTPRequestHandler, _examples(), Handler, landing(), main(), _mak
 
 ### Community 14 - "get_llm() · get_vector_store() · get_que"
 Cohesion: 0.05
-Nodes (30): query(), API-key authentication dependency.  Enforcement is opt-in via the ``API_KEY`` en, Authentication layer (FastAPI-Users: email/password + JWT)., Pydantic schemas for the auth/user API (FastAPI-Users)., UserCreate, UserRead, UserUpdate, get_jwt_strategy() (+22 more)
+Nodes (34): Authentication layer (FastAPI-Users: email/password + JWT)., Pydantic schemas for the auth/user API (FastAPI-Users)., UserCreate, UserRead, UserUpdate, get_jwt_strategy(), get_user_manager(), FastAPI-Users wiring: user manager, JWT auth backend, route dependencies.  Email (+26 more)
 
 ### Community 15 - "Enterprise Codebase  · 16.1 Sample GitHu"
 Cohesion: 0.12
@@ -190,7 +215,7 @@ Nodes (5): Account, helper(), AdminAccount, Sample module for parser tests., val
 
 ### Community 21 - "5.2 LLM-to-Cypher Tr · 4.1 Architectural"
 Cohesion: 0.22
-Nodes (9): 5.1 Semantic + Structural Retrieval (Hybrid RAG), 5.2 LLM-to-Cypher Translation, 5.3 Answer Generation Pipeline, 6.1 Local Ollama Setup, 6.2 Context Window Optimization, 6.3 LLM API Integration, Part II: Advanced Features, Phase 5: Natural Language Query Engine (Weeks 6-9) (+1 more)
+Nodes (9): 4.1 Architectural Risk Scoring, 4.2 Change Impact Analysis, 4.3 Ownership & Test Coverage Tracking, 5.1 Semantic + Structural Retrieval (Hybrid RAG), 5.2 LLM-to-Cypher Translation, 5.3 Answer Generation Pipeline, Part II: Advanced Features, Phase 4: Risk Detection & Architecture Analysis (Weeks 5-7) (+1 more)
 
 ### Community 22 - "8.1 React/Next.js Da · 7.2 Background Jo"
 Cohesion: 0.22
@@ -241,8 +266,8 @@ Cohesion: 0.33
 Nodes (6): 10.1 Agentic Framework, 10.2 Refactoring Recommendation Engine, 11.1 SAST Integration, Part IV: Advanced Features & Optimization, Phase 10: Multi-Agent Orchestration (Weeks 15-17), Phase 11: Security & Compliance Scanning (Weeks 18-19)
 
 ### Community 37 - "test_index_built() · test_qa_webapp.py ·"
-Cohesion: 0.60
-Nodes (5): _a(), test_index_built(), test_qa_explain_and_callers(), test_qa_file_and_search(), test_webapp_pages_render()
+Cohesion: 0.24
+Nodes (8): role_rank(), role_satisfies(), Per-repo RBAC: role ordering, membership grants, and route enforcement (Phase 2,, Register/login a user; returns (bearer_token, user_id)., test_creator_is_owner_and_can_manage_members(), test_non_member_is_forbidden_and_member_cannot_grant(), test_role_ordering(), _user_token()
 
 ### Community 38 - "PART 0 — PROJECT CHA · 0.1 What You Are "
 Cohesion: 0.40
@@ -273,52 +298,140 @@ Cohesion: 0.50
 Nodes (4): 13.1 Unit Tests, 13.2 Integration Tests, Part VI: Testing & Quality, Phase 13: Testing Strategy (Weeks 22-23)
 
 ### Community 45 - "6.3 LLM API Integrat · 6.2 Context Windo"
-Cohesion: 0.17
-Nodes (6): FileHashStore, IncrementalUpdater, Persistent ``file_path -> hash`` map backed by SQLite., Re-index only changed/added files and prune deleted ones., Remove the File node and every entity defined in it., main()
+Cohesion: 0.38
+Nodes (6): ApiKeyCreate, ApiKeyCreated, ApiKeyInfo, create_key(), list_keys(), Per-user API key management (the "settings page" backend).  All routes require a
 
 ### Community 46 - "Free/Open-Source Bud · Resource Requirem"
 Cohesion: 0.50
 Nodes (4): Free/Open-Source Budget, Hardware (Minimum), Hardware (Recommended for Production), Resource Requirements
 
+### Community 48 - "__init__.py · FastAPI backend (Pha"
+Cohesion: 0.18
+Nodes (13): FastAPI backend (Phase 7)., _attachment(), _check_format(), export_impact(), export_risks(), Export endpoints: download risk reports and impact analysis as CSV/Excel.  Sits, impact(), Input validators for user-supplied repo URLs and file paths.  Kept dependency-fr (+5 more)
+
 ### Community 54 - "Community 54"
-Cohesion: 0.09
-Nodes (35): _init_database(), Create tables for local SQLite dev so the app runs with no setup.     For Postgr, datetime, Base, Declarative base for all ORM models., Relational metadata store (SQLAlchemy).  Default DATABASE_URL is a local SQLite, ApiKey, AuditLog (+27 more)
+Cohesion: 0.16
+Nodes (16): create_api_key(), generate_key(), hash_key(), list_api_keys(), Per-user API keys: generation, hashing, verification, lifecycle.  Phase 2 (FULL_, Issue a new key for ``user_id``. Returns ``(raw_key, metadata)``.      The raw k, Mark a key revoked. Scoped to ``user_id`` so users can't revoke others'     keys, Return the owning ``user_id`` for a valid, non-revoked key, else None.      Cons (+8 more)
 
 ### Community 58 - "Community 58"
 Cohesion: 0.06
 Nodes (32): 1. Current State Snapshot, 2. Gap Table by Category, 3. Bugs / Issues Found, 4. Free/Open-Source Stack Additions (no paid tiers, anywhere), 5. Phased Build Plan, 6. What NOT to Add (explicitly out of scope, and why), 7. Immediate Next Action, AI Features (+24 more)
 
 ### Community 59 - "Community 59"
-Cohesion: 0.25
-Nodes (5): Any, ArcadeDBClient, Run an idempotent read., Run a write/DDL statement., test_integration_runs_against_live_graph()
+Cohesion: 0.19
+Nodes (18): client_ip(), Audit logging: persist security-relevant actions to the ``audit_log`` table.  Ph, Best-effort client IP, honouring a single X-Forwarded-For hop (the value     a r, Append one audit event. Swallows all errors (logs a warning) so auditing     can, record_audit(), report_risks(), IngestRequest, start_ingest() (+10 more)
 
 ### Community 60 - "Community 60"
-Cohesion: 0.19
-Nodes (11): ArcadeDBError, Thin HTTP client for ArcadeDB.  Wraps ArcadeDB's REST API (https://docs.arcadedb, Raised when ArcadeDB returns a non-2xx response., Incremental re-indexing driven by per-file SHA-256 hashes.  A small SQLite key-v, Graph database layer (Phase 2): ArcadeDB ingestion + incremental updates., apply_schema(), Graph schema: vertex/edge types and indexes.  ArcadeDB DDL is SQL, not Cypher, s, Return the ordered list of DDL statements that define the schema. (+3 more)
+Cohesion: 0.09
+Nodes (18): ABC, Path, main(), Object-storage abstraction (Phase 3).  One small interface so uploaded artifacts, Store ``data`` under ``key``; return a backend-specific locator., Read back the bytes stored under ``key``., Storage, get_storage() (+10 more)
 
 ### Community 62 - "Community 62"
+Cohesion: 0.17
+Nodes (10): Any, impact_to_rows(), Tabular exports for risk reports and impact analysis (Phase 3).  Pure builders (, Flatten the impact summary's direct/transitive entity lists into rows., render(), risks_to_rows(), to_csv(), to_xlsx() (+2 more)
+
+### Community 68 - "Community 68"
+Cohesion: 0.08
+Nodes (34): list_notifications(), NotificationInfo, In-app notification REST API (Phase 3). JWT-protected; users see only their own, read_all(), read_one(), notify_job_completion(), Notification dispatch (Phase 3): fan one event out to the durable store and to e, _user_email() (+26 more)
+
+### Community 69 - "Community 69"
+Cohesion: 0.15
+Nodes (20): add_member_route(), create_repo_route(), list_members_route(), list_repos_route(), MemberGrant, MemberInfo, Repo ownership + membership management (Phase 2 RBAC).  A repo's creator becomes, remove_member_route() (+12 more)
+
+### Community 70 - "Community 70"
+Cohesion: 0.39
+Nodes (5): get_graph_client(), get_llm(), get_query_engine(), get_vector_store(), Lazily-constructed singleton service clients for dependency injection.  Construc
+
+### Community 71 - "Community 71"
+Cohesion: 0.18
+Nodes (17): create_repo(), Create a repo and grant its creator the ``owner`` role., Base, Declarative base for all ORM models., Relational metadata store (SQLAlchemy).  Default DATABASE_URL is a local SQLite, ApiKey, AuditLog, Job (+9 more)
+
+### Community 73 - "Community 73"
+Cohesion: 0.18
+Nodes (16): _init_database(), Create tables for local SQLite dev so the app runs with no setup.     For Postgr, _async_sessionmaker(), _async_url(), get_async_engine(), get_async_session(), get_database_url(), get_engine() (+8 more)
+
+### Community 74 - "Community 74"
+Cohesion: 0.23
+Nodes (12): GraphBuilder, FakeClient, Phase 2 tests.  The unit tests run offline against a recording fake client — the, Records every command(...) call instead of hitting a server., test_edge_match_is_typed(), test_entities_grouped_by_label(), test_external_call_edge_dropped(), test_file_nodes_and_contains_edges() (+4 more)
+
+### Community 75 - "Community 75"
+Cohesion: 0.17
+Nodes (6): FileHashStore, IncrementalUpdater, Persistent ``file_path -> hash`` map backed by SQLite., Re-index only changed/added files and prune deleted ones., Remove the File node and every entity defined in it., main()
+
+### Community 76 - "Community 76"
+Cohesion: 0.14
+Nodes (15): _all_paths_to_roots(), _build_index(), _complexity(), _documentation(), _file_loc(), _health_score(), _hotspots(), _label_propagation() (+7 more)
+
+### Community 77 - "Community 77"
+Cohesion: 0.17
+Nodes (12): ArcadeDBClient, ArcadeDBError, Thin HTTP client for ArcadeDB.  Wraps ArcadeDB's REST API (https://docs.arcadedb, Raised when ArcadeDB returns a non-2xx response., Incremental re-indexing driven by per-file SHA-256 hashes.  A small SQLite key-v, Graph database layer (Phase 2): ArcadeDB ingestion + incremental updates., apply_schema(), Graph schema: vertex/edge types and indexes.  ArcadeDB DDL is SQL, not Cypher, s (+4 more)
+
+### Community 78 - "Community 78"
+Cohesion: 0.30
+Nodes (11): analyze_repository(), test_analyze_samples_overview(), test_call_graph_and_blast_radius(), test_complexity_picks_up_branches(), test_dependencies_external_detected(), test_git_insights_on_self(), test_graph_renders_in_html(), test_graph_view_present() (+3 more)
+
+### Community 79 - "Community 79"
+Cohesion: 0.22
+Nodes (4): Return (callee_name, receiver) for a call node.          ``receiver`` is the seg, Names of classes this class extends (last path component only)., Top-level module name(s) of an import statement., UniversalParser
+
+### Community 80 - "Community 80"
+Cohesion: 0.33
+Nodes (6): CodebaseAnalysis, collect_git_insights(), _git(), _is_git_repo(), Git history insights: churn, ownership, bus factor, contributor activity.  Uses, Self-contained codebase analysis engine (no external services required).  Comput
+
+### Community 81 - "Community 81"
+Cohesion: 0.25
+Nodes (6): pdf_available(), Risk-report rendering (Phase 3): a self-contained HTML report, plus an optional, to_pdf(), datetime, _utcnow(), RuntimeError
+
+### Community 82 - "Community 82"
+Cohesion: 0.25
+Nodes (6): _call_graph_metrics(), descendants(), Minimal directed-graph helpers (stdlib only) replacing the bits of networkx that, All nodes reachable from source (excluding source)., Yield simple cycles (Johnson-style, simplified) as node lists.      Sufficient f, simple_cycles()
+
+### Community 84 - "Community 84"
+Cohesion: 0.47
+Nodes (10): CodeRelationship, _build(), _entity(), SymbolResolver disambiguation tests (offline, no tree-sitter)., _resolve(), test_qualified_call_resolves_to_named_class(), test_self_call_resolves_to_own_class(), test_single_candidate_resolves_cleanly() (+2 more)
+
+### Community 86 - "Community 86"
+Cohesion: 0.60
+Nodes (5): _a(), test_index_built(), test_qa_explain_and_callers(), test_qa_file_and_search(), test_webapp_pages_render()
+
+### Community 87 - "Community 87"
 Cohesion: 0.50
-Nodes (4): 4.1 Architectural Risk Scoring, 4.2 Change Impact Analysis, 4.3 Ownership & Test Coverage Tracking, Phase 4: Risk Detection & Architecture Analysis (Weeks 5-7)
+Nodes (5): _dependencies(), _graph_view(), _module_of(), File-level dependency graph (nodes=files, edges=imports + cross-file     calls), _rel()
+
+### Community 88 - "Community 88"
+Cohesion: 0.40
+Nodes (4): Run migrations in 'offline' mode.      This configures the context with just a U, Run migrations in 'online' mode.      In this scenario we need to create an Engi, run_migrations_offline(), run_migrations_online()
+
+### Community 89 - "Community 89"
+Cohesion: 0.50
+Nodes (4): 6.1 Local Ollama Setup, 6.2 Context Window Optimization, 6.3 LLM API Integration, Phase 6: LLM Integration (Weeks 8-10)
+
+### Community 91 - "Community 91"
+Cohesion: 0.36
+Nodes (9): _parse(), test_detects_calls(), test_extracts_imports(), test_extracts_inheritance(), test_parses_javascript(), test_parses_python_functions_and_class(), test_python_docstring_and_complexity(), test_symbol_resolution_links_call() (+1 more)
+
+### Community 92 - "Community 92"
+Cohesion: 0.47
+Nodes (5): _count(), Audit logging: security-relevant actions land in the audit_log table, and a fail, test_query_route_writes_audit_event(), test_record_audit_persists_row(), test_record_audit_swallows_errors()
 
 ## Knowledge Gaps
 - **209 isolated node(s):** `RISK_COLOR`, `metadata`, `SEVERITIES`, `ForceGraph2D`, `LINKS` (+204 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **15 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **18 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `run_ingestion()` connect `.__init__() · Settings · jobs.py · App-l` to `CodeEntity · CodeRelationship · builder.`, `Parse an entire repo · AST parsing engin`, `Embedder · LLM access layer (Ph · CodeEn`, `detector.py · Architecture-risk de · Wri`, `Community 59`, `Community 60`?**
-  _High betweenness centrality (0.167) - this node is a cross-community bridge._
-- **Why does `parse_repository()` connect `Parse an entire repo · AST parsing engin` to `_all_paths_to_roots( · _build_index() · `, `.__init__() · Settings · jobs.py · App-l`, `6.3 LLM API Integrat · 6.2 Context Windo`, `Embedder · LLM access layer (Ph · CodeEn`?**
-  _High betweenness centrality (0.145) - this node is a cross-community bridge._
-- **Why does `analyze_repository()` connect `_all_paths_to_roots( · _build_index() · ` to `test_index_built() · test_qa_webapp.py ·`, `Parse an entire repo · AST parsing engin`, `._analyze_git() · Handler · serve.py · B`, `graph_widget() · Static, pre-laid-out · `?**
-  _High betweenness centrality (0.124) - this node is a cross-community bridge._
+- **Why does `run_ingestion()` connect `.__init__() · Settings · jobs.py · App-l` to `Parse an entire repo · AST parsing engin`, `Embedder · LLM access layer (Ph · CodeEn`, `detector.py · Architecture-risk de · Wri`, `Community 74`, `Community 77`, `Community 59`?**
+  _High betweenness centrality (0.135) - this node is a cross-community bridge._
+- **Why does `parse_repository()` connect `Parse an entire repo · AST parsing engin` to `.__init__() · Settings · jobs.py · App-l`, `Embedder · LLM access layer (Ph · CodeEn`, `Community 75`, `Community 78`, `Community 79`, `Community 60`?**
+  _High betweenness centrality (0.080) - this node is a cross-community bridge._
+- **Why does `record_audit()` connect `Community 59` to `.__init__() · Settings · jobs.py · App-l`, `Community 69`, `Community 71`, `6.3 LLM API Integrat · 6.2 Context Windo`, `__init__.py · FastAPI backend (Pha`, `Community 92`?**
+  _High betweenness centrality (0.066) - this node is a cross-community bridge._
 - **Are the 16 inferred relationships involving `analyze_repository()` (e.g. with `parse_repository()` and `main()`) actually correct?**
   _`analyze_repository()` has 16 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 11 inferred relationships involving `ArcadeDBClient` (e.g. with `run_ingestion()` and `GraphBuilder`) actually correct?**
   _`ArcadeDBClient` has 11 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 13 inferred relationships involving `RiskDetector` (e.g. with `export_risks()` and `report_risks()`) actually correct?**
+  _`RiskDetector` has 13 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 5 inferred relationships involving `GraphBuilder` (e.g. with `run_ingestion()` and `ArcadeDBClient`) actually correct?**
   _`GraphBuilder` has 5 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 11 inferred relationships involving `RiskDetector` (e.g. with `risks()` and `run_ingestion()`) actually correct?**
-  _`RiskDetector` has 11 INFERRED edges - model-reasoned connections that need verification._

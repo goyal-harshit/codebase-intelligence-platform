@@ -39,6 +39,21 @@ def clone_repo(repo_url: str, clone_dir: str) -> str:
     return dest
 
 
+def _notify(jobs: JobManager, job_id: str) -> None:
+    """Fan a job's (already-persisted) terminal state out to in-app + email
+    notifications. Best-effort: notifications must never fail the job."""
+    try:
+        from notifications import notify_job_completion
+
+        job = jobs.get(job_id)
+        if not job:
+            return
+        notify_job_completion(job_id, job.get("user_id"), job["status"],
+                              result=job.get("result"), error=job.get("error"))
+    except Exception:
+        logger.warning("[job %s] notification dispatch failed", job_id, exc_info=True)
+
+
 def run_ingestion(jobs: JobManager, job_id: str,
                   repo_url: str | None = None, repo_path: str | None = None) -> None:
     from ast_parser import parse_repository
@@ -55,14 +70,17 @@ def run_ingestion(jobs: JobManager, job_id: str,
                         error=f"ArcadeDB not reachable at {graph.base_url}. "
                               f"Start the backing services (e.g. `docker compose up -d "
                               f"arcadedb chroma ollama`) before ingesting.")
+            _notify(jobs, job_id)
             return
 
         path = repo_path
         if repo_url:
             jobs.update(job_id, step="cloning")
             path = clone_repo(repo_url, Settings().clone_dir)
+            jobs.update(job_id, repo_path=path)
         if not path or not os.path.isdir(path):
             jobs.update(job_id, status="failed", error=f"repo path not found: {path}")
+            _notify(jobs, job_id)
             return
 
         # Full ingest is a clean rebuild: drop any prior graph so re-ingesting
@@ -106,8 +124,10 @@ def run_ingestion(jobs: JobManager, job_id: str,
                             "edges": stats["edges"], "risks": n_risks})
         logger.info("[job %s] ingestion %s (%s files, %s risks)",
                     job_id, final_status, stats["files"], n_risks)
+        _notify(jobs, job_id)
     except Exception as e:
         jobs.update(job_id, status="failed", error=str(e))
         logger.error("[job %s] ingestion failed: %s", job_id, e)
+        _notify(jobs, job_id)
     finally:
         INGESTION_DURATION.observe(time.perf_counter() - _start)

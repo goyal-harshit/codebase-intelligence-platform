@@ -3,10 +3,18 @@
 @tailwind utilities;
 
 :root {
-  --bg: #fafafa;
+  --bg: #f8fafc;
 }
 
 body {
   background: var(--bg);
-  color: #0a0a0a;
+  color: #0f172a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: #c7d2fe;
 }

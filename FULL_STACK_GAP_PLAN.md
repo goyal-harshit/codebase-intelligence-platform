@@ -195,27 +195,27 @@ Each phase is independently shippable. Do not start a phase before its dependenc
 4. CSRF protection on any cookie-based session routes. — **N/A by design:** auth is JWT *bearer header* only (no cookie-based sessions), so there is no CSRF surface. Revisit in Phase 7 if a reverse proxy ever introduces cookie sessions.
 5. **Output:** multiple users share one instance; repo membership/roles, per-user keys, and an audit trail are all in place. (Note: the analysis *data plane* is still a single shared ArcadeDB graph — true per-repo data isolation at query time is a larger graph-layer change tracked separately, not part of Phase 2's authz scope.)
 
-### Phase 3 — File Handling, Notifications, Exports
-1. File upload (zip a repo instead of requiring a Git URL) → MinIO storage.
-2. CSV/Excel export of risk reports and impact analysis (`openpyxl`).
-3. PDF report generation (WeasyPrint) — directly extends the "AI report generation" gap.
-4. In-app toast notifications (frontend) + WebSocket push for job-completion events.
-5. Email notifications (job done, risk threshold breached) via pluggable SMTP.
-6. **Output:** no CLI/manual steps required to get a repo in or a report out.
+### Phase 3 — File Handling, Notifications, Exports  ✅ DONE (2026-06-29)
+1. File upload (zip a repo instead of requiring a Git URL) → MinIO storage. — ✅ `api/routes_upload.py` (`POST /api/v1/ingest/upload`, zip-slip + zip-bomb guards), pluggable `storage/` (LocalStorage default, optional `MinioStorage` via `MINIO_ENDPOINT`), MinIO service added to docker-compose.
+2. CSV/Excel export of risk reports and impact analysis (`openpyxl`). — ✅ `api/exports.py` builders + `api/routes_export.py` (`/api/v1/export/risks`, `/api/v1/export/impact/{path}`, `?format=csv|xlsx`).
+3. PDF report generation (WeasyPrint) — directly extends the "AI report generation" gap. — ✅ `api/report.py` (`build_html_report`; HTML always available, PDF optional behind WeasyPrint with graceful 503), `GET /api/v1/report/risks?format=html|pdf`.
+4. In-app toast notifications (frontend) + WebSocket push for job-completion events. — ✅ (backend) durable `notifications` table + `notifications/store.py`, REST `api/routes_notifications.py` (`/api/v1/notifications`, read/read-all), WebSocket `/ws/notifications` (JWT via `?token=`, DB-poll delivery — no external pub/sub, cross-process-safe via shared DB, id-tracked). Frontend toast component is a Phase 6 item.
+5. Email notifications (job done, risk threshold breached) via pluggable SMTP. — ✅ `notifications/email.py` (`ConsoleEmailSender` dev default, `SMTPEmailSender` when `SMTP_HOST` set), `notifications/dispatch.py` `notify_job_completion()` fans terminal job states to in-app + email, wired into all terminal paths in `api/tasks.py`.
+6. **Output:** no CLI/manual steps required to get a repo in or a report out. (All backend items done; frontend toast UI deferred to Phase 6.)
 
-### Phase 4 — AI Feature Depth
-1. Externalize prompts into versioned template files (fixes bug #4) — also unlocks prompt experimentation without redeploy.
-2. Multi-turn conversation history (store in Postgres, keyed by user+session).
-3. AI summarization endpoint (summarize a file/module/PR diff).
-4. AI report generation (turn a risk-scan + impact-analysis run into a narrative PDF, building on Phase 3's PDF pipeline).
-5. AI code review mode (run risk detectors + LLM commentary on a diff, not just a whole repo).
-6. **Output:** the AI layer moves from "answer one-shot questions" to "produce artifacts a team actually uses."
+### Phase 4 — AI Feature Depth  ✅ DONE (2026-06-29)
+1. Externalize prompts into versioned template files (fixes bug #4). — ✅ `backend/prompt_templates/*.txt` + `backend/prompts.py` loader (`load`/`render`/`reset_cache`). `cypher_generator.py` + `answer.py` now load templates (constants preserved); new templates: cypher_fewshot, answer, summarize, code_review, narrative_report.
+2. Multi-turn conversation history (store in Postgres, keyed by user+session). — ✅ `db.Conversation` + `db.ConversationMessage` (int autoincrement PK for deterministic ordering — OS clock too coarse for created_at ties), migration `6d3f9a2b4c10`, `backend/conversations/` store, `GET /query?session_id=` feeds history back + persists each turn, `api/routes_conversations.py` (create/list/messages).
+3. AI summarization endpoint. — ✅ `api/summarizer.py` + `POST /api/v1/summarize` (inline `code` or graph-entity context).
+4. AI report generation (narrative PDF, building on Phase 3's PDF pipeline). — ✅ `report.build_narrative` (LLM exec summary) + narrative block in `build_html_report`, `GET /api/v1/report/narrative?format=html|pdf`.
+5. AI code review mode (LLM commentary on a diff). — ✅ `api/review.py` + `POST /api/v1/review`.
+6. **Output:** the AI layer moves from "answer one-shot questions" to "produce artifacts a team actually uses." All endpoints unit-tested with a fake LLM (dependency overrides); 180 pass / 15 pre-existing tree-sitter fails / 5 skip.
 
 ### Phase 5 — Collaboration & Visualization Depth
 1. Team workspaces (multiple repos per team, shared via Phase 2's RBAC).
 2. Comments + mentions on specific risk findings or graph nodes.
 3. Activity feed (derived from the audit log).
-4. Hotspot heatmap (churn × complexity — git_insights.py already computes the inputs; this is mostly a frontend viz task).
+4. Hotspot heatmap (churn × complexity — git_insights.py already computes the inputs; this is mostly a frontend viz task). — ✅ `analysis/hotspots.py`, `api/routes_hotspots.py` (`GET /api/v1/hotspots`), dashboard heatmap panel.
 5. Timeline view of risk/health score over time (requires storing periodic scan snapshots in Postgres).
 6. **Output:** the product stops being single-player.
 
@@ -247,4 +247,4 @@ Each phase is independently shippable. Do not start a phase before its dependenc
 
 ## 7. Immediate Next Action
 
-Start Phase 1, step 1 (Postgres + SQLAlchemy + Alembic in `docker-compose.yml`/`backend/`) — everything else in this plan is blocked on having a relational store.
+Continue Phase 5 with collaboration depth: add comments/mentions on risk findings or graph nodes, then expose an activity feed from the existing audit log.

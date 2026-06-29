@@ -47,6 +47,7 @@ class JobManager:
                 return None
             return {
                 "job_id": job.id,
+                "user_id": job.user_id,
                 "status": job.status,
                 "step": job.step,
                 "error": job.error,
