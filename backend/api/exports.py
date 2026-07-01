@@ -40,16 +40,32 @@ def to_csv(headers: Sequence[str], rows: Sequence[Sequence[Any]]) -> bytes:
 
 def to_xlsx(headers: Sequence[str], rows: Sequence[Sequence[Any]], sheet_title: str = "export") -> bytes:
     from openpyxl import Workbook
-    from openpyxl.styles import Font
+    from openpyxl.styles import Font, Alignment
 
     wb = Workbook()
     ws = wb.active
     ws.title = sheet_title[:31] or "export"  # Excel caps sheet titles at 31 chars
+    
+    # Write headers
     ws.append(list(headers))
     for cell in ws[1]:
         cell.font = Font(bold=True)
+        
+    # Write rows with text wrap
+    wrap_alignment = Alignment(wrap_text=True, vertical="top")
     for row in rows:
         ws.append(list(row))
+        for cell in ws[ws.max_row]:
+            cell.alignment = wrap_alignment
+            
+    # Set column widths (approximate for typical content)
+    col_widths = {"A": 15, "B": 10, "C": 25, "D": 40, "E": 60}
+    for col, width in col_widths.items():
+        ws.column_dimensions[col].width = width
+        
+    # Freeze the header row
+    ws.freeze_panes = "A2"
+    
     buf = io.BytesIO()
     wb.save(buf)
     return buf.getvalue()

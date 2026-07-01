@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Network } from "lucide-react";
+import { Network, FolderTree } from "lucide-react";
 import { getImpact, ImpactResult } from "@/lib/api";
 import CodeGraph, { GraphData } from "@/components/CodeGraph";
+import FileBrowser from "@/components/FileBrowser";
 import PageHeader from "@/components/PageHeader";
 import StateBlock from "@/components/StateBlock";
 
@@ -36,18 +37,24 @@ export default function ImpactPage() {
   const [result, setResult] = useState<ImpactResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showBrowser, setShowBrowser] = useState(false);
 
-  const run = async () => {
-    if (!filePath.trim()) return;
+  const run = async (path = filePath) => {
+    if (!path.trim()) return;
     setLoading(true);
     setError(null);
     try {
-      setResult(await getImpact(filePath, depth));
+      setResult(await getImpact(path, depth));
     } catch (e: any) {
       setError(e?.response?.data?.detail ?? e?.message ?? "request failed");
     } finally {
       setLoading(false);
     }
+  };
+
+  const pick = (path: string) => {
+    setFilePath(path);
+    run(path);
   };
 
   return (
@@ -76,7 +83,7 @@ export default function ImpactPage() {
             onChange={(e) => setDepth(Number(e.target.value))}
           />
           <button
-            onClick={run}
+            onClick={() => run()}
             disabled={loading || !filePath.trim()}
             className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-slate-950 px-6 py-2 text-sm font-medium text-white disabled:opacity-40"
           >
@@ -84,6 +91,18 @@ export default function ImpactPage() {
             {loading ? "Analyzing" : "Analyze"}
           </button>
         </div>
+        <button
+          onClick={() => setShowBrowser((v) => !v)}
+          className="mt-3 inline-flex items-center gap-1.5 text-sm text-slate-600 hover:text-slate-950"
+        >
+          <FolderTree size={15} />
+          {showBrowser ? "Hide file browser" : "Browse ingested files"}
+        </button>
+        {showBrowser && (
+          <div className="mt-3">
+            <FileBrowser onSelect={pick} selected={filePath} />
+          </div>
+        )}
       </section>
 
       <div className="mt-6">

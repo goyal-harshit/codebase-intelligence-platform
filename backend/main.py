@@ -24,11 +24,15 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from api import (
     routes_conversations,
+    routes_files,
+    routes_graphify,
+    routes_health,
     routes_hotspots,
     routes_impact,
     routes_ingest,
     routes_export,
     routes_keys,
+    routes_llm,
     routes_notifications,
     routes_query,
     routes_repos,
@@ -37,6 +41,8 @@ from api import (
     routes_stats,
     routes_summarize,
     routes_upload,
+    routes_comments,
+    routes_activity,
 )
 from api.config import Settings
 from api.ratelimit import SLOWAPI_AVAILABLE, limiter
@@ -90,6 +96,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
+    allow_origin_regex=settings.cors_origin_regex,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -146,15 +153,23 @@ app.include_router(routes_risks.router, prefix="/api/v1", tags=["risks"], depend
 app.include_router(routes_stats.router, prefix="/api/v1", tags=["stats"], dependencies=_auth)
 app.include_router(routes_hotspots.router, prefix="/api/v1", tags=["hotspots"], dependencies=_auth)
 app.include_router(routes_upload.router, prefix="/api/v1", tags=["ingest"], dependencies=_auth)
+app.include_router(routes_files.router, prefix="/api/v1", tags=["repos"], dependencies=_auth)
 app.include_router(routes_export.router, prefix="/api/v1", tags=["export"], dependencies=_auth)
 app.include_router(routes_summarize.router, prefix="/api/v1", tags=["ai"], dependencies=_auth)
 app.include_router(routes_review.router, prefix="/api/v1", tags=["ai"], dependencies=_auth)
+app.include_router(routes_graphify.router, prefix="/api/v1", tags=["graphify"], dependencies=_auth)
 app.include_router(routes_conversations.router, prefix="/api/v1", tags=["conversations"], dependencies=_auth)
 # Per-user API key management + repo RBAC (settings page). JWT-protected inside
 # the routers, so they are not behind the service-key gate.
 app.include_router(routes_keys.router, prefix="/api/v1", tags=["keys"])
 app.include_router(routes_repos.router, prefix="/api/v1", tags=["repos"])
 app.include_router(routes_notifications.router, prefix="/api/v1", tags=["notifications"])
+app.include_router(routes_comments.router, prefix="/api/v1", tags=["comments"], dependencies=_auth)
+app.include_router(routes_activity.router, prefix="/api/v1", tags=["activity"], dependencies=_auth)
+# Service health probe stays open (like /health) so the status UI works even
+# before sign-in and when a backend is down.
+app.include_router(routes_health.router, prefix="/api/v1", tags=["health"])
+app.include_router(routes_llm.router, prefix="/api/v1", tags=["llm"], dependencies=_auth)
 
 
 @app.on_event("startup")

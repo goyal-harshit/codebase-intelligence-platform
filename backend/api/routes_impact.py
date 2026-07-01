@@ -16,7 +16,17 @@ def impact(file_path: str, depth: int = 5, graph=Depends(get_graph_client)):
         file_path = validate_relative_path(file_path)
     except ValidationError as e:
         raise HTTPException(400, str(e))
+    analyzer = ImpactAnalyzer(graph)
     try:
-        return ImpactAnalyzer(graph).analyze_file_impact(file_path, max_depth=depth)
+        resolved, suggestions = analyzer.resolve_file_path(file_path)
+    except Exception as e:
+        raise HTTPException(503, f"graph backend unavailable: {e}")
+    if resolved is None:
+        detail = f"file not found in graph: {file_path}"
+        if suggestions:
+            detail += "; did you mean: " + ", ".join(suggestions)
+        raise HTTPException(404, detail)
+    try:
+        return analyzer.analyze_file_impact(resolved, max_depth=depth)
     except Exception as e:
         raise HTTPException(503, f"graph backend unavailable: {e}")

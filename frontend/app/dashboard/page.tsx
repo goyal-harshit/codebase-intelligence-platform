@@ -24,6 +24,7 @@ import PageHeader from "@/components/PageHeader";
 import RiskTable from "@/components/RiskTable";
 import StateBlock from "@/components/StateBlock";
 import StatsGrid from "@/components/StatsGrid";
+import ActivityFeed from "@/components/ActivityFeed";
 
 type LoadState<T> = {
   loading: boolean;
@@ -79,17 +80,21 @@ export default function Dashboard() {
   const [hotspots, setHotspots] = useState<LoadState<HotspotResult>>(initial);
 
   useEffect(() => {
+    const ctrl = new AbortController();
+
     getStats()
-      .then((data) => setStats({ loading: false, data, error: null }))
-      .catch((e) => setStats({ loading: false, data: null, error: e?.message ?? "unavailable" }));
+      .then((data) => { if (!ctrl.signal.aborted) setStats({ loading: false, data, error: null }); })
+      .catch((e) => { if (!ctrl.signal.aborted) setStats({ loading: false, data: null, error: e?.message ?? "unavailable" }); });
 
     getRisks()
-      .then((data) => setRisks({ loading: false, data, error: null }))
-      .catch((e) => setRisks({ loading: false, data: null, error: e?.message ?? "unavailable" }));
+      .then((data) => { if (!ctrl.signal.aborted) setRisks({ loading: false, data, error: null }); })
+      .catch((e) => { if (!ctrl.signal.aborted) setRisks({ loading: false, data: null, error: e?.message ?? "unavailable" }); });
 
     getHotspots()
-      .then((data) => setHotspots({ loading: false, data, error: null }))
-      .catch((e) => setHotspots({ loading: false, data: null, error: e?.message ?? "unavailable" }));
+      .then((data) => { if (!ctrl.signal.aborted) setHotspots({ loading: false, data, error: null }); })
+      .catch((e) => { if (!ctrl.signal.aborted) setHotspots({ loading: false, data: null, error: e?.message ?? "unavailable" }); });
+
+    return () => ctrl.abort();
   }, []);
 
   const allRisks = risks.data?.risks ?? [];
@@ -120,11 +125,11 @@ export default function Dashboard() {
               Risk report
             </a>
             <a
-              href={exportRisksUrl("csv")}
+              href={exportRisksUrl("xlsx")}
               className="inline-flex items-center gap-2 rounded-lg bg-slate-950 px-3 py-2 text-sm text-white"
             >
               <Download size={16} />
-              Export CSV
+              Export XLSX
             </a>
           </>
         }
@@ -152,18 +157,32 @@ export default function Dashboard() {
 
           <Panel
             title="Hotspot heatmap"
-            action={<span className="text-xs text-slate-500">churn x complexity</span>}
+            action={
+              <span className="text-xs text-slate-500">
+                {hotspots.data?.mode === "complexity_only"
+                  ? "complexity only"
+                  : "churn x complexity"}
+              </span>
+            }
           >
             {hotspots.loading ? (
               <StateBlock state="loading" title="Calculating hotspots" />
             ) : hotspots.error ? (
               <StateBlock state="error" title="Hotspots unavailable" detail={hotspots.error} />
             ) : hotspots.data?.available ? (
-              <HotspotHeatmap hotspots={hotspots.data.hotspots} />
+              <div className="space-y-3">
+                {hotspots.data.mode === "complexity_only" && (
+                  <p className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+                    Git history unavailable ({hotspots.data.reason}), so this heatmap is
+                    coloured by code complexity alone. Ingest via a Git URL to include churn.
+                  </p>
+                )}
+                <HotspotHeatmap hotspots={hotspots.data.hotspots} mode={hotspots.data.mode} />
+              </div>
             ) : (
               <StateBlock
                 state="empty"
-                title="Hotspots need git history and a completed ingest"
+                title="Hotspots need a completed ingest"
                 detail={hotspots.data?.reason}
               />
             )}
@@ -239,6 +258,10 @@ export default function Dashboard() {
               )}
             </div>
           </Panel>
+
+          <div className="h-80">
+            <ActivityFeed />
+          </div>
         </aside>
       </div>
     </div>

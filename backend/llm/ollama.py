@@ -62,3 +62,13 @@ class OllamaClient:
         )
         resp.raise_for_status()
         return resp.json()["response"].strip()
+
+    def list_models(self, timeout: float = 5.0) -> list[str]:
+        """Names of models installed on the Ollama server (``GET /api/tags``).
+
+        Powers the Settings model-picker so users choose from what's pulled
+        instead of typing a tag by hand. Raises on connection failure.
+        """
+        resp = self._session.get(f"{self.base_url}/api/tags", timeout=timeout)
+        resp.raise_for_status()
+        return [m.get("name") for m in resp.json().get("models", []) if m.get("name")]

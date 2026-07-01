@@ -9,7 +9,8 @@ from __future__ import annotations
 from functools import lru_cache
 
 from graph_db import ArcadeDBClient
-from llm import OllamaClient
+from llm import LLMClient, OllamaClient, OpenAICompatibleClient
+from llm import config as llm_config
 from retrieval import QueryEngine
 from vector_db import VectorStoreBuilder
 
@@ -24,11 +25,26 @@ def get_vector_store() -> VectorStoreBuilder:
     return VectorStoreBuilder()
 
 
-@lru_cache
-def get_llm() -> OllamaClient:
-    return OllamaClient()
+def llm_provider() -> str:
+    """The effective LLM provider (DB config override, else ``LLM_*`` env)."""
+    return llm_config.effective_config()["provider"]
 
 
-@lru_cache
+def get_llm() -> LLMClient:
+    """Build the client from the effective config (free/local providers only).
+
+    Not cached: a runtime ``PUT /api/v1/llm-config`` change must take effect on
+    the next request. Construction is cheap and opens no connection.
+    """
+    cfg = llm_config.effective_config()
+    if cfg["provider"] in {"openai_compatible", "openai", "openai-compatible"}:
+        return OpenAICompatibleClient(
+            base_url=cfg["base_url"], model=cfg["model"], api_key=cfg["api_key"] or None
+        )
+    return OllamaClient(base_url=cfg["base_url"], model=cfg["model"])
+
+
 def get_query_engine() -> QueryEngine:
+    # Not cached so a live LLM-config change is picked up; the graph and vector
+    # clients it depends on stay cached (stable, no per-request config).
     return QueryEngine(get_graph_client(), get_vector_store(), get_llm())

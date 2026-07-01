@@ -7,17 +7,22 @@ import {
   AlertTriangle,
   BarChart3,
   Bell,
-  GitBranch,
+  LogIn,
+  LogOut,
   Network,
   Settings,
+  Share2,
   FileText,
   Search,
   UploadCloud,
+  UserCircle2,
 } from "lucide-react";
+import { useAuth } from "@/components/AuthProvider";
 
 const LINKS = [
   { href: "/", label: "Ingest", icon: UploadCloud },
   { href: "/dashboard", label: "Dashboard", icon: BarChart3 },
+  { href: "/graph", label: "Graph", icon: Share2 },
   { href: "/query", label: "Ask", icon: Search },
   { href: "/risks", label: "Risks", icon: AlertTriangle },
   { href: "/impact", label: "Impact", icon: Network },
@@ -28,6 +33,7 @@ const LINKS = [
 
 export default function Nav() {
   const pathname = usePathname();
+  const { user, loading, logout } = useAuth();
 
   return (
     <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur">
@@ -64,9 +70,41 @@ export default function Nav() {
           })}
         </div>
 
-        <div className="hidden items-center gap-2 text-xs text-slate-500 xl:flex">
-          <GitBranch size={15} />
-          Self-hosted analysis workspace
+        <div className="flex items-center gap-3 text-sm">
+          {loading ? (
+            <span className="h-8 w-20 animate-pulse rounded-lg bg-slate-100" />
+          ) : user ? (
+            <>
+              <span
+                className="flex items-center gap-2 text-slate-600"
+                title={user.email}
+              >
+                <UserCircle2 size={18} className="text-slate-400" />
+                <span className="hidden max-w-[12rem] truncate sm:inline">
+                  {user.full_name || user.email}
+                </span>
+              </span>
+              <button
+                onClick={logout}
+                className="flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-slate-600 transition hover:bg-slate-100 hover:text-slate-950"
+              >
+                <LogOut size={15} />
+                <span className="hidden sm:inline">Sign out</span>
+              </button>
+            </>
+          ) : (
+            <Link
+              href="/login"
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 transition ${
+                pathname === "/login"
+                  ? "bg-slate-950 text-white"
+                  : "border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+              }`}
+            >
+              <LogIn size={15} />
+              Sign in
+            </Link>
+          )}
         </div>
       </nav>
     </header>

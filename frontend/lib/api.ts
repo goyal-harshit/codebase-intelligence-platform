@@ -5,6 +5,32 @@ export const API_URL =
 
 export const api = axios.create({ baseURL: API_URL });
 
+/* ---- Auth token storage + injection ----
+   The backend uses FastAPI-Users JWT (BearerTransport). We persist the token in
+   localStorage and attach it to every request. Data routes accept anonymous
+   access when API_KEY is unset, but the collaboration routes (comments,
+   activity) require a resolved user, so a signed-in token unlocks them. */
+
+const TOKEN_KEY = "ci_auth_token";
+
+export const getToken = (): string | null =>
+  typeof window === "undefined" ? null : window.localStorage.getItem(TOKEN_KEY);
+
+export const setToken = (token: string | null) => {
+  if (typeof window === "undefined") return;
+  if (token) window.localStorage.setItem(TOKEN_KEY, token);
+  else window.localStorage.removeItem(TOKEN_KEY);
+};
+
+api.interceptors.request.use((config) => {
+  const token = getToken();
+  if (token) {
+    config.headers = config.headers ?? {};
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export interface Stats {
   total_files: number;
   total_functions: number;
@@ -65,6 +91,7 @@ export interface Hotspot {
 
 export interface HotspotResult {
   available: boolean;
+  mode?: "churn_x_complexity" | "complexity_only";
   reason?: string;
   repo_path?: string;
   hotspots: Hotspot[];
@@ -105,6 +132,78 @@ export const getHotspots = (limit = 12) =>
     .get<HotspotResult>("/api/v1/hotspots", { params: { limit } })
     .then((r) => r.data);
 
+export interface RepoFiles {
+  repo_path: string;
+  count: number;
+  files: string[];
+  job_id?: string;
+}
+
+// Files from the most recent completed ingest — backs the file selector on the
+// Impact and Ask pages so users click an exact path instead of typing it.
+export const getRepoFiles = (ext?: string) =>
+  api
+    .get<RepoFiles>("/api/v1/repos/files", { params: ext ? { ext } : {} })
+    .then((r) => r.data);
+
+export const getJobFiles = (jobId: string, ext?: string) =>
+  api
+    .get<RepoFiles>(`/api/v1/repos/${jobId}/files`, { params: ext ? { ext } : {} })
+    .then((r) => r.data);
+
+export interface ServiceStatus {
+  ok: boolean;
+  url?: string | null;
+  model?: string | null;
+  model_present?: boolean | null;
+  error?: string;
+}
+
+export interface ServiceHealth {
+  services: Record<string, ServiceStatus>;
+  all_ok: boolean;
+}
+
+export const getServiceHealth = () =>
+  api.get<ServiceHealth>("/api/v1/health/services").then((r) => r.data);
+
+export interface LlmConfig {
+  provider: string;
+  base_url?: string | null;
+  model?: string | null;
+  api_key_set: boolean;
+  source?: string;
+}
+
+export interface LlmModels {
+  provider: string;
+  available: boolean;
+  models: string[];
+  error?: string;
+}
+
+export interface LlmConfigUpdate {
+  provider: string;
+  base_url?: string | null;
+  model?: string | null;
+  // omit to keep the stored key; "" to clear it
+  api_key?: string | null;
+}
+
+export const getLlmConfig = () =>
+  api.get<LlmConfig>("/api/v1/llm-config").then((r) => r.data);
+
+export const getLlmModels = () =>
+  api.get<LlmModels>("/api/v1/llm-config/models").then((r) => r.data);
+
+export const updateLlmConfig = (body: LlmConfigUpdate) =>
+  api.put<LlmConfig>("/api/v1/llm-config", body).then((r) => r.data);
+
+export const pullModel = (model: string) =>
+  api
+    .post<{ status: string; model: string }>("/api/v1/llm-config/pull", { model })
+    .then((r) => r.data);
+
 export const startIngest = (body: { repo_url?: string; repo_path?: string }) =>
   api
     .post<IngestJob>("/api/v1/ingest", body)
@@ -141,3 +240,125 @@ export const getNotifications = (unreadOnly = false) =>
 
 export const markAllNotificationsRead = () =>
   api.post<{ marked_read: number }>("/api/v1/notifications/read-all").then((r) => r.data);
+
+/* ---- Graphify (architecture knowledge graph) ---- */
+
+export interface GraphifyNode {
+  id: string;
+  name: string;
+  type: string;
+  community: number;
+  file?: string;
+}
+
+export interface GraphifyLink {
+  source: string;
+  target: string;
+}
+
+export interface GraphifyGraph {
+  nodes: GraphifyNode[];
+  links: GraphifyLink[];
+}
+
+export interface GraphifyStats {
+  nodes: number;
+  edges: number;
+  communities: number;
+  available: boolean;
+}
+
+export const getGraphifyStats = () =>
+  api.get<GraphifyStats>("/api/v1/graphify/stats").then((r) => r.data);
+
+export const getGraphifyGraph = () =>
+  api.get<GraphifyGraph>("/api/v1/graphify/graph").then((r) => r.data);
+
+export const getGraphifyReport = () =>
+  api.get<string>("/api/v1/graphify/report", { transformResponse: [(d) => d] }).then((r) => r.data);
+
+export const exportGraphReportUrl = () => `${API_URL}/api/v1/graphify/report`;
+export const exportGraphJsonUrl = () => `${API_URL}/api/v1/graphify/graph`;
+
+/* ---- Comments ---- */
+
+export interface Comment {
+  id: string;
+  target_type: string;
+  target_id: string;
+  user_id?: string | null;
+  body: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export const getComments = (targetType: string, targetId: string) =>
+  api
+    .get<Comment[]>("/api/v1/comments", {
+      params: { target_type: targetType, target_id: targetId },
+    })
+    .then((r) => r.data);
+
+export const postComment = (targetType: string, targetId: string, body: string) =>
+  api
+    .post<Comment>("/api/v1/comments", { target_type: targetType, target_id: targetId, body })
+    .then((r) => r.data);
+
+export const deleteComment = (id: string) =>
+  api.delete<void>(`/api/v1/comments/${id}`).then(() => undefined);
+
+/* ---- Activity Feed ---- */
+
+export interface ActivityEvent {
+  id: number;
+  user_id?: string | null;
+  action: string;
+  target?: string | null;
+  detail?: Record<string, unknown> | null;
+  created_at: string;
+}
+
+export const getActivity = (limit = 50) =>
+  api
+    .get<ActivityEvent[]>("/api/v1/activity", { params: { limit } })
+    .then((r) => r.data);
+
+/* ---- Auth (FastAPI-Users: email/password + JWT) ---- */
+
+export interface AuthUser {
+  id: string;
+  email: string;
+  is_active: boolean;
+  is_superuser: boolean;
+  is_verified: boolean;
+  full_name?: string | null;
+}
+
+export const login = async (email: string, password: string) => {
+  // FastAPI-Users JWT login is the OAuth2 password flow: form-encoded
+  // `username`/`password`, returns { access_token, token_type }.
+  const form = new URLSearchParams();
+  form.append("username", email);
+  form.append("password", password);
+  const r = await api.post<{ access_token: string; token_type: string }>(
+    "/auth/jwt/login",
+    form,
+    { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+  );
+  setToken(r.data.access_token);
+  return r.data;
+};
+
+export const register = (email: string, password: string, fullName?: string) =>
+  api
+    .post<AuthUser>("/auth/register", {
+      email,
+      password,
+      full_name: fullName || null,
+    })
+    .then((r) => r.data);
+
+export const getMe = () => api.get<AuthUser>("/users/me").then((r) => r.data);
+
+// JWTs are stateless, so "logout" just drops the client-side token.
+export const logout = () => setToken(null);

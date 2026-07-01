@@ -8,11 +8,15 @@ and is shared between the API process and the worker.
 """
 from __future__ import annotations
 
+import json
 import logging
 import os
+import threading
 import time
 
-from celery_app import celery_app
+import requests
+
+from celery_app import ALWAYS_EAGER, celery_app
 from observability import INGESTION_DURATION
 
 from .config import Settings
@@ -26,6 +30,86 @@ def ingest_repo_task(job_id: str, repo_url: str | None = None,
                      repo_path: str | None = None) -> None:
     """Celery entry point. Runs eagerly (in-process) when no broker is set."""
     run_ingestion(jobs, job_id, repo_url, repo_path)
+
+
+# --- Local model pull (Ollama) -------------------------------------------
+
+@celery_app.task(name="pull_model")
+def pull_model_task(model: str, user_id: str | None = None) -> None:
+    run_model_pull(model, user_id)
+
+
+def dispatch_model_pull(model: str, user_id: str | None) -> None:
+    """Kick off a model pull without blocking the HTTP request.
+
+    In eager mode (dev default) ``.delay()`` would run synchronously and block
+    the request for the whole (minutes-long) download, so run it in a daemon
+    thread instead. With a real broker, hand it to the worker.
+    """
+    if ALWAYS_EAGER:
+        threading.Thread(target=run_model_pull, args=(model, user_id), daemon=True).start()
+    else:
+        pull_model_task.delay(model, user_id)
+
+
+def _notify(user_id: str | None, title: str, *, level: str = "info",
+            body: str | None = None, detail: dict | None = None) -> None:
+    if not user_id:
+        return
+    try:
+        from notifications import create_notification
+
+        create_notification(user_id, title, level=level, type="model_pull",
+                            body=body, detail=detail)
+    except Exception:  # noqa: BLE001 - notifications must never fail the pull
+        logger.warning("model-pull notification failed", exc_info=True)
+
+
+def run_model_pull(model: str, user_id: str | None = None) -> None:
+    """Stream ``POST /api/pull`` from Ollama, reporting progress as notifications.
+
+    Progress is throttled to one notification per 10% bucket (plus status
+    changes) so the WebSocket/notification store isn't flooded on large pulls.
+    """
+    from llm import config as llm_config
+
+    base_url = llm_config.effective_config()["base_url"].rstrip("/")
+    _notify(user_id, f"Pulling model {model}", detail={"model": model, "status": "starting"})
+    last_bucket = -1
+    last_status = ""
+    try:
+        with requests.post(f"{base_url}/api/pull", json={"model": model, "stream": True},
+                           stream=True, timeout=3600) as resp:
+            resp.raise_for_status()
+            for line in resp.iter_lines():
+                if not line:
+                    continue
+                try:
+                    evt = json.loads(line)
+                except ValueError:
+                    continue
+                if evt.get("error"):
+                    _notify(user_id, f"Model pull failed: {model}", level="error",
+                            body=str(evt["error"]), detail={"model": model})
+                    return
+                status = evt.get("status", "")
+                total, completed = evt.get("total"), evt.get("completed")
+                if total and completed:
+                    bucket = int(completed * 10 / total)
+                    if bucket != last_bucket:
+                        last_bucket = bucket
+                        _notify(user_id, f"Pulling {model}: {bucket * 10}%",
+                                detail={"model": model, "percent": bucket * 10, "status": status})
+                elif status and status != last_status:
+                    last_status = status
+                    _notify(user_id, f"Pulling {model}: {status}",
+                            detail={"model": model, "status": status})
+        _notify(user_id, f"Model ready: {model}", level="success",
+                detail={"model": model, "status": "complete"})
+    except Exception as e:  # noqa: BLE001 - surface any failure to the user
+        logger.warning("model pull for %s failed: %s", model, e)
+        _notify(user_id, f"Model pull failed: {model}", level="error",
+                body=str(e), detail={"model": model})
 
 
 def clone_repo(repo_url: str, clone_dir: str) -> str:

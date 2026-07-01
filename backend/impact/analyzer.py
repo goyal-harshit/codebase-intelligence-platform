@@ -30,6 +30,38 @@ class ImpactAnalyzer:
     def __init__(self, client: "ArcadeDBClient") -> None:
         self.client = client
 
+    def resolve_file_path(self, requested: str) -> tuple[str | None, list[str]]:
+        """Map a repo-relative path to the exact ``File.path`` stored in the graph.
+
+        The parser records whatever path it walked (usually the absolute path
+        used at ingest time), so a user typing ``pkg/mod.py`` would never match
+        ``/data/repos/abc/pkg/mod.py`` on an exact lookup. This normalises and
+        suffix-matches instead. Returns ``(matched_path, suggestions)``: a match
+        with no suggestions, or ``None`` with up to 10 near-matches for a 404.
+        """
+        rows = self.client.query("MATCH (f:File) RETURN f.path AS path")
+        stored = [r.get("path") for r in rows if r.get("path")]
+        req = requested.replace("\\", "/").strip("/")
+
+        def norm(p: str) -> str:
+            return p.replace("\\", "/")
+
+        # 1. Exact (separator-insensitive) match.
+        for p in stored:
+            if norm(p) == req:
+                return p, []
+        # 2. Unambiguous suffix match (stored absolute path ends with the input).
+        suffix = "/" + req
+        matches = [p for p in stored if norm(p).endswith(suffix)]
+        if len(matches) == 1:
+            return matches[0], []
+        if matches:
+            return None, sorted(norm(m) for m in matches)[:10]
+        # 3. Basename fallback → suggestions only.
+        base = req.rsplit("/", 1)[-1]
+        near = sorted({norm(p) for p in stored if norm(p).rsplit("/", 1)[-1] == base})
+        return None, near[:10]
+
     def analyze_file_impact(self, file_path: str, max_depth: int = 5) -> dict:
         depth = _bounded_depth(max_depth)
         rows = self.client.query(

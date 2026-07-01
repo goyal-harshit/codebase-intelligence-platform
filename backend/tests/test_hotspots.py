@@ -40,7 +40,40 @@ def test_build_hotspots_ranks_churn_times_complexity(tmp_path: Path):
     result = build_hotspots(graph, str(repo), limit=10)
 
     assert result["available"] is True
+    assert result["mode"] == "churn_x_complexity"
     assert result["hotspots"][0]["file"] == "a.py"
     assert result["hotspots"][0]["churn"] == 2
     assert result["hotspots"][0]["total_complexity"] == 6
     assert result["hotspots"][0]["score"] == 12
+
+
+def test_build_hotspots_falls_back_to_complexity_only_without_git(tmp_path: Path):
+    # A plain (non-git) directory — mirrors the ZIP-upload flow with no .git.
+    repo = tmp_path / "plain"
+    repo.mkdir()
+    graph = FakeGraph()
+    graph.repo = repo
+
+    result = build_hotspots(graph, str(repo), limit=10)
+
+    assert result["available"] is True
+    assert result["mode"] == "complexity_only"
+    assert "reason" in result
+    # Scored by total complexity alone: b.py (10) outranks a.py (4+2=6).
+    assert result["hotspots"][0]["file"] == "b.py"
+    assert result["hotspots"][0]["total_complexity"] == 10
+    assert result["hotspots"][0]["score"] == 10
+    assert result["hotspots"][0]["churn"] == 0
+
+
+def test_build_hotspots_unavailable_when_graph_empty(tmp_path: Path):
+    class EmptyGraph:
+        def query(self, command, params=None, language="cypher"):
+            return []
+
+    repo = tmp_path / "plain2"
+    repo.mkdir()
+    result = build_hotspots(EmptyGraph(), str(repo), limit=10)
+
+    assert result["available"] is False
+    assert result["hotspots"] == []

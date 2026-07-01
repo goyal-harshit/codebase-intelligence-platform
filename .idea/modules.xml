@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/codebase_intelligence_project.iml" filepath="$PROJECT_DIR$/.idea/codebase_intelligence_project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/graphifyy.iml" filepath="$PROJECT_DIR$/.idea/graphifyy.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/requests.iml" filepath="$PROJECT_DIR$/.idea/requests.iml" />
     </modules>
   </component>

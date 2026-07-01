@@ -18,10 +18,12 @@ export default function StateBlock({
   state,
   title,
   detail,
+  action,
 }: {
   state: keyof typeof ICONS;
   title: string;
   detail?: string;
+  action?: React.ReactNode;
 }) {
   const Icon = ICONS[state];
   return (
@@ -31,6 +33,7 @@ export default function StateBlock({
         <div>
           <p className="font-medium">{title}</p>
           {detail && <p className="mt-1 text-sm opacity-80">{detail}</p>}
+          {action && <div className="mt-3">{action}</div>}
         </div>
       </div>
     </div>

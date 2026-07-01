@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Sparkles } from "lucide-react";
+import { Search, Sparkles, FolderTree } from "lucide-react";
 import { ask, QueryResult } from "@/lib/api";
 import AnswerCard from "@/components/AnswerCard";
+import FileBrowser from "@/components/FileBrowser";
 import PageHeader from "@/components/PageHeader";
 import StateBlock from "@/components/StateBlock";
 
@@ -18,6 +19,11 @@ export default function QueryPage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<QueryResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showBrowser, setShowBrowser] = useState(false);
+
+  const insertPath = (path: string) => {
+    setQuestion((q) => (q.trim() ? `${q.trimEnd()} ${path}` : `In ${path}, `));
+  };
 
   const search = async (value = question) => {
     if (!value.trim()) return;
@@ -63,7 +69,7 @@ export default function QueryPage() {
           </button>
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-4 flex flex-wrap items-center gap-2">
           {EXAMPLES.map((example) => (
             <button
               key={example}
@@ -73,7 +79,19 @@ export default function QueryPage() {
               {example}
             </button>
           ))}
+          <button
+            onClick={() => setShowBrowser((v) => !v)}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-950"
+          >
+            <FolderTree size={15} />
+            {showBrowser ? "Hide files" : "Reference a file"}
+          </button>
         </div>
+        {showBrowser && (
+          <div className="mt-3">
+            <FileBrowser onSelect={insertPath} />
+          </div>
+        )}
       </section>
 
       <div className="mt-6">

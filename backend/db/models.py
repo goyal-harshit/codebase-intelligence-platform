@@ -211,3 +211,41 @@ class AuditLog(Base):
     detail: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     ip: Mapped[str | None] = mapped_column(String(64), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow, index=True)
+
+
+class LlmSetting(Base):
+    """App-wide LLM provider configuration (plan Phase C).
+
+    Single-row table keyed by a fixed id (``default``). The API key is stored
+    *encrypted* at rest (see ``llm/secretbox.py``) — never in plaintext, and
+    never returned over the API. When no row exists the app falls back to the
+    ``LLM_*`` environment variables, so this is purely an override layer."""
+
+    __tablename__ = "llm_settings"
+
+    id: Mapped[str] = mapped_column(String(32), primary_key=True, default="default")
+    provider: Mapped[str] = mapped_column(String(32), default="ollama", nullable=False)
+    base_url: Mapped[str | None] = mapped_column(String(2048), nullable=True)
+    model: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    api_key_encrypted: Mapped[str | None] = mapped_column(Text, nullable=True)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=_utcnow, onupdate=_utcnow
+    )
+
+
+class Comment(Base):
+    """Collaboration (Phase 5): threaded discussion on nodes, risks, etc."""
+
+    __tablename__ = "comments"
+
+    id: Mapped[str] = mapped_column(String(32), primary_key=True, default=_uuid)
+    user_id: Mapped[str | None] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), index=True, nullable=True
+    )
+    target_type: Mapped[str] = mapped_column(String(32), nullable=False, index=True)
+    target_id: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
+    body: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow, index=True)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow, onupdate=_utcnow)
+
+    user: Mapped["User | None"] = relationship()

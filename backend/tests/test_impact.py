@@ -75,6 +75,45 @@ def test_find_affected_tests_query_shape():
     assert "COVERED_BY" in client.queries[0][0]
 
 
+class FakeFileGraph:
+    """Returns a canned File-path listing for resolve_file_path tests."""
+
+    def __init__(self, paths):
+        self.paths = list(paths)
+
+    def query(self, command, params=None, language="cypher"):
+        assert "MATCH (f:File)" in command
+        return [{"path": p} for p in self.paths]
+
+
+def test_resolve_exact_match():
+    graph = FakeFileGraph(["/data/repos/x/pkg/mod.py"])
+    matched, suggestions = ImpactAnalyzer(graph).resolve_file_path("/data/repos/x/pkg/mod.py")
+    assert matched == "/data/repos/x/pkg/mod.py"
+    assert suggestions == []
+
+
+def test_resolve_suffix_match_from_relative_path():
+    graph = FakeFileGraph(["/data/repos/x/pkg/mod.py", "/data/repos/x/other.py"])
+    matched, suggestions = ImpactAnalyzer(graph).resolve_file_path("pkg/mod.py")
+    assert matched == "/data/repos/x/pkg/mod.py"
+    assert suggestions == []
+
+
+def test_resolve_ambiguous_suffix_returns_suggestions():
+    graph = FakeFileGraph(["/a/pkg/mod.py", "/b/pkg/mod.py"])
+    matched, suggestions = ImpactAnalyzer(graph).resolve_file_path("pkg/mod.py")
+    assert matched is None
+    assert set(suggestions) == {"/a/pkg/mod.py", "/b/pkg/mod.py"}
+
+
+def test_resolve_no_match_suggests_by_basename():
+    graph = FakeFileGraph(["/a/service/auth.py"])
+    matched, suggestions = ImpactAnalyzer(graph).resolve_file_path("wrong/auth.py")
+    assert matched is None
+    assert suggestions == ["/a/service/auth.py"]
+
+
 @pytest.mark.skipif(
     not os.getenv("ARCADEDB_INTEGRATION"),
     reason="set ARCADEDB_INTEGRATION=1 with a populated graph to run",
