@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import {
   AlertTriangle,
   Download,
@@ -13,10 +14,12 @@ import {
   exportRisksUrl,
   getHotspots,
   getRisks,
+  getSecurity,
   getStats,
   HotspotResult,
   Risk,
   riskReportUrl,
+  SecurityResult,
   Stats,
 } from "@/lib/api";
 import HotspotHeatmap from "@/components/HotspotHeatmap";
@@ -39,6 +42,13 @@ const SEVERITY_RANK: Record<string, number> = {
   high: 3,
   medium: 2,
   low: 1,
+};
+
+const SECURITY_SEVERITY_COLOR: Record<string, string> = {
+  critical: "bg-red-100 text-red-800",
+  high: "bg-orange-100 text-orange-800",
+  medium: "bg-yellow-100 text-yellow-800",
+  low: "bg-gray-100 text-gray-700",
 };
 
 function severitySummary(risks: Risk[]) {
@@ -78,9 +88,14 @@ export default function Dashboard() {
   const [stats, setStats] = useState<LoadState<Stats>>(initial);
   const [risks, setRisks] = useState<LoadState<{ risks: Risk[]; total: number }>>(initial);
   const [hotspots, setHotspots] = useState<LoadState<HotspotResult>>(initial);
+  const [security, setSecurity] = useState<LoadState<SecurityResult>>(initial);
 
   useEffect(() => {
     const ctrl = new AbortController();
+
+    getSecurity()
+      .then((data) => { if (!ctrl.signal.aborted) setSecurity({ loading: false, data, error: null }); })
+      .catch((e) => { if (!ctrl.signal.aborted) setSecurity({ loading: false, data: null, error: e?.response?.data?.detail ?? e?.message ?? "unavailable" }); });
 
     getStats()
       .then((data) => { if (!ctrl.signal.aborted) setStats({ loading: false, data, error: null }); })
@@ -97,7 +112,7 @@ export default function Dashboard() {
     return () => ctrl.abort();
   }, []);
 
-  const allRisks = risks.data?.risks ?? [];
+  const allRisks = useMemo(() => risks.data?.risks ?? [], [risks.data]);
   const summary = useMemo(() => severitySummary(allRisks), [allRisks]);
   const score = healthScore(allRisks, stats.data);
   const topRisks = allRisks.slice(0, 8);
@@ -214,6 +229,51 @@ export default function Dashboard() {
                 </p>
               </div>
             </div>
+          </Panel>
+
+          <Panel
+            title="Security posture"
+            action={
+              <Link href="/security" className="text-xs text-slate-500 hover:text-slate-950">
+                View scan
+              </Link>
+            }
+          >
+            {security.loading ? (
+              <StateBlock state="loading" title="Scanning source" />
+            ) : security.data && security.data.available !== false ? (
+              <div>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-2xl font-semibold text-slate-950">
+                    {security.data.total}
+                  </span>
+                  <span className="text-sm text-slate-500">
+                    finding{security.data.total === 1 ? "" : "s"} across {security.data.files_scanned ?? 0} files
+                  </span>
+                </div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {["critical", "high", "medium", "low"].map((sev) => {
+                    const count = security.data?.by_severity?.[sev] ?? 0;
+                    return (
+                      <span
+                        key={sev}
+                        className={`rounded px-2 py-0.5 text-xs ${
+                          count > 0
+                            ? SECURITY_SEVERITY_COLOR[sev]
+                            : "bg-slate-50 text-slate-400"
+                        }`}
+                      >
+                        {count} {sev}
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm text-slate-500">
+                {security.data?.reason ?? security.error ?? "Run an ingest to enable scanning."}
+              </p>
+            )}
           </Panel>
 
           <Panel title="Severity distribution">

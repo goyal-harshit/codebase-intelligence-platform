@@ -119,6 +119,56 @@ export const getRisks = (severity?: string) =>
     })
     .then((r) => r.data);
 
+export interface SecurityFinding {
+  rule: string;
+  severity: string;
+  file: string;
+  line: number;
+  message: string;
+  snippet: string;
+  // "builtin" (regex scanner) | "bandit" | "ruff"
+  source?: string;
+}
+
+export interface SecurityResult {
+  available?: boolean;
+  reason?: string;
+  repo_path?: string;
+  files_scanned?: number;
+  findings: SecurityFinding[];
+  total: number;
+  by_severity: Record<string, number>;
+}
+
+export const getSecurity = (severity?: string) =>
+  api
+    .get<SecurityResult>("/api/v1/security", { params: severity ? { severity } : {} })
+    .then((r) => r.data);
+
+export interface Recommendation {
+  id: string;
+  type: string;
+  title: string;
+  severity: string;
+  target: string;
+  file?: string | null;
+  rationale: string;
+  suggestion: string;
+  effort: string;
+  details?: string | null;
+}
+
+export interface RefactorResult {
+  recommendations: Recommendation[];
+  total: number;
+  narrative?: string | null;
+}
+
+export const getRefactor = (explain = false) =>
+  api
+    .get<RefactorResult>("/api/v1/refactor", { params: explain ? { explain: true } : {} })
+    .then((r) => r.data);
+
 export const ask = (q: string) =>
   api.get<QueryResult>("/api/v1/query", { params: { q } }).then((r) => r.data);
 
@@ -362,3 +412,39 @@ export const getMe = () => api.get<AuthUser>("/users/me").then((r) => r.data);
 
 // JWTs are stateless, so "logout" just drops the client-side token.
 export const logout = () => setToken(null);
+
+/* ---- OAuth (GitHub) ----
+   The backend redirects to GitHub and, after the callback, sends the browser
+   back to /login#token=<jwt>. The button only renders when the backend
+   reports the provider as configured. */
+
+export const getAuthProviders = () =>
+  api.get<{ github: boolean }>("/auth/providers").then((r) => r.data);
+
+// Full-page navigation (not XHR): the backend answers with a 302 to GitHub.
+export const githubLoginUrl = () => `${API_URL}/auth/github/login`;
+
+/* ---- Auto-documentation (wiki) ---- */
+
+export interface DocgenPage {
+  module: string;
+  markdown: string;
+}
+
+export const getDocgenModules = () =>
+  api
+    .get<{ modules: string[]; total: number }>("/api/v1/docgen/modules")
+    .then((r) => r.data);
+
+export const generateDocs = (modules?: string[], narrative = false) =>
+  api
+    .post<{ pages: DocgenPage[]; total: number; narrative: boolean }>(
+      "/api/v1/docgen/generate",
+      { modules: modules ?? null, narrative }
+    )
+    .then((r) => r.data);
+
+export const getWikiMarkdown = () =>
+  api
+    .get<{ markdown: string; modules: string[]; total: number }>("/api/v1/docgen/wiki")
+    .then((r) => r.data);

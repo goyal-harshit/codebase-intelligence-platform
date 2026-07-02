@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { LogIn, UserPlus, ShieldCheck, Loader2 } from "lucide-react";
+import { Github, LogIn, UserPlus, ShieldCheck, Loader2 } from "lucide-react";
 import axios from "axios";
 import { useAuth } from "@/components/AuthProvider";
+import { getAuthProviders, githubLoginUrl, setToken } from "@/lib/api";
 
 type Mode = "login" | "register";
 
@@ -29,7 +30,7 @@ function errorMessage(err: unknown, mode: Mode): string {
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login, register } = useAuth();
+  const { login, register, refresh } = useAuth();
 
   const [mode, setMode] = useState<Mode>("login");
   const [email, setEmail] = useState("");
@@ -37,6 +38,24 @@ export default function LoginPage() {
   const [fullName, setFullName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [githubEnabled, setGithubEnabled] = useState(false);
+
+  // GitHub OAuth callback lands here as /login#token=<jwt> (a fragment, so
+  // the token never appears in server logs). Store it and go to the app.
+  useEffect(() => {
+    const match = window.location.hash.match(/token=([^&]+)/);
+    if (match) {
+      setToken(match[1]);
+      window.history.replaceState(null, "", window.location.pathname);
+      refresh().then(() => router.push("/dashboard"));
+    }
+  }, [refresh, router]);
+
+  useEffect(() => {
+    getAuthProviders()
+      .then((p) => setGithubEnabled(p.github))
+      .catch(() => setGithubEnabled(false));
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -166,6 +185,22 @@ export default function LoginPage() {
           {busy && <Loader2 size={16} className="animate-spin" />}
           {mode === "login" ? "Sign in" : "Create account"}
         </button>
+
+        {githubEnabled && (
+          <>
+            <div className="my-4 flex items-center gap-3 text-xs uppercase tracking-wide text-slate-400">
+              <span className="h-px flex-1 bg-slate-200" />
+              or
+              <span className="h-px flex-1 bg-slate-200" />
+            </div>
+            <a
+              href={githubLoginUrl()}
+              className="flex w-full items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-950 transition hover:bg-slate-50"
+            >
+              <Github size={16} /> Continue with GitHub
+            </a>
+          </>
+        )}
       </form>
 
       <p className="mt-4 text-center text-xs text-slate-500">
