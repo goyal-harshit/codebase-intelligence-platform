@@ -2,7 +2,8 @@
 
 Open-source platform that ingests any Git repo, builds a knowledge graph + vector index of its code, and answers plain-English questions, detects architecture risks, and computes change-impact / blast radius.
 
-See `CODEBASE_INTELLIGENCE_MASTER_PLAN.md` for the full build spec.
+See `PROJECT_PLAN.md` for the architecture, feature matrix, and roadmap
+(it supersedes all earlier plan documents).
 
 ## Quickstart (Docker)
 
@@ -30,6 +31,18 @@ Prefer running pieces locally for development? See the per-phase sections below.
 | 7 | FastAPI backend | **Done** |
 | 8 | Next.js frontend | **Done** |
 | 9 | Docker / deployment | **Done** |
+| 10 | Security / SAST scanner | **Done** |
+| 11 | Refactoring recommendations | **Done** |
+| 12 | GitHub OAuth sign-in | **Done** |
+
+### GitHub OAuth (optional)
+
+Create a free OAuth App at github.com/settings/developers (callback URL:
+your backend URL + `/auth/github/callback`, e.g.
+`http://localhost:8000/auth/github/callback`), then set `GITHUB_CLIENT_ID`
+and `GITHUB_CLIENT_SECRET` (e.g. in `.env.local`). The login page shows a
+"Continue with GitHub" button automatically when configured; without the
+variables, email/password auth keeps working and the button stays hidden.
 
 ## Phase 1 — AST Parser
 
