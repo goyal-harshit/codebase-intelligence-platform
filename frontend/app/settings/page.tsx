@@ -1,30 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { KeyRound, Shield, Users, LogIn, LogOut, UserCircle2, BadgeCheck } from "lucide-react";
+import { LogIn, LogOut, UserCircle2, BadgeCheck } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import StateBlock from "@/components/StateBlock";
 import SystemStatusPanel from "@/components/SystemStatusPanel";
 import LlmConfigEditor from "@/components/LlmConfigEditor";
 import { useAuth } from "@/components/AuthProvider";
-
-const SETTINGS = [
-  {
-    title: "User sessions",
-    detail: "JWT auth is wired to /auth/jwt; sign in from the top-right of any page.",
-    icon: Shield,
-  },
-  {
-    title: "API keys",
-    detail: "Per-user API-key CRUD exists in the backend and can be wired to a protected key-management form next.",
-    icon: KeyRound,
-  },
-  {
-    title: "Repo access",
-    detail: "Repo membership and RBAC routes are available for owner/member/viewer workflows.",
-    icon: Users,
-  },
-];
 
 export default function SettingsPage() {
   const { user, loading, logout } = useAuth();
@@ -34,7 +16,7 @@ export default function SettingsPage() {
       <PageHeader
         eyebrow="Administration"
         title="Settings"
-        description="Authentication, API-key, and repo access controls exposed by the backend."
+        description="Your account, service health, and local LLM configuration."
       />
 
       <div className="mb-5">
@@ -87,18 +69,6 @@ export default function SettingsPage() {
       <div className="mb-4 grid gap-4 lg:grid-cols-2">
         <SystemStatusPanel />
         <LlmConfigEditor />
-      </div>
-
-      <div className="grid gap-4 lg:grid-cols-3">
-        {SETTINGS.map(({ title, detail, icon: Icon }) => (
-          <section key={title} className="rounded-lg border border-slate-200 bg-white p-5">
-            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-slate-100 text-slate-700">
-              <Icon size={20} />
-            </div>
-            <h2 className="text-lg font-semibold text-slate-950">{title}</h2>
-            <p className="mt-2 text-sm text-slate-500">{detail}</p>
-          </section>
-        ))}
       </div>
     </div>
   );

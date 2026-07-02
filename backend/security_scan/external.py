@@ -20,6 +20,14 @@ import sys
 
 _TIMEOUT_SECONDS = 120
 
+# Dependency/build/VCS trees make Bandit crawl for minutes and time out on
+# real-world repos; both tools skip them explicitly (ruff --isolated also
+# stops honouring .gitignore, so it needs the list too).
+_EXCLUDED_DIRS = (
+    "node_modules", "venv", ".venv", "env", ".git", "__pycache__",
+    ".next", "dist", "build", ".tox", ".mypy_cache", ".pytest_cache",
+)
+
 # Bandit severities map 1:1; Ruff S-rules carry no severity, so they surface
 # as medium except a few high-signal codes.
 _BANDIT_SEVERITY = {"HIGH": "high", "MEDIUM": "medium", "LOW": "low"}
@@ -55,8 +63,10 @@ def _rel(path: str, repo_path: str) -> str:
 
 def run_bandit(repo_path: str) -> list[dict] | None:
     """Bandit findings for *repo_path*, or None if the tool is unusable."""
+    excludes = ",".join(f"*/{d}/*" for d in _EXCLUDED_DIRS)
     data = _run_json(
-        [sys.executable, "-m", "bandit", "-r", repo_path, "-f", "json", "-q"]
+        [sys.executable, "-m", "bandit", "-r", repo_path, "-f", "json", "-q",
+         "-x", excludes]
     )
     if not isinstance(data, dict) or "results" not in data:
         return None
@@ -81,6 +91,7 @@ def run_ruff(repo_path: str) -> list[dict] | None:
             sys.executable, "-m", "ruff", "check", repo_path,
             "--select", "S", "--output-format", "json",
             "--no-cache", "--exit-zero", "--isolated",
+            "--exclude", ",".join(_EXCLUDED_DIRS),
         ]
     )
     if not isinstance(data, list):

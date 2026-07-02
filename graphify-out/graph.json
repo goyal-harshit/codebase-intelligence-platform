@@ -1180,7 +1180,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_init",
-      "community": 33,
+      "community": 97,
       "norm_label": "__init__.py"
     },
     {
@@ -1190,7 +1190,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_init_rationale_1",
-      "community": 33,
+      "community": 97,
       "norm_label": "fastapi backend (phase 7)."
     },
     {
@@ -1200,7 +1200,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_audit",
-      "community": 48,
+      "community": 59,
       "norm_label": "audit.py"
     },
     {
@@ -1240,7 +1240,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_audit_rationale_1",
-      "community": 48,
+      "community": 59,
       "norm_label": "audit logging: persist security-relevant actions to the ``audit_log`` table.  ph"
     },
     {
@@ -1350,7 +1350,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "api_deps_get_llm",
-      "community": 70,
+      "community": 48,
       "norm_label": "get_llm()"
     },
     {
@@ -1390,7 +1390,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "api_deps_rationale_34",
-      "community": 70,
+      "community": 48,
       "norm_label": "build the client from the effective config (free/local providers only).      not"
     },
     {
@@ -1560,7 +1560,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_ratelimit",
-      "community": 0,
+      "community": 59,
       "norm_label": "ratelimit.py"
     },
     {
@@ -1570,7 +1570,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "api_ratelimit_nooplimiter",
-      "community": 0,
+      "community": 59,
       "norm_label": "_nooplimiter"
     },
     {
@@ -1580,7 +1580,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "api_ratelimit_nooplimiter_limit",
-      "community": 0,
+      "community": 59,
       "norm_label": ".limit()"
     },
     {
@@ -1590,7 +1590,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_ratelimit_rationale_1",
-      "community": 0,
+      "community": 59,
       "norm_label": "per-client rate limiting via slowapi, with a no-op fallback.  if slowapi is not"
     },
     {
@@ -1600,7 +1600,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_report",
-      "community": 54,
+      "community": 69,
       "norm_label": "report.py"
     },
     {
@@ -1610,7 +1610,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "api_report_format_findings",
-      "community": 54,
+      "community": 69,
       "norm_label": "format_findings()"
     },
     {
@@ -1620,7 +1620,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "api_report_build_narrative",
-      "community": 54,
+      "community": 69,
       "norm_label": "build_narrative()"
     },
     {
@@ -1630,7 +1630,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "api_report_build_html_report",
-      "community": 54,
+      "community": 69,
       "norm_label": "build_html_report()"
     },
     {
@@ -1640,7 +1640,7 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "api_report_pdf_available",
-      "community": 54,
+      "community": 69,
       "norm_label": "pdf_available()"
     },
     {
@@ -1650,7 +1650,7 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "api_report_to_pdf",
-      "community": 54,
+      "community": 69,
       "norm_label": "to_pdf()"
     },
     {
@@ -1660,7 +1660,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_report_rationale_1",
-      "community": 54,
+      "community": 69,
       "norm_label": "risk-report rendering (phase 3): a self-contained html report, plus an optional"
     },
     {
@@ -1670,7 +1670,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "api_report_rationale_28",
-      "community": 54,
+      "community": 69,
       "norm_label": "one line per finding, for the narrative prompt."
     },
     {
@@ -1680,7 +1680,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "api_report_rationale_37",
-      "community": 54,
+      "community": 69,
       "norm_label": "llm executive summary of the risk findings (phase 4 item 4)."
     },
     {
@@ -1690,7 +1690,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_review",
-      "community": 97,
+      "community": 59,
       "norm_label": "review.py"
     },
     {
@@ -1700,7 +1700,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "api_review_review_diff",
-      "community": 97,
+      "community": 59,
       "norm_label": "review_diff()"
     },
     {
@@ -1710,7 +1710,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_review_rationale_1",
-      "community": 97,
+      "community": 59,
       "norm_label": "ai code review core (phase 4): llm commentary on a diff.  separated from the rou"
     },
     {
@@ -1720,7 +1720,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_routes_activity",
-      "community": 54,
+      "community": 34,
       "norm_label": "routes_activity.py"
     },
     {
@@ -1730,7 +1730,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "api_routes_activity_activityout",
-      "community": 54,
+      "community": 34,
       "norm_label": "activityout"
     },
     {
@@ -1740,7 +1740,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "basemodel",
-      "community": 69,
+      "community": 17,
       "norm_label": "basemodel"
     },
     {
@@ -1750,7 +1750,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "api_routes_activity_get_activity_feed",
-      "community": 54,
+      "community": 34,
       "norm_label": "get_activity_feed()"
     },
     {
@@ -1760,7 +1760,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_routes_activity_rationale_1",
-      "community": 54,
+      "community": 34,
       "norm_label": "collaboration (phase 5): activity feed based on the audit log."
     },
     {
@@ -1770,7 +1770,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "api_routes_activity_rationale_30",
-      "community": 54,
+      "community": 34,
       "norm_label": "get the most recent activity feed events from the audit log."
     },
     {
@@ -1780,7 +1780,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_routes_comments",
-      "community": 48,
+      "community": 34,
       "norm_label": "routes_comments.py"
     },
     {
@@ -1790,7 +1790,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "api_routes_comments_commentcreate",
-      "community": 48,
+      "community": 34,
       "norm_label": "commentcreate"
     },
     {
@@ -1800,7 +1800,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "api_routes_comments_commentout",
-      "community": 48,
+      "community": 34,
       "norm_label": "commentout"
     },
     {
@@ -1810,7 +1810,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "api_routes_comments_list_comments",
-      "community": 48,
+      "community": 34,
       "norm_label": "list_comments()"
     },
     {
@@ -1820,7 +1820,7 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "api_routes_comments_create_comment",
-      "community": 48,
+      "community": 34,
       "norm_label": "create_comment()"
     },
     {
@@ -1840,7 +1840,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_routes_comments_rationale_1",
-      "community": 48,
+      "community": 34,
       "norm_label": "collaboration (phase 5): threaded comments on risks and graph nodes."
     },
     {
@@ -1850,7 +1850,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "api_routes_comments_rationale_36",
-      "community": 48,
+      "community": 34,
       "norm_label": "list comments for a specific target."
     },
     {
@@ -1860,7 +1860,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "api_routes_comments_rationale_49",
-      "community": 48,
+      "community": 34,
       "norm_label": "add a new comment to a target."
     },
     {
@@ -1970,7 +1970,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_routes_docgen",
-      "community": 70,
+      "community": 48,
       "norm_label": "routes_docgen.py"
     },
     {
@@ -1980,7 +1980,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "api_routes_docgen_generaterequest",
-      "community": 70,
+      "community": 48,
       "norm_label": "generaterequest"
     },
     {
@@ -1990,7 +1990,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "api_routes_docgen_docgen_modules",
-      "community": 89,
+      "community": 107,
       "norm_label": "docgen_modules()"
     },
     {
@@ -2000,7 +2000,7 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "api_routes_docgen_docgen_generate",
-      "community": 70,
+      "community": 48,
       "norm_label": "docgen_generate()"
     },
     {
@@ -2010,7 +2010,7 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "api_routes_docgen_docgen_wiki",
-      "community": 70,
+      "community": 48,
       "norm_label": "docgen_wiki()"
     },
     {
@@ -2020,7 +2020,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_routes_docgen_rationale_1",
-      "community": 70,
+      "community": 48,
       "norm_label": "auto-documentation (\"wiki\") endpoints (roadmap v1.3).  ``get /api/v1/docgen/modu"
     },
     {
@@ -2030,7 +2030,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_routes_export",
-      "community": 33,
+      "community": 97,
       "norm_label": "routes_export.py"
     },
     {
@@ -2040,7 +2040,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "api_routes_export_attachment",
-      "community": 33,
+      "community": 97,
       "norm_label": "_attachment()"
     },
     {
@@ -2050,7 +2050,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "response",
-      "community": 33,
+      "community": 97,
       "norm_label": "response"
     },
     {
@@ -2060,7 +2060,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "api_routes_export_check_format",
-      "community": 33,
+      "community": 97,
       "norm_label": "_check_format()"
     },
     {
@@ -2070,7 +2070,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "api_routes_export_export_risks",
-      "community": 33,
+      "community": 97,
       "norm_label": "export_risks()"
     },
     {
@@ -2080,7 +2080,7 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "api_routes_export_export_impact",
-      "community": 33,
+      "community": 97,
       "norm_label": "export_impact()"
     },
     {
@@ -2090,7 +2090,7 @@
       "source_location": "L99",
       "_origin": "ast",
       "id": "api_routes_export_report_risks",
-      "community": 48,
+      "community": 97,
       "norm_label": "report_risks()"
     },
     {
@@ -2110,7 +2110,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_routes_export_rationale_1",
-      "community": 33,
+      "community": 97,
       "norm_label": "export endpoints: download risk reports and impact analysis as csv/excel.  sits"
     },
     {
@@ -2327,7 +2327,7 @@
       "label": "_check_arcadedb()",
       "file_type": "code",
       "source_file": "backend/api/routes_health.py",
-      "source_location": "L25",
+      "source_location": "L26",
       "_origin": "ast",
       "id": "api_routes_health_check_arcadedb",
       "community": 70,
@@ -2337,7 +2337,7 @@
       "label": "_check_chromadb()",
       "file_type": "code",
       "source_file": "backend/api/routes_health.py",
-      "source_location": "L33",
+      "source_location": "L34",
       "_origin": "ast",
       "id": "api_routes_health_check_chromadb",
       "community": 70,
@@ -2347,7 +2347,7 @@
       "label": "_check_llm()",
       "file_type": "code",
       "source_file": "backend/api/routes_health.py",
-      "source_location": "L50",
+      "source_location": "L51",
       "_origin": "ast",
       "id": "api_routes_health_check_llm",
       "community": 70,
@@ -2357,7 +2357,7 @@
       "label": "health_services()",
       "file_type": "code",
       "source_file": "backend/api/routes_health.py",
-      "source_location": "L69",
+      "source_location": "L70",
       "_origin": "ast",
       "id": "api_routes_health_health_services",
       "community": 70,
@@ -2430,7 +2430,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_routes_ingest",
-      "community": 0,
+      "community": 59,
       "norm_label": "routes_ingest.py"
     },
     {
@@ -2440,7 +2440,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "api_routes_ingest_ingestrequest",
-      "community": 0,
+      "community": 59,
       "norm_label": "ingestrequest"
     },
     {
@@ -2450,7 +2450,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "api_routes_ingest_start_ingest",
-      "community": 0,
+      "community": 59,
       "norm_label": "start_ingest()"
     },
     {
@@ -2460,7 +2460,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "api_routes_ingest_ingest_status",
-      "community": 0,
+      "community": 59,
       "norm_label": "ingest_status()"
     },
     {
@@ -2470,7 +2470,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_routes_keys",
-      "community": 54,
+      "community": 48,
       "norm_label": "routes_keys.py"
     },
     {
@@ -2480,7 +2480,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "api_routes_keys_apikeycreate",
-      "community": 54,
+      "community": 48,
       "norm_label": "apikeycreate"
     },
     {
@@ -2490,7 +2490,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "api_routes_keys_apikeyinfo",
-      "community": 54,
+      "community": 48,
       "norm_label": "apikeyinfo"
     },
     {
@@ -2500,7 +2500,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "api_routes_keys_apikeycreated",
-      "community": 54,
+      "community": 48,
       "norm_label": "apikeycreated"
     },
     {
@@ -2510,7 +2510,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "api_routes_keys_create_key",
-      "community": 54,
+      "community": 48,
       "norm_label": "create_key()"
     },
     {
@@ -2520,7 +2520,7 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "api_routes_keys_list_keys",
-      "community": 54,
+      "community": 48,
       "norm_label": "list_keys()"
     },
     {
@@ -2540,7 +2540,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_routes_keys_rationale_1",
-      "community": 54,
+      "community": 48,
       "norm_label": "per-user api key management (the \"settings page\" backend).  all routes require a"
     },
     {
@@ -2770,7 +2770,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_routes_repos",
-      "community": 69,
+      "community": 17,
       "norm_label": "routes_repos.py"
     },
     {
@@ -2780,7 +2780,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "api_routes_repos_repocreate",
-      "community": 69,
+      "community": 17,
       "norm_label": "repocreate"
     },
     {
@@ -2790,7 +2790,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "api_routes_repos_repoinfo",
-      "community": 69,
+      "community": 17,
       "norm_label": "repoinfo"
     },
     {
@@ -2800,7 +2800,7 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "api_routes_repos_memberinfo",
-      "community": 69,
+      "community": 17,
       "norm_label": "memberinfo"
     },
     {
@@ -2810,7 +2810,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "api_routes_repos_membergrant",
-      "community": 69,
+      "community": 17,
       "norm_label": "membergrant"
     },
     {
@@ -2820,7 +2820,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "api_routes_repos_create_repo_route",
-      "community": 69,
+      "community": 17,
       "norm_label": "create_repo_route()"
     },
     {
@@ -2840,7 +2840,7 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "api_routes_repos_list_members_route",
-      "community": 69,
+      "community": 17,
       "norm_label": "list_members_route()"
     },
     {
@@ -2850,7 +2850,7 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "api_routes_repos_add_member_route",
-      "community": 69,
+      "community": 17,
       "norm_label": "add_member_route()"
     },
     {
@@ -2860,7 +2860,7 @@
       "source_location": "L96",
       "_origin": "ast",
       "id": "api_routes_repos_remove_member_route",
-      "community": 69,
+      "community": 17,
       "norm_label": "remove_member_route()"
     },
     {
@@ -2870,7 +2870,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_routes_repos_rationale_1",
-      "community": 69,
+      "community": 17,
       "norm_label": "repo ownership + membership management (phase 2 rbac).  a repo's creator becomes"
     },
     {
@@ -2880,7 +2880,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_routes_review",
-      "community": 97,
+      "community": 59,
       "norm_label": "routes_review.py"
     },
     {
@@ -2890,7 +2890,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "api_routes_review_reviewrequest",
-      "community": 97,
+      "community": 59,
       "norm_label": "reviewrequest"
     },
     {
@@ -2900,7 +2900,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "api_routes_review_review_route",
-      "community": 97,
+      "community": 59,
       "norm_label": "review_route()"
     },
     {
@@ -2910,7 +2910,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "api_routes_review_rationale_1",
-      "community": 97,
+      "community": 59,
       "norm_label": "ai code review endpoint (phase 4): review a unified diff with the llm."
     },
     {
@@ -2947,7 +2947,7 @@
       "label": "_latest_repo_path()",
       "file_type": "code",
       "source_file": "backend/api/routes_security.py",
-      "source_location": "L25",
+      "source_location": "L32",
       "_origin": "ast",
       "id": "api_routes_security_latest_repo_path",
       "community": 48,
@@ -2957,7 +2957,7 @@
       "label": "security()",
       "file_type": "code",
       "source_file": "backend/api/routes_security.py",
-      "source_location": "L36",
+      "source_location": "L43",
       "_origin": "ast",
       "id": "api_routes_security_security",
       "community": 48,
@@ -3370,7 +3370,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "valueerror",
-      "community": 1,
+      "community": 95,
       "norm_label": "valueerror"
     },
     {
@@ -3400,7 +3400,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "api_validators_validate_repo_url",
-      "community": 0,
+      "community": 33,
       "norm_label": "validate_repo_url()"
     },
     {
@@ -3410,7 +3410,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "resolver",
-      "community": 0,
+      "community": 33,
       "norm_label": "resolver"
     },
     {
@@ -3450,7 +3450,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "api_validators_rationale_52",
-      "community": 0,
+      "community": 33,
       "norm_label": "allow-list a clone url and block ssrf to internal/loopback ranges.      fails cl"
     },
     {
@@ -3530,7 +3530,7 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "ast_parser_parser_coderelationship",
-      "community": 4,
+      "community": 77,
       "norm_label": "coderelationship"
     },
     {
@@ -3540,7 +3540,7 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "ast_parser_parser_universalparser",
-      "community": 4,
+      "community": 0,
       "norm_label": "universalparser"
     },
     {
@@ -3550,7 +3550,7 @@
       "source_location": "L85",
       "_origin": "ast",
       "id": "ast_parser_parser_universalparser_init",
-      "community": 4,
+      "community": 0,
       "norm_label": ".__init__()"
     },
     {
@@ -3560,7 +3560,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "ast_parser_parser_universalparser_get_parser",
-      "community": 4,
+      "community": 0,
       "norm_label": "._get_parser()"
     },
     {
@@ -3570,7 +3570,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "ast_parser_parser_universalparser_detect_language",
-      "community": 4,
+      "community": 0,
       "norm_label": ".detect_language()"
     },
     {
@@ -3580,7 +3580,7 @@
       "source_location": "L96",
       "_origin": "ast",
       "id": "ast_parser_parser_universalparser_parse_file",
-      "community": 4,
+      "community": 0,
       "norm_label": ".parse_file()"
     },
     {
@@ -3590,7 +3590,7 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "ast_parser_parser_universalparser_parse_source",
-      "community": 4,
+      "community": 0,
       "norm_label": ".parse_source()"
     },
     {
@@ -3600,7 +3600,7 @@
       "source_location": "L120",
       "_origin": "ast",
       "id": "ast_parser_parser_universalparser_walk",
-      "community": 4,
+      "community": 0,
       "norm_label": "._walk()"
     },
     {
@@ -3610,7 +3610,7 @@
       "source_location": "L177",
       "_origin": "ast",
       "id": "ast_parser_parser_universalparser_text",
-      "community": 4,
+      "community": 0,
       "norm_label": "._text()"
     },
     {
@@ -3620,7 +3620,7 @@
       "source_location": "L183",
       "_origin": "ast",
       "id": "ast_parser_parser_universalparser_make_id",
-      "community": 4,
+      "community": 0,
       "norm_label": "._make_id()"
     },
     {
@@ -3630,7 +3630,7 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "ast_parser_parser_universalparser_signature",
-      "community": 4,
+      "community": 0,
       "norm_label": "._signature()"
     },
     {
@@ -3640,7 +3640,7 @@
       "source_location": "L196",
       "_origin": "ast",
       "id": "ast_parser_parser_universalparser_docstring",
-      "community": 4,
+      "community": 0,
       "norm_label": "._docstring()"
     },
     {
@@ -3650,7 +3650,7 @@
       "source_location": "L208",
       "_origin": "ast",
       "id": "ast_parser_parser_universalparser_call_target",
-      "community": 4,
+      "community": 0,
       "norm_label": "._call_target()"
     },
     {
@@ -3660,7 +3660,7 @@
       "source_location": "L227",
       "_origin": "ast",
       "id": "ast_parser_parser_universalparser_base_class_names",
-      "community": 4,
+      "community": 0,
       "norm_label": "._base_class_names()"
     },
     {
@@ -3670,7 +3670,7 @@
       "source_location": "L252",
       "_origin": "ast",
       "id": "ast_parser_parser_universalparser_import_targets",
-      "community": 4,
+      "community": 0,
       "norm_label": "._import_targets()"
     },
     {
@@ -3680,7 +3680,7 @@
       "source_location": "L276",
       "_origin": "ast",
       "id": "ast_parser_parser_universalparser_first_identifier",
-      "community": 4,
+      "community": 0,
       "norm_label": "._first_identifier()"
     },
     {
@@ -3690,7 +3690,7 @@
       "source_location": "L286",
       "_origin": "ast",
       "id": "ast_parser_parser_universalparser_complexity",
-      "community": 4,
+      "community": 0,
       "norm_label": "._complexity()"
     },
     {
@@ -3710,7 +3710,7 @@
       "source_location": "L209",
       "_origin": "ast",
       "id": "ast_parser_parser_rationale_209",
-      "community": 4,
+      "community": 0,
       "norm_label": "return (callee_name, receiver) for a call node.          ``receiver`` is the seg"
     },
     {
@@ -3720,7 +3720,7 @@
       "source_location": "L228",
       "_origin": "ast",
       "id": "ast_parser_parser_rationale_228",
-      "community": 4,
+      "community": 0,
       "norm_label": "names of classes this class extends (last path component only)."
     },
     {
@@ -3730,7 +3730,7 @@
       "source_location": "L253",
       "_origin": "ast",
       "id": "ast_parser_parser_rationale_253",
-      "community": 4,
+      "community": 0,
       "norm_label": "top-level module name(s) of an import statement."
     },
     {
@@ -3960,7 +3960,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "auth_init",
-      "community": 17,
+      "community": 15,
       "norm_label": "__init__.py"
     },
     {
@@ -3970,7 +3970,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "auth_init_rationale_1",
-      "community": 17,
+      "community": 15,
       "norm_label": "authentication layer (fastapi-users: email/password + jwt)."
     },
     {
@@ -4320,7 +4320,7 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "auth_rbac_list_members",
-      "community": 69,
+      "community": 17,
       "norm_label": "list_members()"
     },
     {
@@ -4350,7 +4350,7 @@
       "source_location": "L106",
       "_origin": "ast",
       "id": "auth_rbac_repocontext",
-      "community": 69,
+      "community": 17,
       "norm_label": "repocontext"
     },
     {
@@ -4410,7 +4410,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "auth_schemas",
-      "community": 17,
+      "community": 15,
       "norm_label": "schemas.py"
     },
     {
@@ -4420,7 +4420,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "auth_schemas_userread",
-      "community": 17,
+      "community": 15,
       "norm_label": "userread"
     },
     {
@@ -4430,7 +4430,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "auth_schemas_usercreate",
-      "community": 17,
+      "community": 15,
       "norm_label": "usercreate"
     },
     {
@@ -4440,7 +4440,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "auth_schemas_userupdate",
-      "community": 17,
+      "community": 15,
       "norm_label": "userupdate"
     },
     {
@@ -4450,7 +4450,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "auth_schemas_rationale_1",
-      "community": 17,
+      "community": 15,
       "norm_label": "pydantic schemas for the auth/user api (fastapi-users)."
     },
     {
@@ -4790,7 +4790,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "db_models_utcnow",
-      "community": 54,
+      "community": 34,
       "norm_label": "_utcnow()"
     },
     {
@@ -4800,7 +4800,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "datetime",
-      "community": 54,
+      "community": 34,
       "norm_label": "datetime"
     },
     {
@@ -5160,7 +5160,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "docgen_init",
-      "community": 89,
+      "community": 42,
       "norm_label": "__init__.py"
     },
     {
@@ -5170,7 +5170,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "docgen_init_rationale_1",
-      "community": 89,
+      "community": 42,
       "norm_label": "auto-documentation (\"wiki\") generator (roadmap v1.3).  turns the parsed entities"
     },
     {
@@ -5180,7 +5180,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "docgen_generator",
-      "community": 89,
+      "community": 42,
       "norm_label": "generator.py"
     },
     {
@@ -5190,7 +5190,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "docgen_generator_docgenerator",
-      "community": 89,
+      "community": 107,
       "norm_label": "docgenerator"
     },
     {
@@ -5200,7 +5200,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "docgen_generator_docgenerator_init",
-      "community": 89,
+      "community": 107,
       "norm_label": ".__init__()"
     },
     {
@@ -5210,7 +5210,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "docgen_generator_docgenerator_list_modules",
-      "community": 89,
+      "community": 107,
       "norm_label": ".list_modules()"
     },
     {
@@ -5220,7 +5220,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "docgen_generator_docgenerator_collect",
-      "community": 89,
+      "community": 107,
       "norm_label": ".collect()"
     },
     {
@@ -5230,7 +5230,7 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "docgen_generator_docgenerator_generate",
-      "community": 89,
+      "community": 42,
       "norm_label": ".generate()"
     },
     {
@@ -5240,7 +5240,7 @@
       "source_location": "L117",
       "_origin": "ast",
       "id": "docgen_generator_build_skeleton",
-      "community": 89,
+      "community": 42,
       "norm_label": "build_skeleton()"
     },
     {
@@ -5250,7 +5250,7 @@
       "source_location": "L163",
       "_origin": "ast",
       "id": "docgen_generator_build_wiki",
-      "community": 89,
+      "community": 42,
       "norm_label": "build_wiki()"
     },
     {
@@ -5260,7 +5260,7 @@
       "source_location": "L176",
       "_origin": "ast",
       "id": "docgen_generator_purpose_narrative",
-      "community": 89,
+      "community": 42,
       "norm_label": "purpose_narrative()"
     },
     {
@@ -5270,7 +5270,7 @@
       "source_location": "L200",
       "_origin": "ast",
       "id": "docgen_generator_entity_line",
-      "community": 89,
+      "community": 42,
       "norm_label": "_entity_line()"
     },
     {
@@ -5280,7 +5280,7 @@
       "source_location": "L212",
       "_origin": "ast",
       "id": "docgen_generator_slug",
-      "community": 89,
+      "community": 42,
       "norm_label": "_slug()"
     },
     {
@@ -5290,7 +5290,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "docgen_generator_rationale_1",
-      "community": 89,
+      "community": 42,
       "norm_label": "per-module documentation from the code graph (roadmap v1.3).  the graph already"
     },
     {
@@ -5300,7 +5300,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "docgen_generator_rationale_39",
-      "community": 89,
+      "community": 107,
       "norm_label": "collects per-module facts from the graph and renders wiki pages."
     },
     {
@@ -5310,7 +5310,7 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "docgen_generator_rationale_47",
-      "community": 89,
+      "community": 107,
       "norm_label": "distinct source-file paths the graph knows about, sorted."
     },
     {
@@ -5320,7 +5320,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "docgen_generator_rationale_52",
-      "community": 89,
+      "community": 107,
       "norm_label": "all facts needed to document one module (source file)."
     },
     {
@@ -5330,7 +5330,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "docgen_generator_rationale_93",
-      "community": 89,
+      "community": 42,
       "norm_label": "render one page per module: ``[{\"module\": path, \"markdown\": md}]``.          ``m"
     },
     {
@@ -5340,7 +5340,7 @@
       "source_location": "L118",
       "_origin": "ast",
       "id": "docgen_generator_rationale_118",
-      "community": 89,
+      "community": 42,
       "norm_label": "deterministic markdown page for one module dict (see ``collect``).      if ``mod"
     },
     {
@@ -5350,7 +5350,7 @@
       "source_location": "L164",
       "_origin": "ast",
       "id": "docgen_generator_rationale_164",
-      "community": 89,
+      "community": 42,
       "norm_label": "concatenate pages into a single wiki document with an index section."
     },
     {
@@ -5360,7 +5360,7 @@
       "source_location": "L177",
       "_origin": "ast",
       "id": "docgen_generator_rationale_177",
-      "community": 89,
+      "community": 42,
       "norm_label": "one bounded llm call producing a short prose purpose for a module.      returns"
     },
     {
@@ -5370,7 +5370,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "graph_db_init",
-      "community": 77,
+      "community": 19,
       "norm_label": "__init__.py"
     },
     {
@@ -5380,7 +5380,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "graph_db_init_rationale_1",
-      "community": 77,
+      "community": 19,
       "norm_label": "graph database layer (phase 2): arcadedb ingestion + incremental updates."
     },
     {
@@ -5590,7 +5590,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "graph_db_client",
-      "community": 77,
+      "community": 19,
       "norm_label": "client.py"
     },
     {
@@ -5600,7 +5600,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "graph_db_client_arcadedberror",
-      "community": 77,
+      "community": 19,
       "norm_label": "arcadedberror"
     },
     {
@@ -5610,7 +5610,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "runtimeerror",
-      "community": 54,
+      "community": 69,
       "norm_label": "runtimeerror"
     },
     {
@@ -5730,7 +5730,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "graph_db_client_rationale_1",
-      "community": 77,
+      "community": 19,
       "norm_label": "thin http client for arcadedb.  wraps arcadedb's rest api (https://docs.arcadedb"
     },
     {
@@ -5740,7 +5740,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "graph_db_client_rationale_17",
-      "community": 77,
+      "community": 19,
       "norm_label": "raised when arcadedb returns a non-2xx response."
     },
     {
@@ -5770,7 +5770,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "graph_db_incremental",
-      "community": 77,
+      "community": 19,
       "norm_label": "incremental.py"
     },
     {
@@ -5900,7 +5900,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "graph_db_incremental_rationale_1",
-      "community": 77,
+      "community": 19,
       "norm_label": "incremental re-indexing driven by per-file sha-256 hashes.  a small sqlite key-v"
     },
     {
@@ -5940,7 +5940,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "graph_db_schema",
-      "community": 77,
+      "community": 19,
       "norm_label": "schema.py"
     },
     {
@@ -5950,7 +5950,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "graph_db_schema_schema_statements",
-      "community": 77,
+      "community": 19,
       "norm_label": "schema_statements()"
     },
     {
@@ -5960,7 +5960,7 @@
       "source_location": "L64",
       "_origin": "ast",
       "id": "graph_db_schema_apply_schema",
-      "community": 77,
+      "community": 19,
       "norm_label": "apply_schema()"
     },
     {
@@ -5970,7 +5970,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "graph_db_schema_rationale_1",
-      "community": 77,
+      "community": 19,
       "norm_label": "graph schema: vertex/edge types and indexes.  arcadedb ddl is sql, not cypher, s"
     },
     {
@@ -5980,7 +5980,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "graph_db_schema_rationale_52",
-      "community": 77,
+      "community": 19,
       "norm_label": "return the ordered list of ddl statements that define the schema."
     },
     {
@@ -5990,7 +5990,7 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "graph_db_schema_rationale_65",
-      "community": 77,
+      "community": 19,
       "norm_label": "create all vertex/edge types and indexes on the database."
     },
     {
@@ -7600,7 +7600,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "retrieval_init",
-      "community": 29,
+      "community": 1,
       "norm_label": "__init__.py"
     },
     {
@@ -7610,7 +7610,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "retrieval_init_rationale_1",
-      "community": 29,
+      "community": 1,
       "norm_label": "hybrid retrieval + llm query engine (phase 6)."
     },
     {
@@ -7620,7 +7620,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "retrieval_answer",
-      "community": 29,
+      "community": 1,
       "norm_label": "answer.py"
     },
     {
@@ -7630,7 +7630,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "retrieval_answer_answergenerator",
-      "community": 29,
+      "community": 1,
       "norm_label": "answergenerator"
     },
     {
@@ -7640,7 +7640,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "retrieval_answer_answergenerator_init",
-      "community": 29,
+      "community": 1,
       "norm_label": ".__init__()"
     },
     {
@@ -7650,7 +7650,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "retrieval_answer_answergenerator_generate",
-      "community": 29,
+      "community": 1,
       "norm_label": ".generate()"
     },
     {
@@ -7660,7 +7660,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "retrieval_answer_answergenerator_format_context",
-      "community": 29,
+      "community": 1,
       "norm_label": ".format_context()"
     },
     {
@@ -7670,7 +7670,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "retrieval_answer_rationale_1",
-      "community": 29,
+      "community": 1,
       "norm_label": "turns retrieved context into a cited natural-language answer via the llm."
     },
     {
@@ -7780,7 +7780,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "retrieval_engine",
-      "community": 29,
+      "community": 1,
       "norm_label": "engine.py"
     },
     {
@@ -7790,7 +7790,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "retrieval_engine_queryengine",
-      "community": 29,
+      "community": 1,
       "norm_label": "queryengine"
     },
     {
@@ -7800,7 +7800,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "retrieval_engine_queryengine_init",
-      "community": 29,
+      "community": 1,
       "norm_label": ".__init__()"
     },
     {
@@ -7810,7 +7810,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "retrieval_engine_queryengine_answer",
-      "community": 106,
+      "community": 1,
       "norm_label": ".answer()"
     },
     {
@@ -7820,7 +7820,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "retrieval_engine_extract_sources",
-      "community": 106,
+      "community": 1,
       "norm_label": "extract_sources()"
     },
     {
@@ -7830,7 +7830,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "retrieval_engine_rationale_1",
-      "community": 29,
+      "community": 1,
       "norm_label": "end-to-end query engine: retrieve -> answer -> cite.  this is the single entry p"
     },
     {
@@ -7840,7 +7840,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "retrieval_engine_rationale_36",
-      "community": 106,
+      "community": 1,
       "norm_label": "best-effort list of file paths cited by the retrieved context."
     },
     {
@@ -7850,7 +7850,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "retrieval_lexical",
-      "community": 42,
+      "community": 1,
       "norm_label": "lexical.py"
     },
     {
@@ -7860,7 +7860,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "retrieval_lexical_tokenize",
-      "community": 42,
+      "community": 1,
       "norm_label": "tokenize()"
     },
     {
@@ -7870,7 +7870,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "retrieval_lexical_bm25_scores",
-      "community": 42,
+      "community": 1,
       "norm_label": "bm25_scores()"
     },
     {
@@ -7880,7 +7880,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "retrieval_lexical_rerank_hybrid",
-      "community": 42,
+      "community": 1,
       "norm_label": "rerank_hybrid()"
     },
     {
@@ -7890,7 +7890,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "retrieval_lexical_rationale_1",
-      "community": 42,
+      "community": 1,
       "norm_label": "bm25 lexical scoring + reciprocal-rank fusion for the semantic path.  chroma's v"
     },
     {
@@ -7900,7 +7900,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "retrieval_lexical_rationale_27",
-      "community": 42,
+      "community": 1,
       "norm_label": "code-aware tokens: splits snake_case and camelcase, lowercases."
     },
     {
@@ -7910,7 +7910,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "retrieval_lexical_rationale_32",
-      "community": 42,
+      "community": 1,
       "norm_label": "okapi bm25 score of *query* against each document."
     },
     {
@@ -7920,7 +7920,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "retrieval_lexical_rationale_59",
-      "community": 42,
+      "community": 1,
       "norm_label": "fuse vector order (as returned) with bm25 order via rrf; truncate to     *top_k*"
     },
     {
@@ -7930,7 +7930,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "retrieval_retriever",
-      "community": 29,
+      "community": 1,
       "norm_label": "retriever.py"
     },
     {
@@ -7940,7 +7940,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "retrieval_retriever_hybridretriever",
-      "community": 29,
+      "community": 1,
       "norm_label": "hybridretriever"
     },
     {
@@ -7950,7 +7950,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "retrieval_retriever_hybridretriever_init",
-      "community": 29,
+      "community": 1,
       "norm_label": ".__init__()"
     },
     {
@@ -7960,7 +7960,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "retrieval_retriever_hybridretriever_retrieve",
-      "community": 107,
+      "community": 1,
       "norm_label": ".retrieve()"
     },
     {
@@ -7970,7 +7970,7 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "retrieval_retriever_hybridretriever_semantic",
-      "community": 107,
+      "community": 1,
       "norm_label": "._semantic()"
     },
     {
@@ -7980,7 +7980,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "retrieval_retriever_rationale_1",
-      "community": 29,
+      "community": 1,
       "norm_label": "hybrid retrieval: structural (graph) first for structural questions, with a sema"
     },
     {
@@ -7990,7 +7990,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "retrieval_retriever_rationale_51",
-      "community": 107,
+      "community": 1,
       "norm_label": "vector search over a wider pool, re-ranked with bm25 (rrf fusion)."
     },
     {
@@ -8000,7 +8000,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "retrieval_router",
-      "community": 29,
+      "community": 1,
       "norm_label": "router.py"
     },
     {
@@ -8010,7 +8010,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "retrieval_router_queryrouter",
-      "community": 29,
+      "community": 1,
       "norm_label": "queryrouter"
     },
     {
@@ -8020,7 +8020,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "retrieval_router_queryrouter_classify",
-      "community": 29,
+      "community": 1,
       "norm_label": ".classify()"
     },
     {
@@ -8030,7 +8030,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "retrieval_router_rationale_1",
-      "community": 29,
+      "community": 1,
       "norm_label": "routes a question to structural (graph) vs semantic (vector) retrieval."
     },
     {
@@ -8227,7 +8227,7 @@
       "label": "_run_json()",
       "file_type": "code",
       "source_file": "backend/security_scan/external.py",
-      "source_location": "L30",
+      "source_location": "L38",
       "_origin": "ast",
       "id": "security_scan_external_run_json",
       "community": 81,
@@ -8237,7 +8237,7 @@
       "label": "_rel()",
       "file_type": "code",
       "source_file": "backend/security_scan/external.py",
-      "source_location": "L49",
+      "source_location": "L57",
       "_origin": "ast",
       "id": "security_scan_external_rel",
       "community": 81,
@@ -8247,7 +8247,7 @@
       "label": "run_bandit()",
       "file_type": "code",
       "source_file": "backend/security_scan/external.py",
-      "source_location": "L56",
+      "source_location": "L64",
       "_origin": "ast",
       "id": "security_scan_external_run_bandit",
       "community": 81,
@@ -8257,7 +8257,7 @@
       "label": "run_ruff()",
       "file_type": "code",
       "source_file": "backend/security_scan/external.py",
-      "source_location": "L77",
+      "source_location": "L87",
       "_origin": "ast",
       "id": "security_scan_external_run_ruff",
       "community": 81,
@@ -8267,7 +8267,7 @@
       "label": "run_external_tools()",
       "file_type": "code",
       "source_file": "backend/security_scan/external.py",
-      "source_location": "L104",
+      "source_location": "L115",
       "_origin": "ast",
       "id": "security_scan_external_run_external_tools",
       "community": 81,
@@ -8287,9 +8287,9 @@
       "label": "Run a tool and parse its stdout as JSON; None on any failure.      Non-zero exit",
       "file_type": "rationale",
       "source_file": "backend/security_scan/external.py",
-      "source_location": "L31",
+      "source_location": "L39",
       "_origin": "ast",
-      "id": "security_scan_external_rationale_31",
+      "id": "security_scan_external_rationale_39",
       "community": 81,
       "norm_label": "run a tool and parse its stdout as json; none on any failure.      non-zero exit"
     },
@@ -8297,9 +8297,9 @@
       "label": "Bandit findings for *repo_path*, or None if the tool is unusable.",
       "file_type": "rationale",
       "source_file": "backend/security_scan/external.py",
-      "source_location": "L57",
+      "source_location": "L65",
       "_origin": "ast",
-      "id": "security_scan_external_rationale_57",
+      "id": "security_scan_external_rationale_65",
       "community": 81,
       "norm_label": "bandit findings for *repo_path*, or none if the tool is unusable."
     },
@@ -8307,9 +8307,9 @@
       "label": "Ruff flake8-bandit (S) findings, or None if the tool is unusable.",
       "file_type": "rationale",
       "source_file": "backend/security_scan/external.py",
-      "source_location": "L78",
+      "source_location": "L88",
       "_origin": "ast",
-      "id": "security_scan_external_rationale_78",
+      "id": "security_scan_external_rationale_88",
       "community": 81,
       "norm_label": "ruff flake8-bandit (s) findings, or none if the tool is unusable."
     },
@@ -8317,9 +8317,9 @@
       "label": "All external-tool findings plus per-tool availability flags.",
       "file_type": "rationale",
       "source_file": "backend/security_scan/external.py",
-      "source_location": "L105",
+      "source_location": "L116",
       "_origin": "ast",
-      "id": "security_scan_external_rationale_105",
+      "id": "security_scan_external_rationale_116",
       "community": 81,
       "norm_label": "all external-tool findings plus per-tool availability flags."
     },
@@ -9690,7 +9690,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_docgen",
-      "community": 89,
+      "community": 29,
       "norm_label": "test_docgen.py"
     },
     {
@@ -9700,7 +9700,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "tests_test_docgen_test_skeleton_lists_inventory_and_dependencies",
-      "community": 89,
+      "community": 29,
       "norm_label": "test_skeleton_lists_inventory_and_dependencies()"
     },
     {
@@ -9710,7 +9710,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "tests_test_docgen_test_skeleton_with_purpose_and_empty_module",
-      "community": 89,
+      "community": 29,
       "norm_label": "test_skeleton_with_purpose_and_empty_module()"
     },
     {
@@ -9720,7 +9720,7 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "tests_test_docgen_test_build_wiki_has_index_and_all_pages",
-      "community": 89,
+      "community": 42,
       "norm_label": "test_build_wiki_has_index_and_all_pages()"
     },
     {
@@ -9730,7 +9730,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "tests_test_docgen_okllm",
-      "community": 89,
+      "community": 29,
       "norm_label": "okllm"
     },
     {
@@ -9740,7 +9740,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "tests_test_docgen_okllm_generate",
-      "community": 89,
+      "community": 29,
       "norm_label": ".generate()"
     },
     {
@@ -9750,7 +9750,7 @@
       "source_location": "L64",
       "_origin": "ast",
       "id": "tests_test_docgen_badllm",
-      "community": 89,
+      "community": 29,
       "norm_label": "badllm"
     },
     {
@@ -9760,7 +9760,7 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "tests_test_docgen_badllm_generate",
-      "community": 89,
+      "community": 29,
       "norm_label": ".generate()"
     },
     {
@@ -9770,7 +9770,7 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "tests_test_docgen_test_purpose_narrative_uses_llm_and_degrades",
-      "community": 89,
+      "community": 29,
       "norm_label": "test_purpose_narrative_uses_llm_and_degrades()"
     },
     {
@@ -9780,7 +9780,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "tests_test_docgen_fakegraph",
-      "community": 89,
+      "community": 29,
       "norm_label": "fakegraph"
     },
     {
@@ -9790,7 +9790,7 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "tests_test_docgen_fakegraph_query",
-      "community": 89,
+      "community": 29,
       "norm_label": ".query()"
     },
     {
@@ -9800,7 +9800,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "tests_test_docgen_test_generate_all_modules_sorted_and_filtered",
-      "community": 89,
+      "community": 29,
       "norm_label": "test_generate_all_modules_sorted_and_filtered()"
     },
     {
@@ -9810,7 +9810,7 @@
       "source_location": "L103",
       "_origin": "ast",
       "id": "tests_test_docgen_test_generate_narrative_on_and_degraded",
-      "community": 89,
+      "community": 29,
       "norm_label": "test_generate_narrative_on_and_degraded()"
     },
     {
@@ -9820,7 +9820,7 @@
       "source_location": "L129",
       "_origin": "ast",
       "id": "tests_test_docgen_test_openapi_lists_docgen_routes",
-      "community": 89,
+      "community": 29,
       "norm_label": "test_openapi_lists_docgen_routes()"
     },
     {
@@ -9830,7 +9830,7 @@
       "source_location": "L135",
       "_origin": "ast",
       "id": "tests_test_docgen_test_modules_degrades_to_503_without_graph",
-      "community": 89,
+      "community": 29,
       "norm_label": "test_modules_degrades_to_503_without_graph()"
     },
     {
@@ -9840,7 +9840,7 @@
       "source_location": "L142",
       "_origin": "ast",
       "id": "tests_test_docgen_test_endpoints_with_fake_graph",
-      "community": 89,
+      "community": 29,
       "norm_label": "test_endpoints_with_fake_graph()"
     },
     {
@@ -9850,7 +9850,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_docgen_rationale_1",
-      "community": 89,
+      "community": 29,
       "norm_label": "roadmap v1.3 tests \u2014 module skeletons, wiki assembly, llm degrade, endpoints."
     },
     {
@@ -10000,7 +10000,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "tests_test_graph_db_test_schema_statements_well_formed",
-      "community": 77,
+      "community": 19,
       "norm_label": "test_schema_statements_well_formed()"
     },
     {
@@ -10450,7 +10450,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_lexical",
-      "community": 42,
+      "community": 1,
       "norm_label": "test_lexical.py"
     },
     {
@@ -10460,7 +10460,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "tests_test_lexical_test_tokenize_splits_code_identifiers",
-      "community": 42,
+      "community": 1,
       "norm_label": "test_tokenize_splits_code_identifiers()"
     },
     {
@@ -10470,7 +10470,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "tests_test_lexical_test_bm25_prefers_exact_identifier_match",
-      "community": 42,
+      "community": 1,
       "norm_label": "test_bm25_prefers_exact_identifier_match()"
     },
     {
@@ -10480,7 +10480,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "tests_test_lexical_test_bm25_empty_corpus",
-      "community": 42,
+      "community": 1,
       "norm_label": "test_bm25_empty_corpus()"
     },
     {
@@ -10490,7 +10490,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "tests_test_lexical_chroma",
-      "community": 42,
+      "community": 1,
       "norm_label": "_chroma()"
     },
     {
@@ -10500,7 +10500,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "tests_test_lexical_test_rerank_promotes_lexical_match_and_keeps_shape",
-      "community": 42,
+      "community": 1,
       "norm_label": "test_rerank_promotes_lexical_match_and_keeps_shape()"
     },
     {
@@ -10510,7 +10510,7 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "tests_test_lexical_test_rerank_noop_on_empty_or_single",
-      "community": 42,
+      "community": 1,
       "norm_label": "test_rerank_noop_on_empty_or_single()"
     },
     {
@@ -10520,7 +10520,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "tests_test_lexical_test_retriever_semantic_path_uses_pool_and_truncates",
-      "community": 34,
+      "community": 1,
       "norm_label": "test_retriever_semantic_path_uses_pool_and_truncates()"
     },
     {
@@ -10530,7 +10530,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_lexical_rationale_1",
-      "community": 42,
+      "community": 1,
       "norm_label": "bm25 lexical layer + hybrid (vector \u222a bm25) re-ranking."
     },
     {
@@ -10950,7 +10950,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_parser",
-      "community": 4,
+      "community": 106,
       "norm_label": "test_parser.py"
     },
     {
@@ -10960,7 +10960,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "tests_test_parser_parse",
-      "community": 4,
+      "community": 106,
       "norm_label": "_parse()"
     },
     {
@@ -10970,7 +10970,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "tests_test_parser_test_parses_python_functions_and_class",
-      "community": 4,
+      "community": 106,
       "norm_label": "test_parses_python_functions_and_class()"
     },
     {
@@ -10980,7 +10980,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "tests_test_parser_test_python_docstring_and_complexity",
-      "community": 4,
+      "community": 106,
       "norm_label": "test_python_docstring_and_complexity()"
     },
     {
@@ -10990,7 +10990,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "tests_test_parser_test_detects_calls",
-      "community": 4,
+      "community": 106,
       "norm_label": "test_detects_calls()"
     },
     {
@@ -11000,7 +11000,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "tests_test_parser_test_symbol_resolution_links_call",
-      "community": 4,
+      "community": 106,
       "norm_label": "test_symbol_resolution_links_call()"
     },
     {
@@ -11010,7 +11010,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "tests_test_parser_test_extracts_inheritance",
-      "community": 4,
+      "community": 106,
       "norm_label": "test_extracts_inheritance()"
     },
     {
@@ -11020,7 +11020,7 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "tests_test_parser_test_extracts_imports",
-      "community": 4,
+      "community": 106,
       "norm_label": "test_extracts_imports()"
     },
     {
@@ -11030,7 +11030,7 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "tests_test_parser_test_parses_javascript",
-      "community": 4,
+      "community": 106,
       "norm_label": "test_parses_javascript()"
     },
     {
@@ -11040,7 +11040,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "tests_test_parser_test_unsupported_extension_returns_empty",
-      "community": 4,
+      "community": 106,
       "norm_label": "test_unsupported_extension_returns_empty()"
     },
     {
@@ -11190,7 +11190,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_rbac",
-      "community": 17,
+      "community": 110,
       "norm_label": "test_rbac.py"
     },
     {
@@ -11200,7 +11200,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "tests_test_rbac_user_token",
-      "community": 17,
+      "community": 110,
       "norm_label": "_user_token()"
     },
     {
@@ -11220,7 +11220,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "tests_test_rbac_test_creator_is_owner_and_can_manage_members",
-      "community": 17,
+      "community": 110,
       "norm_label": "test_creator_is_owner_and_can_manage_members()"
     },
     {
@@ -11230,7 +11230,7 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "tests_test_rbac_test_non_member_is_forbidden_and_member_cannot_grant",
-      "community": 17,
+      "community": 110,
       "norm_label": "test_non_member_is_forbidden_and_member_cannot_grant()"
     },
     {
@@ -11240,7 +11240,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "tests_test_rbac_test_repo_routes_require_login",
-      "community": 17,
+      "community": 110,
       "norm_label": "test_repo_routes_require_login()"
     },
     {
@@ -11250,7 +11250,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_rbac_rationale_1",
-      "community": 17,
+      "community": 110,
       "norm_label": "per-repo rbac: role ordering, membership grants, and route enforcement (phase 2,"
     },
     {
@@ -11260,7 +11260,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "tests_test_rbac_rationale_16",
-      "community": 17,
+      "community": 110,
       "norm_label": "register/login a user; returns (bearer_token, user_id)."
     },
     {
@@ -11430,7 +11430,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_retrieval",
-      "community": 34,
+      "community": 1,
       "norm_label": "test_retrieval.py"
     },
     {
@@ -11440,7 +11440,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "tests_test_retrieval_fakellm",
-      "community": 34,
+      "community": 1,
       "norm_label": "fakellm"
     },
     {
@@ -11450,7 +11450,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "tests_test_retrieval_fakellm_init",
-      "community": 34,
+      "community": 1,
       "norm_label": ".__init__()"
     },
     {
@@ -11460,7 +11460,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "tests_test_retrieval_fakellm_generate",
-      "community": 34,
+      "community": 1,
       "norm_label": ".generate()"
     },
     {
@@ -11470,7 +11470,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "tests_test_retrieval_fakegraph",
-      "community": 34,
+      "community": 1,
       "norm_label": "fakegraph"
     },
     {
@@ -11480,7 +11480,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "tests_test_retrieval_fakegraph_init",
-      "community": 34,
+      "community": 1,
       "norm_label": ".__init__()"
     },
     {
@@ -11490,7 +11490,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "tests_test_retrieval_fakegraph_query",
-      "community": 54,
+      "community": 69,
       "norm_label": ".query()"
     },
     {
@@ -11500,7 +11500,7 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "tests_test_retrieval_fakevectors",
-      "community": 34,
+      "community": 1,
       "norm_label": "fakevectors"
     },
     {
@@ -11510,7 +11510,7 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "tests_test_retrieval_fakevectors_init",
-      "community": 34,
+      "community": 1,
       "norm_label": ".__init__()"
     },
     {
@@ -11520,7 +11520,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "tests_test_retrieval_fakevectors_search",
-      "community": 34,
+      "community": 1,
       "norm_label": ".search()"
     },
     {
@@ -11530,7 +11530,7 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "tests_test_retrieval_test_router_structural_vs_semantic",
-      "community": 34,
+      "community": 1,
       "norm_label": "test_router_structural_vs_semantic()"
     },
     {
@@ -11540,7 +11540,7 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "tests_test_retrieval_test_cypher_strips_fences_and_label",
-      "community": 34,
+      "community": 1,
       "norm_label": "test_cypher_strips_fences_and_label()"
     },
     {
@@ -11550,7 +11550,7 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "tests_test_retrieval_test_structural_query_used_when_it_returns_rows",
-      "community": 34,
+      "community": 1,
       "norm_label": "test_structural_query_used_when_it_returns_rows()"
     },
     {
@@ -11560,7 +11560,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "tests_test_retrieval_test_falls_back_to_semantic_when_graph_errors",
-      "community": 34,
+      "community": 1,
       "norm_label": "test_falls_back_to_semantic_when_graph_errors()"
     },
     {
@@ -11570,7 +11570,7 @@
       "source_location": "L91",
       "_origin": "ast",
       "id": "tests_test_retrieval_test_falls_back_when_structural_empty",
-      "community": 34,
+      "community": 1,
       "norm_label": "test_falls_back_when_structural_empty()"
     },
     {
@@ -11580,7 +11580,7 @@
       "source_location": "L99",
       "_origin": "ast",
       "id": "tests_test_retrieval_test_semantic_question_skips_graph",
-      "community": 34,
+      "community": 1,
       "norm_label": "test_semantic_question_skips_graph()"
     },
     {
@@ -11590,7 +11590,7 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "tests_test_retrieval_test_format_context_structural_and_semantic",
-      "community": 34,
+      "community": 1,
       "norm_label": "test_format_context_structural_and_semantic()"
     },
     {
@@ -11600,7 +11600,7 @@
       "source_location": "L123",
       "_origin": "ast",
       "id": "tests_test_retrieval_test_extract_sources_dedupes",
-      "community": 106,
+      "community": 1,
       "norm_label": "test_extract_sources_dedupes()"
     },
     {
@@ -11610,7 +11610,7 @@
       "source_location": "L129",
       "_origin": "ast",
       "id": "tests_test_retrieval_test_engine_answer_end_to_end",
-      "community": 34,
+      "community": 1,
       "norm_label": "test_engine_answer_end_to_end()"
     },
     {
@@ -11620,7 +11620,7 @@
       "source_location": "L151",
       "_origin": "ast",
       "id": "tests_test_retrieval_test_integration_ollama_generates",
-      "community": 34,
+      "community": 1,
       "norm_label": "test_integration_ollama_generates()"
     },
     {
@@ -11630,7 +11630,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_retrieval_rationale_1",
-      "community": 34,
+      "community": 1,
       "norm_label": "phase 6 tests.  offline with fakes for the llm, graph, and vector store \u2014 valida"
     },
     {
@@ -12310,7 +12310,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_symbol_resolver",
-      "community": 4,
+      "community": 77,
       "norm_label": "test_symbol_resolver.py"
     },
     {
@@ -12320,7 +12320,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "tests_test_symbol_resolver_entity",
-      "community": 4,
+      "community": 77,
       "norm_label": "_entity()"
     },
     {
@@ -12330,7 +12330,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "tests_test_symbol_resolver_build",
-      "community": 4,
+      "community": 77,
       "norm_label": "_build()"
     },
     {
@@ -12340,7 +12340,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "tests_test_symbol_resolver_resolve",
-      "community": 4,
+      "community": 77,
       "norm_label": "_resolve()"
     },
     {
@@ -12350,7 +12350,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "tests_test_symbol_resolver_test_self_call_resolves_to_own_class",
-      "community": 4,
+      "community": 77,
       "norm_label": "test_self_call_resolves_to_own_class()"
     },
     {
@@ -12360,7 +12360,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "tests_test_symbol_resolver_test_qualified_call_resolves_to_named_class",
-      "community": 4,
+      "community": 77,
       "norm_label": "test_qualified_call_resolves_to_named_class()"
     },
     {
@@ -12370,7 +12370,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "tests_test_symbol_resolver_test_unqualified_ambiguous_call_flags_ambiguous",
-      "community": 4,
+      "community": 77,
       "norm_label": "test_unqualified_ambiguous_call_flags_ambiguous()"
     },
     {
@@ -12380,7 +12380,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "tests_test_symbol_resolver_test_single_candidate_resolves_cleanly",
-      "community": 4,
+      "community": 77,
       "norm_label": "test_single_candidate_resolves_cleanly()"
     },
     {
@@ -12390,7 +12390,7 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "tests_test_symbol_resolver_test_unknown_name_flagged_external",
-      "community": 4,
+      "community": 77,
       "norm_label": "test_unknown_name_flagged_external()"
     },
     {
@@ -12400,7 +12400,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_symbol_resolver_rationale_1",
-      "community": 4,
+      "community": 77,
       "norm_label": "symbolresolver disambiguation tests (offline, no tree-sitter)."
     },
     {
@@ -12490,7 +12490,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_validators",
-      "community": 0,
+      "community": 33,
       "norm_label": "test_validators.py"
     },
     {
@@ -12500,7 +12500,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "tests_test_validators_test_allows_public_https_repo",
-      "community": 0,
+      "community": 33,
       "norm_label": "test_allows_public_https_repo()"
     },
     {
@@ -12510,7 +12510,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "tests_test_validators_test_rejects_non_http_schemes",
-      "community": 0,
+      "community": 33,
       "norm_label": "test_rejects_non_http_schemes()"
     },
     {
@@ -12520,7 +12520,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "tests_test_validators_test_rejects_internal_targets",
-      "community": 0,
+      "community": 33,
       "norm_label": "test_rejects_internal_targets()"
     },
     {
@@ -12530,7 +12530,7 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "tests_test_validators_test_rejects_public_host_resolving_to_internal_ip",
-      "community": 0,
+      "community": 33,
       "norm_label": "test_rejects_public_host_resolving_to_internal_ip()"
     },
     {
@@ -12540,7 +12540,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "tests_test_validators_test_rejects_unresolvable_host_fail_closed",
-      "community": 0,
+      "community": 33,
       "norm_label": "test_rejects_unresolvable_host_fail_closed()"
     },
     {
@@ -12550,7 +12550,7 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "tests_test_validators_test_relative_path_ok",
-      "community": 0,
+      "community": 33,
       "norm_label": "test_relative_path_ok()"
     },
     {
@@ -12560,7 +12560,7 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "tests_test_validators_test_relative_path_rejects_traversal",
-      "community": 0,
+      "community": 33,
       "norm_label": "test_relative_path_rejects_traversal()"
     },
     {
@@ -12570,7 +12570,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_validators_rationale_1",
-      "community": 0,
+      "community": 33,
       "norm_label": "tests for the ssrf / path-traversal input validators (offline)."
     },
     {
@@ -12920,7 +12920,7 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "vector_db_store_vectorstorebuilder_embed_and_store",
-      "community": 4,
+      "community": 6,
       "norm_label": ".embed_and_store()"
     },
     {
@@ -13200,7 +13200,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "notifications_page",
-      "community": 101,
+      "community": 24,
       "norm_label": "page.tsx"
     },
     {
@@ -13210,7 +13210,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "notifications_page_notificationspage",
-      "community": 101,
+      "community": 24,
       "norm_label": "notificationspage()"
     },
     {
@@ -13380,27 +13380,17 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "settings_page",
-      "community": 31,
+      "community": 101,
       "norm_label": "page.tsx"
-    },
-    {
-      "label": "SETTINGS",
-      "file_type": "code",
-      "source_file": "frontend/app/settings/page.tsx",
-      "source_location": "L11",
-      "_origin": "ast",
-      "id": "settings_page_settings",
-      "community": 31,
-      "norm_label": "settings"
     },
     {
       "label": "SettingsPage()",
       "file_type": "code",
       "source_file": "frontend/app/settings/page.tsx",
-      "source_location": "L29",
+      "source_location": "L11",
       "_origin": "ast",
       "id": "settings_page_settingspage",
-      "community": 31,
+      "community": 101,
       "norm_label": "settingspage()"
     },
     {
@@ -13410,7 +13400,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "wiki_page",
-      "community": 46,
+      "community": 24,
       "norm_label": "page.tsx"
     },
     {
@@ -13420,7 +13410,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "wiki_page_wikipage",
-      "community": 46,
+      "community": 24,
       "norm_label": "wikipage()"
     },
     {
@@ -13640,7 +13630,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_hotspotheatmap",
-      "community": 24,
+      "community": 112,
       "norm_label": "hotspotheatmap.tsx"
     },
     {
@@ -13650,7 +13640,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "components_hotspotheatmap_heatclass",
-      "community": 24,
+      "community": 112,
       "norm_label": "heatclass()"
     },
     {
@@ -13660,7 +13650,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "components_hotspotheatmap_hotspotheatmap",
-      "community": 24,
+      "community": 112,
       "norm_label": "hotspotheatmap()"
     },
     {
@@ -13730,7 +13720,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "components_llmconfigeditor_llmconfigeditor",
-      "community": 31,
+      "community": 101,
       "norm_label": "llmconfigeditor()"
     },
     {
@@ -13950,7 +13940,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_systemstatuspanel",
-      "community": 24,
+      "community": 111,
       "norm_label": "systemstatuspanel.tsx"
     },
     {
@@ -13960,7 +13950,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "components_systemstatuspanel_dot",
-      "community": 24,
+      "community": 111,
       "norm_label": "dot()"
     },
     {
@@ -13970,7 +13960,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "components_systemstatuspanel_systemstatuspanel",
-      "community": 24,
+      "community": 111,
       "norm_label": "systemstatuspanel()"
     },
     {
@@ -14080,7 +14070,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "lib_api_hotspot",
-      "community": 24,
+      "community": 112,
       "norm_label": "hotspot"
     },
     {
@@ -14100,7 +14090,7 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "lib_api_notificationitem",
-      "community": 101,
+      "community": 24,
       "norm_label": "notificationitem"
     },
     {
@@ -14260,7 +14250,7 @@
       "source_location": "L212",
       "_origin": "ast",
       "id": "lib_api_servicehealth",
-      "community": 24,
+      "community": 111,
       "norm_label": "servicehealth"
     },
     {
@@ -14270,7 +14260,7 @@
       "source_location": "L217",
       "_origin": "ast",
       "id": "lib_api_getservicehealth",
-      "community": 24,
+      "community": 111,
       "norm_label": "getservicehealth()"
     },
     {
@@ -14410,7 +14400,7 @@
       "source_location": "L284",
       "_origin": "ast",
       "id": "lib_api_getnotifications",
-      "community": 101,
+      "community": 24,
       "norm_label": "getnotifications()"
     },
     {
@@ -14420,7 +14410,7 @@
       "source_location": "L291",
       "_origin": "ast",
       "id": "lib_api_markallnotificationsread",
-      "community": 101,
+      "community": 24,
       "norm_label": "markallnotificationsread()"
     },
     {
@@ -14650,7 +14640,7 @@
       "source_location": "L429",
       "_origin": "ast",
       "id": "lib_api_docgenpage",
-      "community": 46,
+      "community": 24,
       "norm_label": "docgenpage"
     },
     {
@@ -14660,7 +14650,7 @@
       "source_location": "L434",
       "_origin": "ast",
       "id": "lib_api_getdocgenmodules",
-      "community": 46,
+      "community": 24,
       "norm_label": "getdocgenmodules()"
     },
     {
@@ -14670,7 +14660,7 @@
       "source_location": "L439",
       "_origin": "ast",
       "id": "lib_api_generatedocs",
-      "community": 46,
+      "community": 24,
       "norm_label": "generatedocs()"
     },
     {
@@ -14680,7 +14670,7 @@
       "source_location": "L447",
       "_origin": "ast",
       "id": "lib_api_getwikimarkdown",
-      "community": 46,
+      "community": 24,
       "norm_label": "getwikimarkdown()"
     },
     {
@@ -34928,9 +34918,9 @@
       "source_file": "backend/retrieval/lexical.py",
       "source_location": "L31",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "retrieval_lexical",
-      "target": "retrieval_lexical_bm25_scores",
-      "confidence_score": 1.0
+      "target": "retrieval_lexical_bm25_scores"
     },
     {
       "relation": "contains",
@@ -34938,9 +34928,9 @@
       "source_file": "backend/retrieval/lexical.py",
       "source_location": "L58",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "retrieval_lexical",
-      "target": "retrieval_lexical_rerank_hybrid",
-      "confidence_score": 1.0
+      "target": "retrieval_lexical_rerank_hybrid"
     },
     {
       "relation": "contains",
@@ -34948,9 +34938,9 @@
       "source_file": "backend/retrieval/lexical.py",
       "source_location": "L26",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "retrieval_lexical",
-      "target": "retrieval_lexical_tokenize",
-      "confidence_score": 1.0
+      "target": "retrieval_lexical_tokenize"
     },
     {
       "relation": "rationale_for",
@@ -34958,9 +34948,9 @@
       "source_file": "backend/retrieval/lexical.py",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "retrieval_lexical_rationale_1",
-      "target": "retrieval_lexical",
-      "confidence_score": 1.0
+      "target": "retrieval_lexical"
     },
     {
       "relation": "imports_from",
@@ -34969,9 +34959,9 @@
       "source_file": "backend/retrieval/retriever.py",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "retrieval_retriever",
-      "target": "retrieval_lexical",
-      "confidence_score": 1.0
+      "target": "retrieval_lexical"
     },
     {
       "relation": "imports_from",
@@ -34980,9 +34970,9 @@
       "source_file": "backend/tests/test_lexical.py",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_lexical",
-      "target": "retrieval_lexical",
-      "confidence_score": 1.0
+      "target": "retrieval_lexical"
     },
     {
       "relation": "calls",
@@ -34991,9 +34981,9 @@
       "source_file": "backend/retrieval/lexical.py",
       "source_location": "L33",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "retrieval_lexical_bm25_scores",
-      "target": "retrieval_lexical_tokenize",
-      "confidence_score": 1.0
+      "target": "retrieval_lexical_tokenize"
     },
     {
       "relation": "rationale_for",
@@ -35001,9 +34991,9 @@
       "source_file": "backend/retrieval/lexical.py",
       "source_location": "L27",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "retrieval_lexical_rationale_27",
-      "target": "retrieval_lexical_tokenize",
-      "confidence_score": 1.0
+      "target": "retrieval_lexical_tokenize"
     },
     {
       "relation": "calls",
@@ -35022,9 +35012,9 @@
       "source_file": "backend/retrieval/lexical.py",
       "source_location": "L32",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "retrieval_lexical_rationale_32",
-      "target": "retrieval_lexical_bm25_scores",
-      "confidence_score": 1.0
+      "target": "retrieval_lexical_bm25_scores"
     },
     {
       "relation": "calls",
@@ -35033,9 +35023,9 @@
       "source_file": "backend/retrieval/lexical.py",
       "source_location": "L65",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "retrieval_lexical_rerank_hybrid",
-      "target": "retrieval_lexical_bm25_scores",
-      "confidence_score": 1.0
+      "target": "retrieval_lexical_bm25_scores"
     },
     {
       "relation": "calls",
@@ -35065,9 +35055,9 @@
       "source_file": "backend/retrieval/lexical.py",
       "source_location": "L59",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "retrieval_lexical_rationale_59",
-      "target": "retrieval_lexical_rerank_hybrid",
-      "confidence_score": 1.0
+      "target": "retrieval_lexical_rerank_hybrid"
     },
     {
       "relation": "imports",
@@ -35076,9 +35066,9 @@
       "source_file": "backend/retrieval/retriever.py",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "retrieval_retriever",
-      "target": "retrieval_lexical_rerank_hybrid",
-      "confidence_score": 1.0
+      "target": "retrieval_lexical_rerank_hybrid"
     },
     {
       "relation": "calls",
@@ -35181,9 +35171,9 @@
       "source_file": "backend/retrieval/retriever.py",
       "source_location": "L50",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "retrieval_retriever_hybridretriever",
-      "target": "retrieval_retriever_hybridretriever_semantic",
-      "confidence_score": 1.0
+      "target": "retrieval_retriever_hybridretriever_semantic"
     },
     {
       "relation": "uses",
@@ -35268,9 +35258,9 @@
       "source_file": "backend/retrieval/retriever.py",
       "source_location": "L46",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "retrieval_retriever_hybridretriever_retrieve",
-      "target": "retrieval_retriever_hybridretriever_semantic",
-      "confidence_score": 1.0
+      "target": "retrieval_retriever_hybridretriever_semantic"
     },
     {
       "relation": "rationale_for",
@@ -35278,9 +35268,9 @@
       "source_file": "backend/retrieval/retriever.py",
       "source_location": "L51",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "retrieval_retriever_rationale_51",
-      "target": "retrieval_retriever_hybridretriever_semantic",
-      "confidence_score": 1.0
+      "target": "retrieval_retriever_hybridretriever_semantic"
     },
     {
       "relation": "contains",
@@ -35775,9 +35765,9 @@
       "source_file": "backend/security_scan/external.py",
       "source_location": "L49",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "security_scan_external",
-      "target": "security_scan_external_rel",
-      "confidence_score": 1.0
+      "target": "security_scan_external_rel"
     },
     {
       "relation": "contains",
@@ -35785,9 +35775,9 @@
       "source_file": "backend/security_scan/external.py",
       "source_location": "L56",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "security_scan_external",
-      "target": "security_scan_external_run_bandit",
-      "confidence_score": 1.0
+      "target": "security_scan_external_run_bandit"
     },
     {
       "relation": "contains",
@@ -35795,9 +35785,9 @@
       "source_file": "backend/security_scan/external.py",
       "source_location": "L104",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "security_scan_external",
-      "target": "security_scan_external_run_external_tools",
-      "confidence_score": 1.0
+      "target": "security_scan_external_run_external_tools"
     },
     {
       "relation": "contains",
@@ -35805,9 +35795,9 @@
       "source_file": "backend/security_scan/external.py",
       "source_location": "L30",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "security_scan_external",
-      "target": "security_scan_external_run_json",
-      "confidence_score": 1.0
+      "target": "security_scan_external_run_json"
     },
     {
       "relation": "contains",
@@ -35815,9 +35805,9 @@
       "source_file": "backend/security_scan/external.py",
       "source_location": "L77",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "security_scan_external",
-      "target": "security_scan_external_run_ruff",
-      "confidence_score": 1.0
+      "target": "security_scan_external_run_ruff"
     },
     {
       "relation": "rationale_for",
@@ -35825,17 +35815,17 @@
       "source_file": "backend/security_scan/external.py",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "security_scan_external_rationale_1",
-      "target": "security_scan_external",
-      "confidence_score": 1.0
+      "target": "security_scan_external"
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/security_scan/external.py",
-      "source_location": "L31",
+      "source_location": "L39",
       "weight": 1.0,
-      "source": "security_scan_external_rationale_31",
+      "source": "security_scan_external_rationale_39",
       "target": "security_scan_external_run_json",
       "confidence_score": 1.0
     },
@@ -35846,9 +35836,9 @@
       "source_file": "backend/security_scan/external.py",
       "source_location": "L58",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "security_scan_external_run_bandit",
-      "target": "security_scan_external_run_json",
-      "confidence_score": 1.0
+      "target": "security_scan_external_run_json"
     },
     {
       "relation": "calls",
@@ -35857,9 +35847,9 @@
       "source_file": "backend/security_scan/external.py",
       "source_location": "L79",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "security_scan_external_run_ruff",
-      "target": "security_scan_external_run_json",
-      "confidence_score": 1.0
+      "target": "security_scan_external_run_json"
     },
     {
       "relation": "calls",
@@ -35868,9 +35858,9 @@
       "source_file": "backend/security_scan/external.py",
       "source_location": "L68",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "security_scan_external_run_bandit",
-      "target": "security_scan_external_rel",
-      "confidence_score": 1.0
+      "target": "security_scan_external_rel"
     },
     {
       "relation": "calls",
@@ -35879,17 +35869,17 @@
       "source_file": "backend/security_scan/external.py",
       "source_location": "L95",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "security_scan_external_run_ruff",
-      "target": "security_scan_external_rel",
-      "confidence_score": 1.0
+      "target": "security_scan_external_rel"
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/security_scan/external.py",
-      "source_location": "L57",
+      "source_location": "L65",
       "weight": 1.0,
-      "source": "security_scan_external_rationale_57",
+      "source": "security_scan_external_rationale_65",
       "target": "security_scan_external_run_bandit",
       "confidence_score": 1.0
     },
@@ -35897,9 +35887,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/security_scan/external.py",
-      "source_location": "L78",
+      "source_location": "L88",
       "weight": 1.0,
-      "source": "security_scan_external_rationale_78",
+      "source": "security_scan_external_rationale_88",
       "target": "security_scan_external_run_ruff",
       "confidence_score": 1.0
     },
@@ -35907,9 +35897,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/security_scan/external.py",
-      "source_location": "L105",
+      "source_location": "L116",
       "weight": 1.0,
-      "source": "security_scan_external_rationale_105",
+      "source": "security_scan_external_rationale_116",
       "target": "security_scan_external_run_external_tools",
       "confidence_score": 1.0
     },
@@ -35920,9 +35910,9 @@
       "source_file": "backend/security_scan/scanner.py",
       "source_location": "L200",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "security_scan_scanner",
-      "target": "security_scan_external_run_external_tools",
-      "confidence_score": 1.0
+      "target": "security_scan_external_run_external_tools"
     },
     {
       "relation": "calls",
@@ -35931,9 +35921,9 @@
       "source_file": "backend/security_scan/scanner.py",
       "source_location": "L202",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "security_scan_scanner_scan_repository",
-      "target": "security_scan_external_run_external_tools",
-      "confidence_score": 1.0
+      "target": "security_scan_external_run_external_tools"
     },
     {
       "relation": "contains",
@@ -36183,9 +36173,9 @@
       "source_file": "backend/security_scan/scanner.py",
       "source_location": "L194",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "security_scan_scanner_rationale_194",
-      "target": "security_scan_scanner_scan_repository",
-      "confidence_score": 1.0
+      "target": "security_scan_scanner_scan_repository"
     },
     {
       "relation": "re_exports",
@@ -38753,9 +38743,9 @@
       "source_file": "backend/tests/test_lexical.py",
       "source_location": "L25",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_lexical",
-      "target": "tests_test_lexical_chroma",
-      "confidence_score": 1.0
+      "target": "tests_test_lexical_chroma"
     },
     {
       "relation": "contains",
@@ -38763,9 +38753,9 @@
       "source_file": "backend/tests/test_lexical.py",
       "source_location": "L21",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_lexical",
-      "target": "tests_test_lexical_test_bm25_empty_corpus",
-      "confidence_score": 1.0
+      "target": "tests_test_lexical_test_bm25_empty_corpus"
     },
     {
       "relation": "contains",
@@ -38773,9 +38763,9 @@
       "source_file": "backend/tests/test_lexical.py",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_lexical",
-      "target": "tests_test_lexical_test_bm25_prefers_exact_identifier_match",
-      "confidence_score": 1.0
+      "target": "tests_test_lexical_test_bm25_prefers_exact_identifier_match"
     },
     {
       "relation": "contains",
@@ -38783,9 +38773,9 @@
       "source_file": "backend/tests/test_lexical.py",
       "source_location": "L50",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_lexical",
-      "target": "tests_test_lexical_test_rerank_noop_on_empty_or_single",
-      "confidence_score": 1.0
+      "target": "tests_test_lexical_test_rerank_noop_on_empty_or_single"
     },
     {
       "relation": "contains",
@@ -38793,9 +38783,9 @@
       "source_file": "backend/tests/test_lexical.py",
       "source_location": "L34",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_lexical",
-      "target": "tests_test_lexical_test_rerank_promotes_lexical_match_and_keeps_shape",
-      "confidence_score": 1.0
+      "target": "tests_test_lexical_test_rerank_promotes_lexical_match_and_keeps_shape"
     },
     {
       "relation": "contains",
@@ -38803,9 +38793,9 @@
       "source_file": "backend/tests/test_lexical.py",
       "source_location": "L57",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_lexical",
-      "target": "tests_test_lexical_test_retriever_semantic_path_uses_pool_and_truncates",
-      "confidence_score": 1.0
+      "target": "tests_test_lexical_test_retriever_semantic_path_uses_pool_and_truncates"
     },
     {
       "relation": "contains",
@@ -38813,9 +38803,9 @@
       "source_file": "backend/tests/test_lexical.py",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_lexical",
-      "target": "tests_test_lexical_test_tokenize_splits_code_identifiers",
-      "confidence_score": 1.0
+      "target": "tests_test_lexical_test_tokenize_splits_code_identifiers"
     },
     {
       "relation": "rationale_for",
@@ -38823,9 +38813,9 @@
       "source_file": "backend/tests/test_lexical.py",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_lexical_rationale_1",
-      "target": "tests_test_lexical",
-      "confidence_score": 1.0
+      "target": "tests_test_lexical"
     },
     {
       "relation": "calls",
@@ -38834,9 +38824,9 @@
       "source_file": "backend/tests/test_lexical.py",
       "source_location": "L53",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_lexical_test_rerank_noop_on_empty_or_single",
-      "target": "tests_test_lexical_chroma",
-      "confidence_score": 1.0
+      "target": "tests_test_lexical_chroma"
     },
     {
       "relation": "calls",
@@ -38845,9 +38835,9 @@
       "source_file": "backend/tests/test_lexical.py",
       "source_location": "L41",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_lexical_test_rerank_promotes_lexical_match_and_keeps_shape",
-      "target": "tests_test_lexical_chroma",
-      "confidence_score": 1.0
+      "target": "tests_test_lexical_chroma"
     },
     {
       "relation": "calls",
@@ -40762,9 +40752,9 @@
       "source_file": "backend/tests/test_security_external.py",
       "source_location": "L46",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_security_external",
-      "target": "tests_test_security_external_test_bandit_findings_merged",
-      "confidence_score": 1.0
+      "target": "tests_test_security_external_test_bandit_findings_merged"
     },
     {
       "relation": "contains",
@@ -40772,9 +40762,9 @@
       "source_file": "backend/tests/test_security_external.py",
       "source_location": "L38",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_security_external",
-      "target": "tests_test_security_external_test_builtin_findings_carry_source",
-      "confidence_score": 1.0
+      "target": "tests_test_security_external_test_builtin_findings_carry_source"
     },
     {
       "relation": "contains",
@@ -40782,9 +40772,9 @@
       "source_file": "backend/tests/test_security_external.py",
       "source_location": "L78",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_security_external",
-      "target": "tests_test_security_external_test_degrades_when_tools_unusable",
-      "confidence_score": 1.0
+      "target": "tests_test_security_external_test_degrades_when_tools_unusable"
     },
     {
       "relation": "contains",
@@ -40792,9 +40782,9 @@
       "source_file": "backend/tests/test_security_external.py",
       "source_location": "L69",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_security_external",
-      "target": "tests_test_security_external_test_merged_results_stay_sorted_and_counted",
-      "confidence_score": 1.0
+      "target": "tests_test_security_external_test_merged_results_stay_sorted_and_counted"
     },
     {
       "relation": "contains",
@@ -40802,9 +40792,9 @@
       "source_file": "backend/tests/test_security_external.py",
       "source_location": "L60",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_security_external",
-      "target": "tests_test_security_external_test_ruff_security_rules_merged",
-      "confidence_score": 1.0
+      "target": "tests_test_security_external_test_ruff_security_rules_merged"
     },
     {
       "relation": "contains",
@@ -40812,9 +40802,9 @@
       "source_file": "backend/tests/test_security_external.py",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_security_external",
-      "target": "tests_test_security_external_tool_usable",
-      "confidence_score": 1.0
+      "target": "tests_test_security_external_tool_usable"
     },
     {
       "relation": "contains",
@@ -40822,9 +40812,9 @@
       "source_file": "backend/tests/test_security_external.py",
       "source_location": "L33",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_security_external",
-      "target": "tests_test_security_external_vuln_repo",
-      "confidence_score": 1.0
+      "target": "tests_test_security_external_vuln_repo"
     },
     {
       "relation": "rationale_for",
@@ -40832,9 +40822,9 @@
       "source_file": "backend/tests/test_security_external.py",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_security_external_rationale_1",
-      "target": "tests_test_security_external",
-      "confidence_score": 1.0
+      "target": "tests_test_security_external"
     },
     {
       "relation": "contains",
@@ -42233,9 +42223,9 @@
       "source_file": "frontend/.eslintrc.json",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_eslintrc",
-      "target": "frontend_eslintrc_extends",
-      "confidence_score": 1.0
+      "target": "frontend_eslintrc_extends"
     },
     {
       "relation": "imports_from",
@@ -43659,16 +43649,6 @@
       "confidence_score": 1.0,
       "source": "settings_page",
       "target": "components_systemstatuspanel"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/app/settings/page.tsx",
-      "source_location": "L11",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "settings_page",
-      "target": "settings_page_settings"
     },
     {
       "relation": "contains",
@@ -45713,9 +45693,9 @@
       "source_file": "frontend/package.json",
       "source_location": "L26",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_package_devdependencies",
-      "target": "frontend_package_devdependencies_eslint",
-      "confidence_score": 1.0
+      "target": "frontend_package_devdependencies_eslint"
     },
     {
       "relation": "contains",
@@ -45723,9 +45703,9 @@
       "source_file": "frontend/package.json",
       "source_location": "L27",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "frontend_package_devdependencies",
-      "target": "frontend_package_devdependencies_eslint_config_next",
-      "confidence_score": 1.0
+      "target": "frontend_package_devdependencies_eslint_config_next"
     },
     {
       "relation": "contains",
@@ -47416,9 +47396,9 @@
       "source_file": "docs/api-guide.md",
       "source_location": "L78",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "docs_api_guide_data_routes_api_v1",
-      "target": "docs_api_guide_auto_documentation_wiki",
-      "confidence_score": 1.0
+      "target": "docs_api_guide_auto_documentation_wiki"
     },
     {
       "relation": "contains",
@@ -47692,5 +47672,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "087fd3c0fc596c86c1d92e9be3b3167b26ccc854"
+  "built_at_commit": "fde4bf1315890ef1fa13625ad404801b1e12df5c"
 }

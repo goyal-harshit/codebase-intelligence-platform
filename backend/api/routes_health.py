@@ -11,6 +11,7 @@ a short reason rather than failing the whole endpoint.
 from __future__ import annotations
 
 import os
+from concurrent.futures import ThreadPoolExecutor
 
 import requests
 from fastapi import APIRouter
@@ -67,9 +68,10 @@ def _check_llm() -> dict:
 
 @router.get("/health/services")
 def health_services() -> dict:
-    services = {
-        "arcadedb": _check_arcadedb(),
-        "chromadb": _check_chromadb(),
-        "ollama": _check_llm(),
-    }
+    # Probed concurrently so one slow/down service doesn't stack its timeout
+    # on top of the others' — worst case is max(_TIMEOUT), not the sum.
+    checks = {"arcadedb": _check_arcadedb, "chromadb": _check_chromadb, "ollama": _check_llm}
+    with ThreadPoolExecutor(max_workers=len(checks)) as pool:
+        futures = {name: pool.submit(fn) for name, fn in checks.items()}
+        services = {name: f.result() for name, f in futures.items()}
     return {"services": services, "all_ok": all(s["ok"] for s in services.values())}

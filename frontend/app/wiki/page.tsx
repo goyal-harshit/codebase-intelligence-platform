@@ -35,10 +35,19 @@ export default function WikiPage() {
   }, []);
 
   useEffect(() => {
+    // Generating every module up front can take minutes on a large graph, so
+    // start with the first module; "All modules" stays available on demand.
     getDocgenModules()
-      .then((r) => setModules(r.modules))
-      .catch(() => setModules([]));
-    load(null, false);
+      .then((r) => {
+        setModules(r.modules);
+        const first = r.modules[0] ?? null;
+        setSelected(first);
+        load(first, false);
+      })
+      .catch(() => {
+        setModules([]);
+        load(null, false);
+      });
   }, [load]);
 
   const select = (module: string | null) => {
@@ -106,7 +115,7 @@ export default function WikiPage() {
                     : "text-slate-600 hover:bg-slate-100"
                 }`}
               >
-                All modules
+                All modules (slow)
               </button>
               {modules.map((m) => (
                 <button

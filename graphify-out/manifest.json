@@ -905,8 +905,8 @@
     "semantic_hash": ""
   },
   "backend/api/routes_health.py": {
-    "mtime": 1782909382.464166,
-    "ast_hash": "53a245de4fb8d1158ab884f34882f418",
+    "mtime": 1783000656.4662018,
+    "ast_hash": "2ef9e21409b14d397e5ac2445051e603",
     "semantic_hash": ""
   },
   "backend/api/routes_hotspots.py": {
@@ -970,8 +970,8 @@
     "semantic_hash": ""
   },
   "frontend/app/settings/page.tsx": {
-    "mtime": 1782916259.136459,
-    "ast_hash": "e2a03cfec400c75e54f8b03c18d17d53",
+    "mtime": 1783000687.0165434,
+    "ast_hash": "821c194e82b7c39e9b99e88373aba1fb",
     "semantic_hash": ""
   },
   "frontend/components/ActivityFeed.tsx": {
@@ -1035,8 +1035,8 @@
     "semantic_hash": ""
   },
   "backend/api/routes_security.py": {
-    "mtime": 1782973891.3503592,
-    "ast_hash": "0978bf3bc863ecab2fa5ea9771cf38cc",
+    "mtime": 1783000644.303133,
+    "ast_hash": "5437ac60f610dbaf7b36da8cf773618d",
     "semantic_hash": ""
   },
   "backend/refactoring/__init__.py": {
@@ -1165,8 +1165,8 @@
     "semantic_hash": ""
   },
   "frontend/app/wiki/page.tsx": {
-    "mtime": 1782973364.5291164,
-    "ast_hash": "ac00436227e86284e47fe92c8b38f9b3",
+    "mtime": 1783000666.5449,
+    "ast_hash": "192e50abd2c2656c4f70f06720cb5b7c",
     "semantic_hash": ""
   },
   "frontend/components/MarkdownLite.tsx": {
@@ -1180,8 +1180,8 @@
     "semantic_hash": ""
   },
   "backend/security_scan/external.py": {
-    "mtime": 1782973856.1614642,
-    "ast_hash": "be799ccd1adc16c8c8ee02dda440851b",
+    "mtime": 1783000627.9766464,
+    "ast_hash": "a4648a0ba7b63aeeb74268f3ec613c94",
     "semantic_hash": ""
   },
   "backend/tests/test_lexical.py": {
