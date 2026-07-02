@@ -1,14 +1,20 @@
 """Hybrid retrieval: structural (graph) first for structural questions, with a
-semantic (vector) fallback; semantic-only otherwise."""
+semantic fallback; otherwise semantic — itself hybrid: vector candidates
+re-ranked with BM25 (lexical) via reciprocal-rank fusion."""
 from __future__ import annotations
 
 import logging
 from typing import Optional
 
 from .cypher_generator import CypherGenerator
+from .lexical import rerank_hybrid
 from .router import QueryRouter
 
 logger = logging.getLogger(__name__)
+
+# Vector candidate pool for BM25 re-ranking (bounded so latency stays flat).
+_POOL_MULTIPLIER = 5
+_POOL_MAX = 50
 
 
 class HybridRetriever:
@@ -36,8 +42,13 @@ class HybridRetriever:
                     cypher, exc,
                 )
             # structural produced nothing usable -> semantic fallback
-            sem = self.vectors.search(question, top_k=top_k)
             return {"strategy": "semantic", "fallback_from": "structural",
-                    "attempted_cypher": cypher, "results": sem}
+                    "attempted_cypher": cypher, "results": self._semantic(question, top_k)}
 
-        return {"strategy": "semantic", "results": self.vectors.search(question, top_k=top_k)}
+        return {"strategy": "semantic", "results": self._semantic(question, top_k)}
+
+    def _semantic(self, question: str, top_k: int) -> dict:
+        """Vector search over a wider pool, re-ranked with BM25 (RRF fusion)."""
+        pool = min(max(top_k * _POOL_MULTIPLIER, top_k), _POOL_MAX)
+        candidates = self.vectors.search(question, top_k=pool)
+        return rerank_hybrid(question, candidates, top_k)
