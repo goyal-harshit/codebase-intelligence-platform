@@ -1,7 +1,7 @@
 """FastAPI-Users wiring: user manager, JWT auth backend, route dependencies.
 
-Email/password + JWT today; OAuth (GitHub/Google) is added in step 5 once
-client credentials are provided (the user model already carries oauth fields).
+Email/password + JWT here; GitHub OAuth lives in ``auth.oauth_github`` and
+issues the same JWTs via :func:`get_jwt_strategy`.
 The JWT secret comes from ``AUTH_SECRET`` — main.py warns if it is left at the
 insecure dev default.
 """
