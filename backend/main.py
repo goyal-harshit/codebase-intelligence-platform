@@ -24,6 +24,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from api import (
     routes_conversations,
+    routes_docgen,
     routes_files,
     routes_graphify,
     routes_health,
@@ -35,9 +36,11 @@ from api import (
     routes_llm,
     routes_notifications,
     routes_query,
+    routes_refactor,
     routes_repos,
     routes_review,
     routes_risks,
+    routes_security,
     routes_stats,
     routes_summarize,
     routes_upload,
@@ -54,6 +57,7 @@ from auth import (
     auth_backend,
     fastapi_users,
 )
+from auth import oauth_github
 from auth.users import AUTH_SECRET, DEV_SECRET
 from observability import (
     REQUEST_ID_HEADER,
@@ -142,6 +146,8 @@ app.include_router(
 app.include_router(
     fastapi_users.get_users_router(UserRead, UserUpdate), prefix="/users", tags=["users"]
 )
+# GitHub OAuth (enabled when GITHUB_CLIENT_ID/GITHUB_CLIENT_SECRET are set).
+app.include_router(oauth_github.router, prefix="/auth", tags=["auth"])
 
 # Every data route requires a resolved principal (JWT, per-user API key, or the
 # static service key) when API_KEY is configured. /health stays open for probes.
@@ -150,6 +156,9 @@ app.include_router(routes_ingest.router, prefix="/api/v1", tags=["ingest"], depe
 app.include_router(routes_query.router, prefix="/api/v1", tags=["query"], dependencies=_auth)
 app.include_router(routes_impact.router, prefix="/api/v1", tags=["impact"], dependencies=_auth)
 app.include_router(routes_risks.router, prefix="/api/v1", tags=["risks"], dependencies=_auth)
+app.include_router(routes_security.router, prefix="/api/v1", tags=["security"], dependencies=_auth)
+app.include_router(routes_refactor.router, prefix="/api/v1", tags=["refactor"], dependencies=_auth)
+app.include_router(routes_docgen.router, prefix="/api/v1", tags=["docgen"], dependencies=_auth)
 app.include_router(routes_stats.router, prefix="/api/v1", tags=["stats"], dependencies=_auth)
 app.include_router(routes_hotspots.router, prefix="/api/v1", tags=["hotspots"], dependencies=_auth)
 app.include_router(routes_upload.router, prefix="/api/v1", tags=["ingest"], dependencies=_auth)
