@@ -13,11 +13,23 @@ from typing import Any, Sequence
 # Stable column order so exported files have a predictable schema.
 RISK_HEADERS = ["type", "severity", "target", "file", "details"]
 IMPACT_HEADERS = ["relation", "name", "file", "hops"]
+SECURITY_HEADERS = ["rule_id", "severity", "file", "line", "message"]
+REFACTOR_HEADERS = ["id", "type", "title", "severity", "effort", "target", "file", "rationale", "suggestion"]
 
 
 def risks_to_rows(risks: Sequence[dict]) -> tuple[list[str], list[list[Any]]]:
     rows = [[r.get(h, "") for h in RISK_HEADERS] for r in risks]
     return RISK_HEADERS, rows
+
+
+def security_to_rows(findings: Sequence[dict]) -> tuple[list[str], list[list[Any]]]:
+    rows = [[f.get(h, "") for h in SECURITY_HEADERS] for f in findings]
+    return SECURITY_HEADERS, rows
+
+
+def refactor_to_rows(recs: Sequence[dict]) -> tuple[list[str], list[list[Any]]]:
+    rows = [[r.get(h, "") for h in REFACTOR_HEADERS] for r in recs]
+    return REFACTOR_HEADERS, rows
 
 
 def impact_to_rows(impact: dict) -> tuple[list[str], list[list[Any]]]:

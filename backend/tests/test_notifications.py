@@ -147,12 +147,21 @@ def test_ws_streams_new_notification(monkeypatch):
 # -- end-to-end job completion -------------------------------------------
 
 def test_ingest_failure_notifies_owner(monkeypatch):
-    # Logged-in user starts an ingest; with no graph backend the eager task fails
-    # and dispatches a failure notification attributed to that user.
+    # Logged-in user starts an ingest; with no graph backend the task fails
+    # and dispatches a failure notification attributed to that user. The task
+    # runs in a background thread (non-blocking dispatch), so poll briefly.
+    import time
+
     monkeypatch.delenv("API_KEY", raising=False)
     tok, uid = _user("notif-e2e@example.com")
     h = {"Authorization": f"Bearer {tok}"}
     r = client.post("/api/v1/ingest", json={"repo_path": "/no/such/repo"}, headers=h)
     assert r.status_code == 200, r.text
-    titles = [n["title"] for n in list_for_user(uid)]
+    deadline = time.monotonic() + 10
+    titles: list[str] = []
+    while time.monotonic() < deadline:
+        titles = [n["title"] for n in list_for_user(uid)]
+        if any("Ingestion" in t for t in titles):
+            break
+        time.sleep(0.2)
     assert any("Ingestion" in t for t in titles)

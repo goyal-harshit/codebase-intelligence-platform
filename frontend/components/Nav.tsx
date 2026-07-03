@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import {
   Activity,
   AlertTriangle,
@@ -10,6 +11,7 @@ import {
   BookOpen,
   LogIn,
   LogOut,
+  Menu,
   Network,
   Settings,
   Share2,
@@ -19,6 +21,7 @@ import {
   Wrench,
   UploadCloud,
   UserCircle2,
+  X,
 } from "lucide-react";
 import { useAuth } from "@/components/AuthProvider";
 
@@ -40,79 +43,149 @@ const LINKS = [
 export default function Nav() {
   const pathname = usePathname();
   const { user, loading, logout } = useAuth();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur">
-      <nav className="mx-auto flex min-h-16 max-w-7xl flex-col gap-3 px-4 py-3 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:py-0">
-        <Link href="/" className="flex items-center gap-3 font-semibold text-slate-950">
-          <span className="grid h-9 w-9 place-items-center rounded-lg bg-slate-950 text-white">
-            <Activity size={18} />
-          </span>
-          <span>
-            <span className="block text-sm uppercase tracking-wide text-slate-500">
-              Codebase
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        {/* ── Top bar: brand + auth + mobile toggle ── */}
+        <div className="flex h-14 items-center justify-between">
+          <Link href="/" className="flex items-center gap-2.5 font-semibold text-slate-950">
+            <span className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-indigo-600 to-violet-600 text-white shadow-sm">
+              <Activity size={16} />
             </span>
-            <span className="block leading-4">Intelligence</span>
-          </span>
-        </Link>
+            <span className="text-[15px] tracking-tight">
+              Codebase <span className="text-slate-500 font-normal">Intelligence</span>
+            </span>
+          </Link>
 
-        <div className="flex gap-1 overflow-x-auto pb-1 text-sm lg:pb-0">
+          {/* Auth (desktop) */}
+          <div className="hidden items-center gap-3 text-sm md:flex">
+            {loading ? (
+              <span className="h-8 w-20 animate-pulse rounded-lg bg-slate-100" />
+            ) : user ? (
+              <>
+                <span
+                  className="flex items-center gap-2 text-slate-500"
+                  title={user.email}
+                >
+                  <UserCircle2 size={17} className="text-slate-400" />
+                  <span className="max-w-[12rem] truncate">
+                    {user.full_name || user.email}
+                  </span>
+                </span>
+                <button
+                  onClick={logout}
+                  className="flex items-center gap-1.5 rounded-md border border-slate-200 px-2.5 py-1.5 text-slate-600 transition hover:bg-slate-50 hover:text-slate-950"
+                >
+                  <LogOut size={14} />
+                  Sign out
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/login"
+                className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition ${
+                  pathname === "/login"
+                    ? "bg-slate-950 text-white"
+                    : "border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-950"
+                }`}
+              >
+                <LogIn size={14} />
+                Sign in
+              </Link>
+            )}
+          </div>
+
+          {/* Mobile toggle */}
+          <button
+            onClick={() => setMobileOpen((v) => !v)}
+            className="grid h-9 w-9 place-items-center rounded-md text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 md:hidden"
+            aria-label="Toggle navigation"
+          >
+            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
+
+        {/* ── Nav links (desktop): single scrollable row, no wrap ── */}
+        <div className="hidden gap-0.5 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:flex">
           {LINKS.map(({ href, label, icon: Icon }) => {
             const active = pathname === href;
             return (
               <Link
                 key={href}
                 href={href}
-                className={`flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 transition ${
+                className={`flex flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-md px-2 py-1.5 text-[13px] font-medium transition ${
                   active
-                    ? "bg-slate-950 text-white"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+                    ? "bg-slate-900 text-white shadow-sm"
+                    : "text-slate-500 hover:bg-slate-100 hover:text-slate-950"
                 }`}
               >
-                <Icon size={16} />
+                <Icon size={14} />
                 {label}
               </Link>
             );
           })}
         </div>
+      </div>
 
-        <div className="flex items-center gap-3 text-sm">
-          {loading ? (
-            <span className="h-8 w-20 animate-pulse rounded-lg bg-slate-100" />
-          ) : user ? (
-            <>
-              <span
-                className="flex items-center gap-2 text-slate-600"
-                title={user.email}
-              >
-                <UserCircle2 size={18} className="text-slate-400" />
-                <span className="hidden max-w-[12rem] truncate sm:inline">
-                  {user.full_name || user.email}
+      {/* ── Mobile menu ── */}
+      {mobileOpen && (
+        <div className="border-t border-slate-100 bg-white px-4 pb-4 pt-2 md:hidden">
+          <div className="grid grid-cols-2 gap-1 sm:grid-cols-3">
+            {LINKS.map(({ href, label, icon: Icon }) => {
+              const active = pathname === href;
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setMobileOpen(false)}
+                  className={`flex items-center gap-2 rounded-md px-3 py-2.5 text-sm transition ${
+                    active
+                      ? "bg-slate-900 text-white"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+                  }`}
+                >
+                  <Icon size={15} />
+                  {label}
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Auth (mobile) */}
+          <div className="mt-3 border-t border-slate-100 pt-3 text-sm">
+            {loading ? (
+              <span className="h-8 w-full animate-pulse rounded-lg bg-slate-100 block" />
+            ) : user ? (
+              <div className="flex items-center justify-between">
+                <span className="flex items-center gap-2 text-slate-500">
+                  <UserCircle2 size={17} className="text-slate-400" />
+                  <span className="max-w-[14rem] truncate">
+                    {user.full_name || user.email}
+                  </span>
                 </span>
-              </span>
-              <button
-                onClick={logout}
-                className="flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-slate-600 transition hover:bg-slate-100 hover:text-slate-950"
+                <button
+                  onClick={logout}
+                  className="flex items-center gap-1.5 rounded-md border border-slate-200 px-2.5 py-1.5 text-slate-600 transition hover:bg-slate-50"
+                >
+                  <LogOut size={14} />
+                  Sign out
+                </button>
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                onClick={() => setMobileOpen(false)}
+                className="flex w-full items-center justify-center gap-1.5 rounded-md border border-slate-200 px-3 py-2 text-slate-600 transition hover:bg-slate-50"
               >
-                <LogOut size={15} />
-                <span className="hidden sm:inline">Sign out</span>
-              </button>
-            </>
-          ) : (
-            <Link
-              href="/login"
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 transition ${
-                pathname === "/login"
-                  ? "bg-slate-950 text-white"
-                  : "border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-950"
-              }`}
-            >
-              <LogIn size={15} />
-              Sign in
-            </Link>
-          )}
+                <LogIn size={14} />
+                Sign in
+              </Link>
+            )}
+          </div>
         </div>
-      </nav>
+      )}
     </header>
   );
 }

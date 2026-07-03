@@ -63,6 +63,80 @@ def export_risks(
     return _attachment(f"risks.{suffix}", format, body)
 
 
+@router.get("/export/security")
+def export_security(
+    request: Request,
+    repo_path: Optional[str] = Query(default=None),
+    format: str = Query("csv"),
+    severity: Optional[str] = None,
+    principal: Principal = Depends(get_principal),
+):
+    import os
+    import time
+    from security_scan import scan_repository
+    from .routes_security import _latest_repo_path, _scan_cache, _CACHE_TTL_SECONDS
+    
+    _check_format(format)
+    path = repo_path or _latest_repo_path()
+    if not path or not os.path.isdir(path):
+        raise HTTPException(400, "invalid or missing repo_path")
+        
+    cached = _scan_cache.get(path)
+    if cached and time.monotonic() - cached[0] < _CACHE_TTL_SECONDS:
+        result = cached[1]
+    else:
+        try:
+            result = scan_repository(path, external=True)
+            _scan_cache[path] = (time.monotonic(), result)
+        except Exception as e:
+            raise HTTPException(503, f"security scan failed: {e}")
+            
+    findings = result["findings"]
+    if severity:
+        findings = [f for f in findings if f.get("severity") == severity]
+        
+    headers, rows = _exports.security_to_rows(findings)
+    body = _exports.render(format, headers, rows, sheet_title="security")
+    
+    record_audit(
+        "export.security",
+        user_id=principal.user_id,
+        detail={"format": format, "severity": severity, "count": len(rows)},
+        request=request,
+    )
+    _, suffix = _exports.FORMATS[format]
+    return _attachment(f"security.{suffix}", format, body)
+
+
+@router.get("/export/refactor")
+def export_refactor(
+    request: Request,
+    format: str = Query("csv"),
+    limit: int = Query(default=500, ge=1, le=2000),
+    graph=Depends(get_graph_client),
+    principal: Principal = Depends(get_principal),
+):
+    from refactoring import RefactoringRecommender
+    
+    _check_format(format)
+    try:
+        recs = RefactoringRecommender(graph).recommend(limit=limit)
+    except Exception as e:
+        raise HTTPException(503, f"graph backend unavailable: {e}")
+        
+    headers, rows = _exports.refactor_to_rows(recs)
+    body = _exports.render(format, headers, rows, sheet_title="refactoring")
+    
+    record_audit(
+        "export.refactor",
+        user_id=principal.user_id,
+        detail={"format": format, "count": len(rows)},
+        request=request,
+    )
+    _, suffix = _exports.FORMATS[format]
+    return _attachment(f"refactoring_recommendations.{suffix}", format, body)
+
+
 @router.get("/export/impact/{file_path:path}")
 def export_impact(
     file_path: str,

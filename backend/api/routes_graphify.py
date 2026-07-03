@@ -6,7 +6,7 @@ import os
 from pathlib import Path
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, Response
+from fastapi import APIRouter, HTTPException, Response, Query
 
 router = APIRouter()
 
@@ -69,7 +69,7 @@ def graphify_stats():
 
 
 @router.get("/graphify/graph")
-def graphify_graph():
+def graphify_graph(download: bool = Query(default=False)):
     """Full graph data transformed for the frontend visualisation layer."""
     data = _read_json_cached(_GRAPHIFY_DIR / "graph.json")
     
@@ -93,11 +93,18 @@ def graphify_graph():
         if lnk.get("source") in node_ids and lnk.get("target") in node_ids
     ]
     
-    return {"nodes": nodes, "links": links}
+    result = {"nodes": nodes, "links": links}
+    if download:
+        return Response(
+            content=json.dumps(result),
+            media_type="application/json",
+            headers={"Content-Disposition": 'attachment; filename="graph.json"'}
+        )
+    return result
 
 
 @router.get("/graphify/report")
-def graphify_report():
+def graphify_report(download: bool = Query(default=False)):
     """Return GRAPH_REPORT.md as plain text."""
     report_path = _GRAPHIFY_DIR / "GRAPH_REPORT.md"
     if not report_path.exists():
@@ -106,4 +113,9 @@ def graphify_report():
         content = report_path.read_text(encoding="utf-8")
     except OSError as exc:
         raise HTTPException(500, f"Failed to read report: {exc}")
-    return Response(content=content, media_type="text/plain; charset=utf-8")
+    
+    headers = {}
+    if download:
+        headers["Content-Disposition"] = 'attachment; filename="codebase_architecture_report.md"'
+        
+    return Response(content=content, media_type="text/plain; charset=utf-8", headers=headers)

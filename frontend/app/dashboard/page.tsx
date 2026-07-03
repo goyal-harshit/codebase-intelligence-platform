@@ -61,7 +61,7 @@ function severitySummary(risks: Risk[]) {
 function healthScore(risks: Risk[], stats: Stats | null) {
   if (!stats || stats.total_files === 0) return null;
   const penalty = risks.reduce((sum, risk) => sum + (SEVERITY_RANK[risk.severity] ?? 1), 0);
-  return Math.max(0, Math.round(100 - (penalty / Math.max(stats.total_files, 1)) * 8));
+  return Math.max(0, Math.round(100 - (penalty / Math.max(stats.total_files, 1)) * 3));
 }
 
 function Panel({
@@ -160,8 +160,8 @@ export default function Dashboard() {
         </div>
       )}
 
-      <div className="grid gap-4 lg:grid-cols-[1fr_360px]">
-        <div className="space-y-4">
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
+        <div className="min-w-0 space-y-4">
           {stats.loading ? (
             <StateBlock state="loading" title="Loading graph coverage" />
           ) : stats.error ? (
@@ -214,10 +214,18 @@ export default function Dashboard() {
           </Panel>
         </div>
 
-        <aside className="space-y-4">
+        <aside className="min-w-0 space-y-4">
           <Panel title="Repo health">
             <div className="flex items-center gap-4">
-              <div className="grid h-24 w-24 place-items-center rounded-full border-8 border-emerald-200 bg-emerald-50 text-2xl font-semibold text-emerald-700">
+              <div className={`grid h-24 w-24 place-items-center rounded-full border-8 text-2xl font-semibold ${
+                score === null
+                  ? "border-slate-200 bg-slate-50 text-slate-400"
+                  : score >= 80
+                    ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                    : score >= 60
+                      ? "border-amber-200 bg-amber-50 text-amber-700"
+                      : "border-red-200 bg-red-50 text-red-700"
+              }`}>
                 {score ?? "--"}
               </div>
               <div>

@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Sparkles, Wrench } from "lucide-react";
-import { getRefactor, RefactorResult } from "@/lib/api";
+import { Download, Sparkles, Wrench } from "lucide-react";
+import { getRefactor, RefactorResult, exportRefactorUrl } from "@/lib/api";
 import PageHeader from "@/components/PageHeader";
 import StateBlock from "@/components/StateBlock";
 
@@ -49,14 +49,23 @@ export default function RefactorPage() {
         title="Refactoring recommendations"
         description="Prioritized, actionable refactorings derived from detected architecture risks — highest severity and quickest wins first."
         actions={
-          <button
-            onClick={() => load(true)}
-            disabled={loading || explaining || recs.length === 0}
-            className="inline-flex items-center gap-2 rounded-lg bg-slate-950 px-3 py-2 text-sm text-white disabled:opacity-40"
-          >
-            <Sparkles size={16} />
-            {explaining ? "Planning…" : "Generate plan (local LLM)"}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => load(true)}
+              disabled={loading || explaining || recs.length === 0}
+              className="inline-flex items-center gap-2 rounded-lg bg-slate-950 px-3 py-2 text-sm text-white disabled:opacity-40"
+            >
+              <Sparkles size={16} />
+              {explaining ? "Planning…" : "Generate plan (local LLM)"}
+            </button>
+            <a
+              href={exportRefactorUrl("xlsx")}
+              className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 transition"
+            >
+              <Download size={16} />
+              Export XLSX
+            </a>
+          </div>
         }
       />
 

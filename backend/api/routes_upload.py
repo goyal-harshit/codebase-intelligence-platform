@@ -18,7 +18,7 @@ from .audit import record_audit
 from .config import Settings
 from .jobs import jobs
 from .security import Principal, get_principal
-from .tasks import ingest_repo_task
+from .tasks import dispatch_ingest
 
 router = APIRouter()
 
@@ -72,7 +72,7 @@ async def ingest_upload(
         _safe_extract(zf, dest)
 
     job_id = jobs.create(repo_path=dest, user_id=principal.user_id)
-    ingest_repo_task.delay(job_id, None, dest)
+    dispatch_ingest(job_id, None, dest)
     record_audit(
         "ingest.upload",
         user_id=principal.user_id,

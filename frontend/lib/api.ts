@@ -275,6 +275,15 @@ export const getIngest = (jobId: string) =>
 export const exportRisksUrl = (format: "csv" | "xlsx" = "csv") =>
   `${API_URL}/api/v1/export/risks?format=${format}`;
 
+export const exportSecurityUrl = (format: "csv" | "xlsx" = "csv") =>
+  `${API_URL}/api/v1/export/security?format=${format}`;
+
+export const exportImpactUrl = (filePath: string, format: "csv" | "xlsx" = "csv", depth: number = 5) =>
+  `${API_URL}/api/v1/export/impact/${encodeURIComponent(filePath)}?format=${format}&depth=${depth}`;
+
+export const exportRefactorUrl = (format: "csv" | "xlsx" = "csv") =>
+  `${API_URL}/api/v1/export/refactor?format=${format}`;
+
 export const riskReportUrl = (format: "html" | "pdf" = "html") =>
   `${API_URL}/api/v1/report/risks?format=${format}`;
 
@@ -327,8 +336,8 @@ export const getGraphifyGraph = () =>
 export const getGraphifyReport = () =>
   api.get<string>("/api/v1/graphify/report", { transformResponse: [(d) => d] }).then((r) => r.data);
 
-export const exportGraphReportUrl = () => `${API_URL}/api/v1/graphify/report`;
-export const exportGraphJsonUrl = () => `${API_URL}/api/v1/graphify/graph`;
+export const exportGraphReportUrl = () => `${API_URL}/api/v1/graphify/report?download=true`;
+export const exportGraphJsonUrl = () => `${API_URL}/api/v1/graphify/graph?download=true`;
 
 /* ---- Comments ---- */
 

@@ -3,6 +3,10 @@
 import { Download, FileText, Sparkles, Table } from "lucide-react";
 import {
   exportRisksUrl,
+  exportSecurityUrl,
+  exportGraphReportUrl,
+  exportGraphJsonUrl,
+  exportRefactorUrl,
   narrativeReportUrl,
   riskReportUrl,
 } from "@/lib/api";
@@ -34,6 +38,33 @@ const REPORTS = [
     actions: [
       { label: "CSV", href: exportRisksUrl("csv") },
       { label: "XLSX", href: exportRisksUrl("xlsx") },
+    ],
+  },
+  {
+    title: "Security data export",
+    detail: "Structured CSV/XLSX export of all detected security vulnerabilities.",
+    icon: Table,
+    actions: [
+      { label: "CSV", href: exportSecurityUrl("csv") },
+      { label: "XLSX", href: exportSecurityUrl("xlsx") },
+    ],
+  },
+  {
+    title: "Refactoring recommendations",
+    detail: "Structured CSV/XLSX export of all refactoring recommendations.",
+    icon: Table,
+    actions: [
+      { label: "CSV", href: exportRefactorUrl("csv") },
+      { label: "XLSX", href: exportRefactorUrl("xlsx") },
+    ],
+  },
+  {
+    title: "Graph exports",
+    detail: "Download the architecture knowledge graph context and raw JSON data.",
+    icon: FileText,
+    actions: [
+      { label: "Download MD", href: exportGraphReportUrl() },
+      { label: "Download JSON", href: exportGraphJsonUrl() },
     ],
   },
 ];

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Network, FolderTree } from "lucide-react";
-import { getImpact, ImpactResult } from "@/lib/api";
+import { Download, Network, FolderTree } from "lucide-react";
+import { getImpact, ImpactResult, exportImpactUrl } from "@/lib/api";
 import CodeGraph, { GraphData } from "@/components/CodeGraph";
 import FileBrowser from "@/components/FileBrowser";
 import PageHeader from "@/components/PageHeader";
@@ -63,6 +63,17 @@ export default function ImpactPage() {
         eyebrow="Blast radius"
         title="Change impact"
         description="Inspect direct and transitive callers affected by a file-level change."
+        actions={
+          result && (
+            <a
+              href={exportImpactUrl(filePath, "xlsx", depth)}
+              className="inline-flex items-center gap-2 rounded-lg bg-slate-950 px-3 py-2 text-sm text-white transition hover:bg-slate-800"
+            >
+              <Download size={16} />
+              Export XLSX
+            </a>
+          )
+        }
       />
 
       <section className="rounded-lg border border-slate-200 bg-white p-5">

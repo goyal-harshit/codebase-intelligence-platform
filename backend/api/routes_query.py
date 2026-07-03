@@ -33,7 +33,7 @@ def _load_history(session_id: str, principal: Principal):
 def query(
     request: Request,
     q: str = Query(..., min_length=1, description="natural-language question"),
-    top_k: int = 10,
+    top_k: int = 4,
     session_id: Optional[str] = Query(None, description="conversation id for multi-turn"),
     engine=Depends(get_query_engine),
     principal: Principal = Depends(get_principal),

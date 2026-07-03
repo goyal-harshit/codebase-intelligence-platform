@@ -25,14 +25,25 @@ class AnswerGenerator:
 
     @staticmethod
     def format_context(retrieval_result: dict) -> str:
+        parts = []
+        
+        explicit = retrieval_result.get("explicit_files") or []
+        for ef in explicit:
+            parts.append(f"--- EXPLICIT FILE REQUESTED BY USER ---\nFile: {ef['path']}\nCode:\n{ef['content']}\n--- END EXPLICIT FILE ---")
+            
         if retrieval_result.get("strategy") == "structural":
             results = retrieval_result.get("results") or []
-            return "\n".join(str(r) for r in results[:20])
-        # semantic: Chroma returns parallel lists nested one level deep
-        results = retrieval_result.get("results") or {}
-        docs = (results.get("documents") or [[]])[0]
-        metas = (results.get("metadatas") or [[]])[0]
-        return "\n---\n".join(
-            f"File: {m.get('file_path')}\nFunction: {m.get('name')}\nCode:\n{d[:500]}"
-            for d, m in zip(docs, metas)
-        )
+            if results:
+                parts.append("\n".join(str(r) for r in results[:20]))
+        else:
+            # semantic: Chroma returns parallel lists nested one level deep
+            results = retrieval_result.get("results") or {}
+            docs = (results.get("documents") or [[]])[0]
+            metas = (results.get("metadatas") or [[]])[0]
+            if docs:
+                parts.append("\n---\n".join(
+                    f"File: {m.get('file_path')}\nFunction: {m.get('name')}\nCode:\n{d[:500]}"
+                    for d, m in zip(docs, metas)
+                ))
+                
+        return "\n\n".join(parts)

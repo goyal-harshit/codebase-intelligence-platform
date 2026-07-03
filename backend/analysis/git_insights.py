@@ -32,8 +32,11 @@ def collect_git_insights(repo_path: str, top_n: int = 20) -> dict:
     if not _is_git_repo(repo_path):
         return {"available": False, "reason": "not a git repository"}
 
+    # git log emits forward-slash paths even on Windows, so normalize ours to
+    # match or the membership check below never hits.
     source_files = {
-        os.path.relpath(p, repo_path) for p in walk_repository(repo_path)
+        os.path.relpath(p, repo_path).replace("\\", "/")
+        for p in walk_repository(repo_path)
     }
 
     # One pass over history: commits, authors, per-file churn & authorship.

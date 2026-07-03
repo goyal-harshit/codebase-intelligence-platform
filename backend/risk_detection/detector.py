@@ -50,6 +50,13 @@ class RiskDetector:
             for r in rows
         ]
 
+    # Names that are natural call-graph roots (entry points, lifecycle hooks,
+    # framework callbacks) and should never be flagged as dead code.
+    _ENTRY_POINT_NAMES = frozenset({
+        "main", "__main__", "setup", "teardown", "configure",
+        "app", "create_app", "cli", "run",
+    })
+
     def detect_dead_code(self) -> list[dict]:
         rows = self.client.query(
             "MATCH (f:Function) WHERE NOT (f)<-[:CALLS]-() "
@@ -59,7 +66,25 @@ class RiskDetector:
             {"type": "dead_code", "severity": "medium", "target": r["name"],
              "file": r["file"], "details": "no incoming calls"}
             for r in rows
+            if not self._is_dead_code_false_positive(r["name"])
         ]
+
+    @staticmethod
+    def _is_dead_code_false_positive(name: str) -> bool:
+        """Return True for function names that are expected to have no callers."""
+        if not name:
+            return True
+        # dunder/magic methods (__init__, __str__, __enter__, …)
+        if name.startswith("__") and name.endswith("__"):
+            return True
+        # test functions and fixtures
+        if name.startswith("test_") or name.startswith("Test"):
+            return True
+        # known entry-point / framework-hook names
+        if name in RiskDetector._ENTRY_POINT_NAMES:
+            return True
+        # private helpers starting with _ are borderline; keep them for now
+        return False
 
     def detect_high_complexity(self) -> list[dict]:
         rows = self.client.query(

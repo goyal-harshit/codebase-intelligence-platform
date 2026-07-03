@@ -40,11 +40,13 @@ class OllamaClient:
         self,
         base_url: str | None = None,
         model: str | None = None,
-        timeout: float = 120.0,
+        timeout: float | None = None,
     ) -> None:
         self.base_url = _resolve_base_url(base_url)
         self.model = model or os.getenv("LLM_MODEL") or os.getenv("OLLAMA_MODEL") or "qwen2.5-coder:7b"
-        self.timeout = timeout
+        # CPU-only boxes need headroom: a cold call pays model load (~GBs from
+        # disk) plus prompt eval, which regularly blows past 120s.
+        self.timeout = timeout if timeout is not None else float(os.getenv("LLM_TIMEOUT", "300"))
         self._session = requests.Session()
 
     def generate(self, prompt: str, temperature: float = 0.2) -> str:
@@ -55,6 +57,9 @@ class OllamaClient:
                 "model": self.model,
                 "prompt": prompt,
                 "stream": False,
+                # Keep the model resident between calls: the default 5-minute
+                # eviction makes the next query pay a cold load again.
+                "keep_alive": os.getenv("LLM_KEEP_ALIVE", "60m"),
                 # Ollama takes sampling params under "options", not top-level.
                 "options": {"temperature": temperature},
             },

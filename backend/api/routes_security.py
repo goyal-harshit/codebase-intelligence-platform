@@ -39,6 +39,18 @@ def _latest_repo_path() -> Optional[str]:
         ).scalar_one_or_none()
 
 
+def scan_cached(path: str, refresh: bool = False) -> dict:
+    """Scan *path* (Bandit + Ruff + builtin), cached per repo path with a TTL.
+    Shared by the route, the export route, and the post-ingest cache warmer."""
+    cached = _scan_cache.get(path)
+    if cached and not refresh and time.monotonic() - cached[0] < _CACHE_TTL_SECONDS:
+        return cached[1]
+    # external=True layers Bandit + Ruff (S rules) over the builtin scanner.
+    result = scan_repository(path, external=True)
+    _scan_cache[path] = (time.monotonic(), result)
+    return result
+
+
 @router.get("/security")
 def security(
     request: Request,
@@ -55,16 +67,10 @@ def security(
         raise HTTPException(400, f"repo_path is not a directory: {path}")
 
     record_audit("security_scan", target=path, detail={"severity": severity}, request=request)
-    cached = _scan_cache.get(path)
-    if cached and not refresh and time.monotonic() - cached[0] < _CACHE_TTL_SECONDS:
-        result = cached[1]
-    else:
-        try:
-            # external=True layers Bandit + Ruff (S rules) over the builtin scanner.
-            result = scan_repository(path, external=True)
-        except Exception as e:  # noqa: BLE001
-            raise HTTPException(503, f"security scan failed: {e}")
-        _scan_cache[path] = (time.monotonic(), result)
+    try:
+        result = scan_cached(path, refresh=refresh)
+    except Exception as e:  # noqa: BLE001
+        raise HTTPException(503, f"security scan failed: {e}")
 
     if severity:
         findings = [f for f in result["findings"] if f["severity"] == severity]

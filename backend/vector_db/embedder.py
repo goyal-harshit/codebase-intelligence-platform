@@ -25,6 +25,9 @@ class SentenceTransformerEmbedder:
 
     def _load(self):
         if self._model is None:
+            import os
+            # Disable HF Hub network checks to drastically speed up model initialization
+            os.environ["HF_HUB_OFFLINE"] = "1"
             from sentence_transformers import SentenceTransformer
 
             self._model = SentenceTransformer(self.model_name)

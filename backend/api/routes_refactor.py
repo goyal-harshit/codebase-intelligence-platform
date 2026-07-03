@@ -12,8 +12,15 @@ from refactoring import RefactoringRecommender, recommend_narrative
 
 from .audit import record_audit
 from .deps import get_graph_client, get_llm
+from .result_cache import cached
 
 router = APIRouter()
+
+
+def cached_refactor(graph, limit: int) -> list[dict]:
+    """Refactoring recommendations, cached per limit until the next ingest.
+    Shared by the route and the post-ingest warmer."""
+    return cached(f"refactor:{limit}", lambda: RefactoringRecommender(graph).recommend(limit=limit))
 
 
 @router.get("/refactor")
@@ -25,7 +32,9 @@ def refactor(
 ):
     record_audit("refactor", detail={"explain": explain}, request=request)
     try:
-        recs = RefactoringRecommender(graph).recommend(limit=limit)
+        # Recommendations derive from the same graph risks; cache them per limit
+        # (invalidated on ingest). The optional LLM narrative stays live below.
+        recs = cached_refactor(graph, limit)
     except Exception as e:  # noqa: BLE001
         raise HTTPException(503, f"graph backend unavailable: {e}")
 

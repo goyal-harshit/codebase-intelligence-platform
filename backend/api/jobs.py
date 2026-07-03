@@ -40,6 +40,36 @@ class JobManager:
                 setattr(job, key, value)
             s.commit()
 
+    def find_active(self, repo_url: Optional[str] = None,
+                    repo_path: Optional[str] = None) -> Optional[str]:
+        """Id of a queued/running job for the same target, if one exists.
+
+        Lets the ingest route return the in-flight job instead of piling a
+        duplicate CPU-heavy pipeline on top of it (e.g. double-clicked
+        "Start analysis").
+        """
+        from datetime import datetime, timedelta, timezone
+
+        from sqlalchemy import or_, select
+
+        target = repo_url or repo_path
+        if not target:
+            return None
+        # Ignore jobs with no recent progress: a crash can orphan a row in
+        # "running" and it must not block re-ingesting that repo forever.
+        stale_cutoff = datetime.now(timezone.utc) - timedelta(minutes=30)
+        with self._session() as s:
+            return s.execute(
+                select(Job.id)
+                .where(
+                    Job.status.in_(("queued", "running")),
+                    or_(Job.repo_url == target, Job.repo_path == target),
+                    Job.updated_at >= stale_cutoff,
+                )
+                .order_by(Job.created_at.desc())
+                .limit(1)
+            ).scalar_one_or_none()
+
     def get(self, job_id: str) -> Optional[dict]:
         with self._session() as s:
             job = s.get(Job, job_id)

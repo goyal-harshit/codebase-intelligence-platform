@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { ShieldCheck } from "lucide-react";
-import { getSecurity, SecurityResult } from "@/lib/api";
+import { Download, ShieldCheck } from "lucide-react";
+import { getSecurity, SecurityResult, exportSecurityUrl } from "@/lib/api";
 import PageHeader from "@/components/PageHeader";
 import SecurityTable from "@/components/SecurityTable";
 import StateBlock from "@/components/StateBlock";
@@ -44,6 +44,15 @@ export default function SecurityPage() {
         eyebrow="Static analysis"
         title="Security scan"
         description="Local, LLM-free SAST over the ingested repository: hardcoded secrets, injection-prone patterns, weak crypto, and insecure defaults."
+        actions={
+          <a
+            href={exportSecurityUrl("xlsx")}
+            className="inline-flex items-center gap-2 rounded-lg bg-slate-950 px-3 py-2 text-sm text-white transition hover:bg-slate-800"
+          >
+            <Download size={16} />
+            Export XLSX
+          </a>
+        }
       />
 
       <div className="mt-2">

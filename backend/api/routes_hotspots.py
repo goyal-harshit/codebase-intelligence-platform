@@ -11,6 +11,7 @@ from db import Job, get_sessionmaker
 
 from .audit import record_audit
 from .deps import get_graph_client
+from .result_cache import cached
 from .security import Principal, get_principal
 
 router = APIRouter()
@@ -28,6 +29,13 @@ def _latest_repo_path(user_id: str | None = None) -> str | None:
         if user_id:
             stmt = stmt.where(Job.user_id == user_id)
         return session.execute(stmt).scalar_one_or_none()
+
+
+def cached_hotspots(graph, path: str, limit: int) -> dict:
+    """Hotspots for a repo, cached per (repo, limit) until the next ingest.
+    build_hotspots walks full git history + a graph query, so it's shared by the
+    route and the post-ingest warmer."""
+    return cached(f"hotspots:{path}:{limit}", lambda: build_hotspots(graph, path, limit=limit))
 
 
 @router.get("/hotspots")
@@ -59,6 +67,6 @@ def hotspots(
         request=request,
     )
     try:
-        return build_hotspots(graph, path, limit=limit)
+        return cached_hotspots(graph, path, limit)
     except Exception as e:
         raise HTTPException(503, f"hotspot analysis unavailable: {e}")

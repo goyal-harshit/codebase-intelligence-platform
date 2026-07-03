@@ -40,6 +40,10 @@ def extract_sources(retrieval: dict) -> list[str]:
         if path and path not in seen:
             seen.append(path)
 
+    if retrieval.get("explicit_files"):
+        for ef in retrieval["explicit_files"]:
+            add(ef.get("path"))
+
     if retrieval.get("strategy") == "structural":
         for row in retrieval.get("results") or []:
             if isinstance(row, dict):
