@@ -99,6 +99,9 @@ services:
     command: sh -c "until alembic upgrade head; do echo 'waiting for db, retrying in 2s...'; sleep 2; done && uvicorn main:app --host 0.0.0.0 --port 8000"
     ports:
       - "8001:8000"
+    volumes:
+      # Persist cloned/ingested repo checkouts (REPO_CLONE_DIR) across rebuilds.
+      - backend_data:/app/data
     environment:
       DATABASE_URL: "postgresql+psycopg2://codeintel:codeintel@db:5432/codeintel"
       CELERY_BROKER_URL: "redis://redis:6379/0"
@@ -123,6 +126,8 @@ services:
       CHROMA_PORT: "8000"
       LLM_BASE_URL: "http://host.docker.internal:11434/v1"
       LLM_MODEL: "qwen2.5-coder:7b"
+      # Embedding token window per chunk (lower = faster ingest). See .env.example.
+      EMBED_MAX_TOKENS: "${EMBED_MAX_TOKENS:-256}"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
@@ -142,6 +147,8 @@ services:
     build: ./backend
     image: codebase-intelligence-api
     command: celery -A celery_app worker --loglevel=info
+    volumes:
+      - backend_data:/app/data
     environment:
       DATABASE_URL: "postgresql+psycopg2://codeintel:codeintel@db:5432/codeintel"
       CELERY_BROKER_URL: "redis://redis:6379/0"
@@ -155,6 +162,8 @@ services:
       CHROMA_PORT: "8000"
       LLM_BASE_URL: "http://host.docker.internal:11434/v1"
       LLM_MODEL: "qwen2.5-coder:7b"
+      # Embedding token window per chunk (lower = faster ingest). See .env.example.
+      EMBED_MAX_TOKENS: "${EMBED_MAX_TOKENS:-256}"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
@@ -196,4 +205,5 @@ volumes:
   miniodata:
   arcadedata:
   chromadata:
+  backend_data:
 #   ollama:

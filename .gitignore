@@ -11,3 +11,5 @@ data/
 *.log
 .pytest_cache/
 .mypy_cache/
+*.tsbuildinfo
+*.tmp

@@ -5,18 +5,38 @@ Open-source platform that ingests any Git repo, builds a knowledge graph + vecto
 See `PROJECT_PLAN.md` for the architecture, feature matrix, and roadmap
 (it supersedes all earlier plan documents).
 
-## Quickstart (Docker)
+## Quickstart
 
-```bash
-git clone <this repo> && cd codebase_intelligence_project
-./scripts/setup.sh            # or  pwsh scripts/setup.ps1  on Windows
+Two ways to run the full stack, both work straight after `git clone`:
+
+**Docker (recommended — one click, nothing else to install but Docker Desktop)**
+
+```
+run_ui.bat
 ```
 
-This builds the backend + frontend images, starts ArcadeDB / ChromaDB / Ollama,
-and pulls the `mistral` model. Then open the frontend at
-http://localhost:3000 and the API docs at http://localhost:8001/docs.
+Builds and starts everything via `docker-compose.yml` (postgres, redis, minio,
+arcadedb, chroma, backend, worker, frontend) and opens
+http://localhost:3100. On first run it copies `.env.example` to `.env` —
+edit that file to set a real `AUTH_SECRET` / GitHub OAuth keys / LLM settings
+before exposing the stack beyond your machine. Data (Postgres, MinIO, ArcadeDB,
+Chroma, cloned repos) persists in named Docker volumes across restarts;
+`docker compose down` stops the stack without touching them, `docker compose
+down -v` wipes them.
 
-Prefer running pieces locally for development? See the per-phase sections below.
+**Local dev (hot reload, needs Python 3.11+/3.12 and Node 20+ on PATH)**
+
+```
+run_local.bat
+```
+
+Creates `.venv`, installs backend deps, runs `npm install` for the frontend,
+starts ArcadeDB + Chroma in Docker (if available) for graph/vector storage,
+and runs the backend (`uvicorn --reload`) and frontend (`npm run dev`) natively
+in separate windows.
+
+Prefer running individual pieces locally for development? See the per-phase
+sections below.
 
 ## Status
 
@@ -329,29 +349,34 @@ npm run dev                         # http://localhost:3000
 
 ## Phase 9 — Docker & Deployment
 
-One-command stack via [`docker-compose.yml`](docker-compose.yml):
+One-command stack via [`docker-compose.yml`](docker-compose.yml), started by
+[`run_ui.bat`](run_ui.bat) or directly with `docker compose up -d --build`:
 
 | Service | Image | Host port |
 |---|---|---|
+| db (Postgres) | `postgres:16-alpine` | 5433 → 5432 |
+| redis | `redis:7-alpine` | 6380 → 6379 |
+| minio | `minio/minio` | 9000 (API) / 9001 (console) |
 | arcadedb | `arcadedb/arcadedb` | 2480 / 2424 |
-| chroma | `ghcr.io/chroma-core/chroma` | 8000 |
-| ollama | `ollama/ollama` | 11434 |
+| chroma | `ghcr.io/chroma-core/chroma` | 8003 → 8000 |
 | backend | built from `backend/Dockerfile` | 8001 → 8000 |
-| frontend | built from `frontend/Dockerfile` | 3000 |
+| worker (Celery) | same image as backend | — |
+| frontend | built from `frontend/Dockerfile` | 3100 → 3000 |
 
-Service hostnames are injected into the backend via env vars; the frontend's
-`NEXT_PUBLIC_API_URL` is baked at build time to the host-mapped backend port
-(`http://localhost:8001`). `docker compose config` is validated.
-
-**Deviation from the plan:** the plan's compose includes `redis` + a
-`celery_worker`. Phase 7 runs ingestion as in-process background tasks, so those
-two services would be dead weight — they're omitted here and can be added if/when
-ingestion moves to Celery.
+Service hostnames/credentials are injected into the backend and worker via env
+vars (overridable through a root `.env` — see [`.env.example`](.env.example));
+the frontend's `NEXT_PUBLIC_API_URL` is baked in at build time to the
+host-mapped backend port (`http://localhost:8001`). The backend runs Celery
+ingestion jobs on the `worker` service and persists cloned repo checkouts in
+the `backend_data` volume so they survive container rebuilds.
 
 ```bash
-./scripts/setup.sh        # bootstrap: pull model + bring up the stack
-docker compose up -d      # subsequent runs
-docker compose down       # stop
+run_ui.bat                       # Windows: build + start everything, open browser
+docker compose up -d --build     # equivalent, any OS
+docker compose ps                # status
+docker compose logs -f           # logs
+docker compose down              # stop (keeps data volumes)
+docker compose down -v           # stop and WIPE all data volumes
 ```
 
 ## Continuous Integration

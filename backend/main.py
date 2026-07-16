@@ -11,6 +11,34 @@ import uuid
 from datetime import datetime
 from pathlib import Path
 
+
+def _load_env_file() -> None:
+    """Load ``.env.local`` (KEY=VALUE) into the environment for native runs.
+
+    Docker sets these vars explicitly, but running the backend directly (venv +
+    uvicorn) has no such injection — so the ArcadeDB password and Chroma port
+    live in a project-root ``.env.local``. Zero-dependency parse; real env vars
+    already set (e.g. by Docker/compose) always win via setdefault.
+    """
+    here = Path(__file__).resolve()
+    candidates = [
+        here.parent.parent / ".env.local",  # project root
+        Path.cwd() / ".env.local",
+    ]
+    for env_path in candidates:
+        if not env_path.is_file():
+            continue
+        for raw in env_path.read_text(encoding="utf-8").splitlines():
+            line = raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, _, value = line.partition("=")
+            os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+        break
+
+
+_load_env_file()
+
 from fastapi import (
     Depends,
     FastAPI,
