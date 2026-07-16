@@ -87,6 +87,9 @@ class Job(Base):
     )
     status: Mapped[str] = mapped_column(String(32), default="queued", nullable=False, index=True)
     step: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    # 0-100 within the current step (currently only "embedding" reports it);
+    # other steps have no natural sub-progress and leave this at None.
+    progress: Mapped[int | None] = mapped_column(Integer, nullable=True)
     repo_url: Mapped[str | None] = mapped_column(String(2048), nullable=True)
     repo_path: Mapped[str | None] = mapped_column(String(2048), nullable=True)
     error: Mapped[str | None] = mapped_column(Text, nullable=True)

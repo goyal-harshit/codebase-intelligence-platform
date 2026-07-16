@@ -12,7 +12,7 @@ import db as _db
 from db import Job
 
 # Columns a caller is allowed to update on a job row.
-_UPDATABLE = {"status", "step", "error", "warnings", "result", "repo_url", "repo_path", "user_id"}
+_UPDATABLE = {"status", "step", "error", "warnings", "result", "repo_url", "repo_path", "user_id", "progress"}
 
 
 class JobManager:
@@ -70,20 +70,45 @@ class JobManager:
                 .limit(1)
             ).scalar_one_or_none()
 
+    @staticmethod
+    def _to_dict(job: Job) -> dict:
+        return {
+            "job_id": job.id,
+            "user_id": job.user_id,
+            "status": job.status,
+            "step": job.step,
+            "progress": job.progress,
+            "error": job.error,
+            "result": job.result,
+            "warnings": job.warnings or [],
+            "repo_url": job.repo_url,
+            "repo_path": job.repo_path,
+            "created_at": job.created_at,
+            "updated_at": job.updated_at,
+        }
+
     def get(self, job_id: str) -> Optional[dict]:
         with self._session() as s:
             job = s.get(Job, job_id)
             if job is None:
                 return None
-            return {
-                "job_id": job.id,
-                "user_id": job.user_id,
-                "status": job.status,
-                "step": job.step,
-                "error": job.error,
-                "result": job.result,
-                "warnings": job.warnings or [],
-            }
+            return self._to_dict(job)
+
+    def list_recent(self, limit: int = 20) -> list[dict]:
+        """Most recent jobs, newest first.
+
+        Backs ``GET /api/v1/ingest`` so any page can discover an in-flight
+        ingestion (global progress bar) without holding a job id.
+        """
+        from sqlalchemy import select
+
+        with self._session() as s:
+            rows = (
+                s.execute(select(Job).order_by(Job.created_at.desc()).limit(limit))
+                .scalars()
+                .all()
+            )
+            return [self._to_dict(j) for j in rows]
 
 
 # module-level singleton used by the ingest routes + Celery task

@@ -1,6 +1,6 @@
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from pydantic import BaseModel
 
 from .audit import record_audit
@@ -52,6 +52,16 @@ def start_ingest(
         request=request,
     )
     return {"job_id": job_id, "status": "queued"}
+
+
+@router.get("/ingest")
+def list_ingest_jobs(
+    limit: int = Query(10, ge=1, le=50),
+    principal: Principal = Depends(get_principal),
+):
+    """Recent jobs, newest first — lets the frontend's global progress bar
+    discover an in-flight ingestion from any page without holding a job id."""
+    return {"jobs": jobs.list_recent(limit=limit)}
 
 
 @router.get("/ingest/{job_id}")

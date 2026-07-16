@@ -91,7 +91,23 @@ def init_db() -> None:
     from . import models  # noqa: F401 - register mapped classes
     from .base import Base
 
-    Base.metadata.create_all(get_engine())
+    engine = get_engine()
+    Base.metadata.create_all(engine)
+    _sqlite_add_missing_columns(engine)
+
+
+def _sqlite_add_missing_columns(engine: Engine) -> None:
+    """``create_all`` only creates missing tables, not missing columns on
+    existing ones — a pre-existing local ``app.db`` from before a model change
+    (e.g. the ``jobs.progress`` column) would otherwise 500 on first write.
+    Alembic is the real migration tool for Postgres; this is just enough to
+    keep the zero-setup SQLite dev path working across model changes."""
+    if engine.url.get_backend_name() != "sqlite":
+        return
+    with engine.begin() as conn:
+        existing = {row[1] for row in conn.exec_driver_sql("PRAGMA table_info(jobs)").fetchall()}
+        if "progress" not in existing:
+            conn.exec_driver_sql("ALTER TABLE jobs ADD COLUMN progress INTEGER")
 
 
 def reset_engine_cache() -> None:

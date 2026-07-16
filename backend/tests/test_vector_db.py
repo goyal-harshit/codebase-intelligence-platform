@@ -40,6 +40,24 @@ class FakeCollection:
         return {"ids": [["x"]], "documents": [["doc"]], "metadatas": [[{"name": "x"}]]}
 
 
+class StatefulFakeCollection(FakeCollection):
+    """Remembers upserted metadata so ``.get`` behaves like real Chroma —
+    exercises the unchanged-chunk skip instead of its lookup-failure fallback."""
+
+    def __init__(self):
+        super().__init__()
+        self.store = {}
+
+    def upsert(self, ids, embeddings, documents, metadatas):
+        super().upsert(ids, embeddings, documents, metadatas)
+        for id_, meta in zip(ids, metadatas):
+            self.store[id_] = meta
+
+    def get(self, ids, include=None):
+        found = [i for i in ids if i in self.store]
+        return {"ids": found, "metadatas": [self.store[i] for i in found]}
+
+
 SAMPLE = [
     CodeEntity(id="f1", type="function", name="validate_password", file_path="auth.py",
                language="python", line_start=1, line_end=5, signature="validate_password(pw)",
@@ -76,6 +94,35 @@ def test_embed_and_store_batches():
     assert all_ids == ["f1", "f2", "c1"]
     for u in coll.upserts:
         assert len(u["embeddings"]) == len(u["ids"]) == len(u["documents"])
+
+
+def test_reingest_skips_unchanged_chunks():
+    emb, coll = FakeEmbedder(), StatefulFakeCollection()
+    builder = VectorStoreBuilder(embedder=emb, collection=coll)
+    assert builder.embed_and_store(SAMPLE) == 3
+
+    emb.calls.clear()
+    progress = []
+    embedded = builder.embed_and_store(
+        SAMPLE, on_progress=lambda done, total: progress.append((done, total))
+    )
+    assert embedded == 0
+    assert emb.calls == []  # the model was never touched
+    assert progress[-1] == (3, 3)  # skipped chunks still reach 100%
+
+
+def test_reingest_reembeds_only_changed_chunk():
+    import dataclasses
+
+    emb, coll = FakeEmbedder(), StatefulFakeCollection()
+    builder = VectorStoreBuilder(embedder=emb, collection=coll)
+    builder.embed_and_store(SAMPLE)
+
+    emb.calls.clear()
+    coll.upserts.clear()
+    changed = [dataclasses.replace(SAMPLE[0], raw_code="def validate_password(pw): return None")] + SAMPLE[1:]
+    assert builder.embed_and_store(changed) == 1
+    assert [i for u in coll.upserts for i in u["ids"]] == ["f1"]
 
 
 def test_search_embeds_query_and_passes_filter():

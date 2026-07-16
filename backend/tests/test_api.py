@@ -58,3 +58,23 @@ def test_ingest_creates_job_and_status_is_queryable():
 
 def test_unknown_job_404():
     assert client.get("/api/v1/ingest/deadbeef").status_code == 404
+
+
+def test_ingest_list_returns_recent_jobs_newest_first():
+    # Two jobs created back-to-back; the list endpoint (which backs the global
+    # progress bar) must return both, newest first, in the single-job shape.
+    a = client.post("/api/v1/ingest", json={"repo_path": "/no/such/repo-a"}).json()["job_id"]
+    b = client.post("/api/v1/ingest", json={"repo_path": "/no/such/repo-b"}).json()["job_id"]
+
+    r = client.get("/api/v1/ingest")
+    assert r.status_code == 200
+    jobs = r.json()["jobs"]
+    ids = [j["job_id"] for j in jobs]
+    assert ids.index(b) < ids.index(a)
+    for j in jobs:
+        for key in ("job_id", "status", "step", "progress", "repo_path", "created_at"):
+            assert key in j
+
+    limited = client.get("/api/v1/ingest", params={"limit": 1}).json()["jobs"]
+    assert len(limited) == 1
+    assert client.get("/api/v1/ingest", params={"limit": 0}).status_code == 422

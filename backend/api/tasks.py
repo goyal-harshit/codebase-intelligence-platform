@@ -24,6 +24,15 @@ from .jobs import JobManager, jobs
 
 logger = logging.getLogger("codebase_intelligence.ingest")
 
+# Ingestion is CPU-bound (parsing, then embedding on the CPU-only local
+# model). Nothing stops two ingestions of *different* repo-identity strings
+# for what is physically the same repo (or just two unrelated repos) from
+# being dispatched at once, and eager mode gives each its own daemon thread
+# with no scheduler — so without this lock they run concurrently and fight
+# each other for CPU, making every in-flight job slower. Serialize instead:
+# only one pipeline body executes at a time; the rest wait their turn.
+_pipeline_lock = threading.Lock()
+
 
 @celery_app.task(name="ingest_repo")
 def ingest_repo_task(job_id: str, repo_url: str | None = None,
@@ -219,6 +228,14 @@ def _warm_analysis_caches_async(repo_path: str | None) -> None:
 
 def run_ingestion(jobs: JobManager, job_id: str,
                   repo_url: str | None = None, repo_path: str | None = None) -> None:
+    if _pipeline_lock.locked():
+        jobs.update(job_id, status="queued", step="waiting_for_slot")
+    with _pipeline_lock:
+        _run_ingestion_locked(jobs, job_id, repo_url, repo_path)
+
+
+def _run_ingestion_locked(jobs: JobManager, job_id: str,
+                          repo_url: str | None, repo_path: str | None) -> None:
     from ast_parser import parse_repository
     from graph_db import ArcadeDBClient, GraphBuilder, apply_schema
 
@@ -261,14 +278,12 @@ def run_ingestion(jobs: JobManager, job_id: str,
 
         warnings: list[str] = []
 
-        jobs.update(job_id, step="embedding")
-        try:
-            from vector_db import VectorStoreBuilder
-            VectorStoreBuilder().embed_and_store(entities)
-        except Exception as e:  # Chroma/model optional — warn, keep going
-            warnings.append(f"embedding: {e}")
-            logger.warning("[job %s] embedding step failed: %s", job_id, e)
-
+        # Risk analysis runs BEFORE embedding: it (like stats/hotspots/refactor)
+        # only needs the freshly built graph, whereas embedding is the slow step
+        # (~2min of CPU) and only powers the semantic "Ask" page. Doing risk first
+        # lets us warm the dashboard/risks/hotspots/refactor/security pages while
+        # embedding is still running, so the analysis workspace is usable in
+        # seconds instead of after the full embed.
         jobs.update(job_id, step="risk_analysis")
         n_risks = 0
         try:
@@ -279,6 +294,31 @@ def run_ingestion(jobs: JobManager, job_id: str,
             warnings.append(f"risk_analysis: {e}")
             logger.warning("[job %s] risk analysis failed: %s", job_id, e)
 
+        # Graph + risks are ready: the analysis pages work now. Warm their caches
+        # in the background so the first visit is instant, then embed.
+        _invalidate_analysis_caches()
+        _warm_analysis_caches_async(path)
+
+        jobs.update(job_id, step="embedding", progress=0)
+        try:
+            from vector_db import VectorStoreBuilder
+
+            # Throttled to whole percentage points so a fast run (few chunks)
+            # doesn't hammer the jobs table with one write per chunk-batch.
+            last_pct = -1
+
+            def _on_progress(done: int, total: int) -> None:
+                nonlocal last_pct
+                pct = int(done * 100 / total) if total else 100
+                if pct != last_pct:
+                    last_pct = pct
+                    jobs.update(job_id, progress=pct)
+
+            VectorStoreBuilder().embed_and_store(entities, on_progress=_on_progress)
+        except Exception as e:  # Chroma/model optional — warn, keep going
+            warnings.append(f"embedding: {e}")
+            logger.warning("[job %s] embedding step failed: %s", job_id, e)
+
         # A job that skipped embedding or risk analysis is NOT a clean success —
         # surface that so callers don't trust an incomplete index.
         final_status = "complete_with_warnings" if warnings else "complete"
@@ -287,11 +327,7 @@ def run_ingestion(jobs: JobManager, job_id: str,
                             "edges": stats["edges"], "risks": n_risks})
         logger.info("[job %s] ingestion %s (%s files, %s risks)",
                     job_id, final_status, stats["files"], n_risks)
-        _invalidate_analysis_caches()
         _notify(jobs, job_id)
-        # Proactively compute every page's data now so users don't have to visit
-        # each page to trigger it — the whole workspace is ready on completion.
-        _warm_analysis_caches_async(path)
     except Exception as e:
         jobs.update(job_id, status="failed", error=str(e))
         logger.error("[job %s] ingestion failed: %s", job_id, e)

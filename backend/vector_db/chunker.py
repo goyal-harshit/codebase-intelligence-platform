@@ -12,6 +12,13 @@ if TYPE_CHECKING:
 
 
 class CodeChunker:
+    # The embedder truncates to a token window anyway (see EMBED_MAX_TOKENS,
+    # default 256 tokens ≈ ~1k chars for code). Feeding a 10k-char blob just makes
+    # the tokenizer scan characters it will immediately drop, so cap the text at a
+    # generous char budget first. The signal — header, signature, docstring, body
+    # head — is all at the front, so tail truncation is cheap on quality.
+    MAX_CHARS = 4000
+
     def chunk_entity(self, entity: "CodeEntity") -> dict:
         text = (
             f"# {entity.type}: {entity.name}\n"
@@ -21,6 +28,8 @@ class CodeChunker:
             f"{entity.docstring}\n"
             f"{entity.raw_code}"
         )
+        if len(text) > self.MAX_CHARS:
+            text = text[: self.MAX_CHARS]
         return {
             "id": entity.id,
             "text": text,

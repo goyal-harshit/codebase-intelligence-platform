@@ -147,7 +147,22 @@ export default function IngestWorkspace() {
             <div className={`rounded-lg border p-3 ${statusTone(job.status)}`}>
               <p className="text-sm font-medium">{job.status}</p>
               <p className="mt-1 font-mono text-xs opacity-80">{job.job_id}</p>
-              {job.step && <p className="mt-2 text-sm">Current step: {job.step}</p>}
+              {job.step && (
+                <p className="mt-2 text-sm">
+                  Current step: {job.step}
+                  {typeof job.progress === "number" && !TERMINAL.has(job.status) && (
+                    <> — {job.progress}%</>
+                  )}
+                </p>
+              )}
+              {typeof job.progress === "number" && !TERMINAL.has(job.status) && (
+                <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-white/60">
+                  <div
+                    className="h-full rounded-full bg-current transition-[width] duration-300"
+                    style={{ width: `${job.progress}%` }}
+                  />
+                </div>
+              )}
             </div>
             {job.error && <StateBlock state="error" title="Analysis failed" detail={job.error} />}
             {job.warnings && job.warnings.length > 0 && (

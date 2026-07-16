@@ -18,3 +18,13 @@ body {
 ::selection {
   background: #c7d2fe;
 }
+
+/* Sweep for the global ingest bar when a step has no percent to report. */
+@keyframes ingest-indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}

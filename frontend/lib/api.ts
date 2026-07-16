@@ -74,9 +74,13 @@ export interface IngestJob {
   user_id?: string | null;
   status: string;
   step?: string | null;
+  // 0-100; only meaningful during the "embedding" step, null otherwise.
+  progress?: number | null;
   error?: string | null;
   result?: Record<string, unknown> | null;
   warnings?: string[];
+  repo_url?: string | null;
+  repo_path?: string | null;
 }
 
 export interface Hotspot {
@@ -271,6 +275,13 @@ export const uploadZip = (file: File) => {
 
 export const getIngest = (jobId: string) =>
   api.get<IngestJob>(`/api/v1/ingest/${jobId}`).then((r) => r.data);
+
+// Recent ingest jobs, newest first — backs the global progress bar so any page
+// can surface a background ingestion without knowing the job id.
+export const listIngest = (limit = 10) =>
+  api
+    .get<{ jobs: IngestJob[] }>("/api/v1/ingest", { params: { limit } })
+    .then((r) => r.data);
 
 export const exportRisksUrl = (format: "csv" | "xlsx" = "csv") =>
   `${API_URL}/api/v1/export/risks?format=${format}`;

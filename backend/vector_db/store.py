@@ -6,8 +6,9 @@ from env config: CHROMA_HOST (default localhost), CHROMA_PORT (8000).
 """
 from __future__ import annotations
 
+import hashlib
 import os
-from typing import TYPE_CHECKING, Iterable, Optional
+from typing import TYPE_CHECKING, Callable, Iterable, Optional
 
 from .chunker import CodeChunker
 from .embedder import Embedder, SentenceTransformerEmbedder
@@ -47,21 +48,69 @@ class VectorStoreBuilder:
             )
         return self._collection
 
-    def embed_and_store(self, entities: Iterable[CodeEntity], batch_size: int = 64) -> int:
+    def embed_and_store(
+        self,
+        entities: Iterable[CodeEntity],
+        batch_size: int = 128,
+        on_progress: Optional[Callable[[int, int], None]] = None,
+    ) -> int:
+        """Embed chunks and upsert them; returns the number actually embedded.
+
+        Embedding is the pipeline's slowest step (CPU-only model, minutes for a
+        large repo), and re-ingesting a repo mostly re-feeds identical text —
+        so each chunk carries a content hash in its metadata and chunks whose
+        stored hash already matches are skipped without touching the model.
+        ``on_progress(done, total)`` counts skipped chunks as done so the
+        percentage stays truthful either way.
+        """
         chunks = [self.chunker.chunk_entity(e) for e in entities]
-        stored = 0
-        for i in range(0, len(chunks), batch_size):
+        total = len(chunks)
+        done = 0
+        embedded = 0
+        for i in range(0, total, batch_size):
             batch = chunks[i:i + batch_size]
-            texts = [c["text"] for c in batch]
-            embeddings = self.embedder.encode(texts)
-            self.collection.upsert(
-                ids=[c["id"] for c in batch],
-                embeddings=embeddings,
-                documents=texts,
-                metadatas=[c["metadata"] for c in batch],
+            for c in batch:
+                c["metadata"]["content_sha1"] = hashlib.sha1(
+                    c["text"].encode("utf-8")
+                ).hexdigest()
+            unchanged = self._unchanged_ids(batch)
+            fresh = [c for c in batch if c["id"] not in unchanged]
+            if fresh:
+                texts = [c["text"] for c in fresh]
+                embeddings = self.embedder.encode(texts)
+                self.collection.upsert(
+                    ids=[c["id"] for c in fresh],
+                    embeddings=embeddings,
+                    documents=texts,
+                    metadatas=[c["metadata"] for c in fresh],
+                )
+                embedded += len(fresh)
+            done += len(batch)
+            if on_progress:
+                on_progress(done, total)
+        return embedded
+
+    def _unchanged_ids(self, batch: list[dict]) -> set[str]:
+        """Ids in ``batch`` whose stored content hash matches the current one.
+
+        A lookup failure must never break ingestion — fall back to "nothing
+        matches" so everything is (re-)embedded.
+        """
+        try:
+            existing = self.collection.get(
+                ids=[c["id"] for c in batch], include=["metadatas"]
             )
-            stored += len(batch)
-        return stored
+            stored = {
+                id_: (meta or {}).get("content_sha1")
+                for id_, meta in zip(existing["ids"], existing["metadatas"])
+            }
+        except Exception:
+            return set()
+        return {
+            c["id"]
+            for c in batch
+            if stored.get(c["id"]) and stored[c["id"]] == c["metadata"]["content_sha1"]
+        }
 
     def search(self, query: str, top_k: int = 10, filters: Optional[dict] = None):
         query_embedding = self.embedder.encode([query])
