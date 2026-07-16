@@ -151,8 +151,20 @@ def export_impact(
         file_path = validate_relative_path(file_path)
     except ValidationError as e:
         raise HTTPException(400, str(e))
+    analyzer = ImpactAnalyzer(graph)
     try:
-        result = ImpactAnalyzer(graph).analyze_file_impact(file_path, max_depth=depth)
+        # Resolve the repo-relative input to the (absolute) path stored in the
+        # graph — an unresolved path silently yields an empty export.
+        resolved, suggestions = analyzer.resolve_file_path(file_path)
+    except Exception as e:
+        raise HTTPException(503, f"graph backend unavailable: {e}")
+    if resolved is None:
+        detail = f"file not found in graph: {file_path}"
+        if suggestions:
+            detail += "; did you mean: " + ", ".join(suggestions)
+        raise HTTPException(404, detail)
+    try:
+        result = analyzer.analyze_file_impact(resolved, max_depth=depth)
     except Exception as e:
         raise HTTPException(503, f"graph backend unavailable: {e}")
     headers, rows = _exports.impact_to_rows(result)

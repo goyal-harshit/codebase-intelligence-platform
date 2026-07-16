@@ -40,11 +40,25 @@ def summarize_route(
             target = validate_relative_path(req.target)
         except ValidationError as e:
             raise HTTPException(400, str(e))
+        # The graph stores whatever path the parser walked (absolute at ingest
+        # time), so an exact match on the repo-relative input never hits —
+        # resolve it the same way the impact endpoint does.
+        from impact import ImpactAnalyzer
+
+        try:
+            resolved, suggestions = ImpactAnalyzer(graph).resolve_file_path(target)
+        except Exception as e:
+            raise HTTPException(503, f"graph backend unavailable: {e}")
+        if resolved is None:
+            detail = f"no indexed entities found for '{req.target}'"
+            if suggestions:
+                detail += "; did you mean: " + ", ".join(suggestions)
+            raise HTTPException(404, detail)
         try:
             rows = graph.query(
                 "MATCH (f:File {path: $path})-[:CONTAINS]->(e) "
                 "RETURN e.name AS name, e.lines_of_code AS loc",
-                params={"path": target},
+                params={"path": resolved},
             )
         except Exception as e:
             raise HTTPException(503, f"graph backend unavailable: {e}")
