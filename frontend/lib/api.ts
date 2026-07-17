@@ -81,6 +81,9 @@ export interface IngestJob {
   warnings?: string[];
   repo_url?: string | null;
   repo_path?: string | null;
+  // Backend-computed: an active-status job whose row has gone silent past the
+  // orphan cutoff (crashed run) — UI should not treat it as in-flight.
+  stale?: boolean;
 }
 
 export interface Hotspot {
@@ -448,12 +451,16 @@ export const githubLoginUrl = () => `${API_URL}/auth/github/login`;
 
 export interface DocgenPage {
   module: string;
+  // Repo-relative title (module id with the ingest root stripped).
+  display?: string;
   markdown: string;
 }
 
 export const getDocgenModules = () =>
   api
-    .get<{ modules: string[]; total: number }>("/api/v1/docgen/modules")
+    .get<{ modules: string[]; total: number; display_root?: string }>(
+      "/api/v1/docgen/modules"
+    )
     .then((r) => r.data);
 
 export const generateDocs = (modules?: string[], narrative = false) =>

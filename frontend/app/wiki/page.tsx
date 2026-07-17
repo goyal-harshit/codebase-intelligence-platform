@@ -12,8 +12,19 @@ import MarkdownLite from "@/components/MarkdownLite";
 import PageHeader from "@/components/PageHeader";
 import StateBlock from "@/components/StateBlock";
 
+/** Repo-relative label for a module path (ids stay full graph paths). */
+function moduleLabel(path: string, root: string): string {
+  const norm = path.replace(/\\/g, "/");
+  if (root) {
+    const prefix = root.replace(/\\/g, "/").replace(/\/+$/, "") + "/";
+    if (norm.startsWith(prefix)) return norm.slice(prefix.length);
+  }
+  return norm;
+}
+
 export default function WikiPage() {
   const [modules, setModules] = useState<string[]>([]);
+  const [displayRoot, setDisplayRoot] = useState("");
   const [selected, setSelected] = useState<string | null>(null);
   const [pages, setPages] = useState<DocgenPage[]>([]);
   const [loading, setLoading] = useState(true);
@@ -40,6 +51,7 @@ export default function WikiPage() {
     getDocgenModules()
       .then((r) => {
         setModules(r.modules);
+        setDisplayRoot(r.display_root ?? "");
         const first = r.modules[0] ?? null;
         setSelected(first);
         load(first, false);
@@ -128,7 +140,7 @@ export default function WikiPage() {
                       : "text-slate-600 hover:bg-slate-100"
                   }`}
                 >
-                  {m}
+                  {moduleLabel(m, displayRoot)}
                 </button>
               ))}
             </div>
@@ -150,7 +162,9 @@ export default function WikiPage() {
               <article key={p.module} className="rounded-lg border border-slate-200 bg-white p-5">
                 <div className="mb-3 flex items-center gap-2 text-slate-400">
                   <BookOpen size={15} />
-                  <span className="font-mono text-xs">{p.module}</span>
+                  <span className="font-mono text-xs">
+                    {p.display ?? moduleLabel(p.module, displayRoot)}
+                  </span>
                 </div>
                 <MarkdownLite markdown={p.markdown} />
               </article>

@@ -1,6 +1,7 @@
 # Documentation
 
-Docs for the Codebase Intelligence Platform (roadmap v1.1/v1.2 — see `PROJECT_PLAN.md`).
+Docs for the Codebase Intelligence Platform (see `PROJECT_PLAN.md` for the
+plan and `../CHANGELOG.md` for release history).
 
 ## Contents
 
@@ -19,3 +20,14 @@ Docs for the Codebase Intelligence Platform (roadmap v1.1/v1.2 — see `PROJECT_
 - [ADR 0003 — ArcadeDB over Neo4j](adr/0003-arcadedb-over-neo4j.md)
 - [ADR 0004 — Ollama and open-weight LLMs](adr/0004-ollama-open-weight-llms.md)
 - [ADR 0005 — FastAPI-Users for auth](adr/0005-fastapi-users-auth.md)
+
+## Screenshots
+
+The main workspace pages (also embedded in the top-level README):
+
+- [Dashboard](screenshots/dashboard.png) — stats, risks, hotspot heatmap
+- [Ask the codebase](screenshots/query.png) — hybrid-retrieval Q&A with sources
+- [Change impact](screenshots/impact.png) — blast-radius force graph
+- [Security / SAST](screenshots/security.png) — builtin + Bandit + Ruff findings
+- [Refactoring](screenshots/refactor.png) — ranked recommendations
+- [Wiki](screenshots/wiki.png) — auto-generated per-module documentation

@@ -3,7 +3,21 @@
 Open-source platform that ingests any Git repo, builds a knowledge graph + vector index of its code, and answers plain-English questions, detects architecture risks, and computes change-impact / blast radius.
 
 See `PROJECT_PLAN.md` for the architecture, feature matrix, and roadmap
-(it supersedes all earlier plan documents).
+(it supersedes all earlier plan documents). Releases are annotated git tags
+with matching entries in [CHANGELOG.md](CHANGELOG.md); contribution
+conventions live in [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Screenshots
+
+| Dashboard | Ask the codebase |
+|---|---|
+| ![Dashboard](docs/screenshots/dashboard.png) | ![Query](docs/screenshots/query.png) |
+
+| Security / SAST | Change impact |
+|---|---|
+| ![Security](docs/screenshots/security.png) | ![Impact](docs/screenshots/impact.png) |
+
+More in [docs/screenshots/](docs/screenshots/).
 
 ## Quickstart
 
@@ -17,7 +31,11 @@ run_ui.bat
 
 Builds and starts everything via `docker-compose.yml` (postgres, redis, minio,
 arcadedb, chroma, backend, worker, frontend) and opens
-http://localhost:3100. On first run it copies `.env.example` to `.env` —
+http://localhost:3100. On the very first boot the backend auto-ingests the
+bundled **PyShelf demo repo** (`backend/demo_repo/`), so the dashboard, graph,
+risks, impact, and security pages have data before you ingest anything —
+set `SEED_DEMO_REPO=false` in `.env` to boot empty instead. On first run it
+copies `.env.example` to `.env` —
 edit that file to set a real `AUTH_SECRET` / GitHub OAuth keys / LLM settings
 before exposing the stack beyond your machine. Data (Postgres, MinIO, ArcadeDB,
 Chroma, cloned repos) persists in named Docker volumes across restarts;
@@ -54,6 +72,7 @@ sections below.
 | 10 | Security / SAST scanner | **Done** |
 | 11 | Refactoring recommendations | **Done** |
 | 12 | GitHub OAuth sign-in | **Done** |
+| 13 | v1.4 polish: demo seed, changelog + tags, screenshots | **Done** |
 
 ### GitHub OAuth (optional)
 
@@ -299,10 +318,11 @@ for multi-worker production without changing the route contract.
 ### Run
 
 ```bash
-cd backend && uvicorn main:app --reload --port 8000
+cd backend && uvicorn main:app --reload --port 8100
 ```
 
-Swagger UI at http://localhost:8000/docs.
+Swagger UI at http://localhost:8100/docs. (`run_local.bat` picks the first
+free port from 8100 up and configures the frontend to match.)
 
 ### Test
 
@@ -341,7 +361,7 @@ endpoints exist.
 ```bash
 cd frontend
 npm install
-cp .env.local.example .env.local   # NEXT_PUBLIC_API_URL=http://localhost:8000
+cp .env.local.example .env.local   # NEXT_PUBLIC_API_URL=http://localhost:8100
 npm run dev                         # http://localhost:3000
 ```
 

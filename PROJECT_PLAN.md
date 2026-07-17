@@ -105,7 +105,7 @@ Ordered; each item ships as its own version bump.
 
 1. ~~**v1.1 — Documentation layer.**~~ ✅ Shipped: `docs/architecture.md` (with
    diagram), five ADRs in `docs/adr/`, `docs/api-guide.md`, `docs/index.md`.
-   Still open: screenshots + demo GIF.
+   Screenshots landed with v1.4.
 2. ~~**v1.2 — Free-tier deployment guide.**~~ ✅ Shipped:
    `docs/deployment-free-tier.md` (Vercel/Render/Fly/Neon free tiers; honest
    "no free GPU hosting" caveat for Ollama).
@@ -114,8 +114,15 @@ Ordered; each item ships as its own version bump.
    optional bounded LLM "Purpose" pass; `/api/v1/docgen/{modules,generate,wiki}`,
    plus the `/wiki` frontend page (module sidebar, markdown viewer, LLM purpose
    button, wiki.md download).
-4. **v1.4 — Polish.** Seed/demo repo on first boot, public project board,
-   tagged releases with changelogs, screenshots/demo GIF in docs.
+4. ~~**v1.4 — Polish.**~~ ✅ Shipped: bundled PyShelf demo repo auto-ingested on
+   first boot (`backend/demo_repo/`, `SEED_DEMO_REPO`), `CHANGELOG.md` +
+   annotated release tags `v1.0.0`–`v1.4.0`, screenshots in `docs/screenshots/`
+   (embedded in README + docs), issue templates + `CONTRIBUTING.md` with
+   project-board setup (the board itself is created on GitHub — repo →
+   Projects → Board).
+
+The roadmap is complete through v1.4. New scope gets a new version line here
+before implementation.
 
 **Not building** (per the philosophy: integrate, don't reinvent): custom auth,
 own vector DB / LLM / parser / ORM, landing-page animations, theme switching as

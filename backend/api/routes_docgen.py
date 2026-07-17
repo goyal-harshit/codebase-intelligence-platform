@@ -18,8 +18,20 @@ from docgen import DocGenerator, build_wiki
 
 from .audit import record_audit
 from .deps import get_graph_client, get_llm
+from .routes_files import _latest_repo_path
 
 router = APIRouter()
+
+
+def _generator(graph) -> DocGenerator:
+    """DocGenerator with the latest ingest root as its (cosmetic) display root,
+    so wiki titles are repo-relative instead of machine paths. Best-effort:
+    docgen must keep working when the job store has no usable root."""
+    try:
+        root = _latest_repo_path()
+    except Exception:  # noqa: BLE001
+        root = None
+    return DocGenerator(graph, display_root=root)
 
 
 class GenerateRequest(BaseModel):
@@ -33,11 +45,18 @@ class GenerateRequest(BaseModel):
 
 @router.get("/docgen/modules")
 def docgen_modules(graph=Depends(get_graph_client)):
+    gen = _generator(graph)
     try:
-        modules = DocGenerator(graph).list_modules()
+        modules = gen.list_modules()
     except Exception as e:  # noqa: BLE001
         raise HTTPException(503, f"graph backend unavailable: {e}")
-    return {"modules": modules, "total": len(modules)}
+    return {
+        "modules": modules,
+        "total": len(modules),
+        # Cosmetic prefix the UI may strip from module labels (repo root of
+        # the latest completed ingest); "" when unknown.
+        "display_root": gen.display_root or "",
+    }
 
 
 @router.post("/docgen/generate")
@@ -53,7 +72,7 @@ def docgen_generate(
         request=request,
     )
     try:
-        pages = DocGenerator(graph).generate(
+        pages = _generator(graph).generate(
             modules=req.modules,
             narrative=req.narrative,
             llm=get_llm() if req.narrative else None,
@@ -71,7 +90,7 @@ def docgen_wiki(
 ):
     record_audit("docgen_wiki", detail={"narrative": narrative}, request=request)
     try:
-        pages = DocGenerator(graph).generate(
+        pages = _generator(graph).generate(
             narrative=narrative, llm=get_llm() if narrative else None
         )
     except Exception as e:  # noqa: BLE001

@@ -218,6 +218,24 @@ def _init_database() -> None:
     if get_database_url().startswith("sqlite"):
         init_db()
 
+    # Reconcile orphans: a crash can leave jobs in "running" forever, and they
+    # then haunt every consumer of the job list (progress banner, /ingest).
+    from api.jobs import jobs
+
+    swept = jobs.fail_stale_active()
+    if swept:
+        logger.info("marked %d orphaned ingest job(s) as failed", swept)
+
+
+@app.on_event("startup")
+def _seed_demo_repo() -> None:
+    """First boot with SEED_DEMO_REPO enabled: ingest the bundled demo repo so
+    the UI has data immediately. Runs after _init_database (registration order)
+    because the job store needs the tables. No-op unless explicitly enabled."""
+    from api.seed_demo import maybe_seed_demo_repo
+
+    maybe_seed_demo_repo()
+
 
 def _user_id_from_token(token: str) -> str | None:
     """Decode a FastAPI-Users JWT (the same secret/audience the auth backend

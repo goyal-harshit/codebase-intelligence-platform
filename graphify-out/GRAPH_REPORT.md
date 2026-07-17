@@ -1,16 +1,16 @@
-# Graph Report - codebase_intelligence_project  (2026-07-16)
+# Graph Report - codebase_intelligence_project  (2026-07-17)
 
 ## Corpus Check
-- 223 files · ~73,548 words
+- 237 files · ~94,187 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1751 nodes · 3121 edges · 112 communities (91 shown, 21 thin omitted)
-- Extraction: 93% EXTRACTED · 7% INFERRED · 0% AMBIGUOUS · INFERRED: 234 edges (avg confidence: 0.74)
+- 1887 nodes · 3323 edges · 145 communities (119 shown, 26 thin omitted)
+- Extraction: 92% EXTRACTED · 8% INFERRED · 0% AMBIGUOUS · INFERRED: 250 edges (avg confidence: 0.74)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `5ab4f12f`
+- Built from commit: `a7ee0c36`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -104,30 +104,61 @@
 - [[_COMMUNITY_Community 95|Community 95]]
 - [[_COMMUNITY_Community 96|Community 96]]
 - [[_COMMUNITY_Community 97|Community 97]]
+- [[_COMMUNITY_Community 98|Community 98]]
 - [[_COMMUNITY_Community 99|Community 99]]
 - [[_COMMUNITY_Community 100|Community 100]]
 - [[_COMMUNITY_Community 101|Community 101]]
+- [[_COMMUNITY_Community 102|Community 102]]
+- [[_COMMUNITY_Community 103|Community 103]]
 - [[_COMMUNITY_Community 104|Community 104]]
 - [[_COMMUNITY_Community 105|Community 105]]
+- [[_COMMUNITY_Community 106|Community 106]]
+- [[_COMMUNITY_Community 107|Community 107]]
 - [[_COMMUNITY_Community 108|Community 108]]
 - [[_COMMUNITY_Community 109|Community 109]]
 - [[_COMMUNITY_Community 110|Community 110]]
 - [[_COMMUNITY_Community 111|Community 111]]
+- [[_COMMUNITY_Community 112|Community 112]]
 - [[_COMMUNITY_Community 113|Community 113]]
+- [[_COMMUNITY_Community 114|Community 114]]
+- [[_COMMUNITY_Community 115|Community 115]]
 - [[_COMMUNITY_Community 118|Community 118]]
 - [[_COMMUNITY_Community 119|Community 119]]
+- [[_COMMUNITY_Community 120|Community 120]]
+- [[_COMMUNITY_Community 123|Community 123]]
+- [[_COMMUNITY_Community 124|Community 124]]
+- [[_COMMUNITY_Community 125|Community 125]]
+- [[_COMMUNITY_Community 126|Community 126]]
+- [[_COMMUNITY_Community 127|Community 127]]
+- [[_COMMUNITY_Community 128|Community 128]]
+- [[_COMMUNITY_Community 129|Community 129]]
+- [[_COMMUNITY_Community 130|Community 130]]
+- [[_COMMUNITY_Community 131|Community 131]]
+- [[_COMMUNITY_Community 132|Community 132]]
+- [[_COMMUNITY_Community 133|Community 133]]
+- [[_COMMUNITY_Community 134|Community 134]]
+- [[_COMMUNITY_Community 136|Community 136]]
+- [[_COMMUNITY_Community 138|Community 138]]
+- [[_COMMUNITY_Community 140|Community 140]]
+- [[_COMMUNITY_Community 143|Community 143]]
+- [[_COMMUNITY_Community 144|Community 144]]
+- [[_COMMUNITY_Community 145|Community 145]]
+- [[_COMMUNITY_Community 146|Community 146]]
+- [[_COMMUNITY_Community 147|Community 147]]
+- [[_COMMUNITY_Community 148|Community 148]]
+- [[_COMMUNITY_Community 149|Community 149]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `record_audit()` - 48 edges
 2. `Principal` - 37 edges
 3. `analyze_repository()` - 34 edges
 4. `RiskDetector` - 31 edges
-5. `ArcadeDBClient` - 28 edges
+5. `ArcadeDBClient` - 29 edges
 6. `ImpactAnalyzer` - 28 edges
-7. `GraphBuilder` - 26 edges
-8. `CodeRelationship` - 23 edges
-9. `UniversalParser` - 21 edges
-10. `CypherGenerator` - 20 edges
+7. `Catalog` - 26 edges
+8. `GraphBuilder` - 26 edges
+9. `CodeRelationship` - 23 edges
+10. `UniversalParser` - 21 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `main()` --calls--> `analyze_repository()`  [INFERRED]
@@ -144,27 +175,27 @@
 ## Import Cycles
 - None detected.
 
-## Communities (112 total, 21 thin omitted)
+## Communities (145 total, 26 thin omitted)
 
 ### Community 0 - "CodeEntity · CodeRelationship · builder."
-Cohesion: 0.16
-Nodes (13): assert_read_only(), CypherGenerator, LLM-backed English->Cypher translation with few-shot prompting., The generated Cypher is not a safe, read-only query., Reject anything that is not a single read-only query.      Defends against a jai, UnsafeCypherError, _FakeLLM, Tests that LLM-generated Cypher is constrained to read-only queries. (+5 more)
+Cohesion: 0.15
+Nodes (14): assert_read_only(), CypherGenerator, LLM-backed English->Cypher translation with few-shot prompting., The generated Cypher is not a safe, read-only query., Reject anything that is not a single read-only query.      Defends against a jai, UnsafeCypherError, _FakeLLM, Tests that LLM-generated Cypher is constrained to read-only queries. (+6 more)
 
 ### Community 1 - "CypherGenerator · answer.py · QueryRoute"
-Cohesion: 0.13
-Nodes (15): AnswerGenerator, Turns retrieved context into a cited natural-language answer via the LLM., extract_sources(), QueryEngine, End-to-end query engine: retrieve -> answer -> cite.  This is the single entry p, Best-effort list of file paths cited by the retrieved context., Hybrid retrieval + LLM query engine (Phase 6)., _norm_path() (+7 more)
+Cohesion: 0.15
+Nodes (11): AnswerGenerator, Turns retrieved context into a cited natural-language answer via the LLM., extract_sources(), QueryEngine, End-to-end query engine: retrieve -> answer -> cite.  This is the single entry p, Best-effort list of file paths cited by the retrieved context., Hybrid retrieval + LLM query engine (Phase 6)., QueryRouter (+3 more)
 
 ### Community 2 - "_all_paths_to_roots( · _build_index() · "
 Cohesion: 0.14
 Nodes (4): _build_call_graph(), _DegreeView, DiGraph, Iterable of (node, degree) pairs that is also callable: dv(n) -> degree.
 
 ### Community 3 - ".__init__() · Settings · jobs.py · App-l"
-Cohesion: 0.14
-Nodes (15): JobManager, Durable ingestion-job tracking, backed by the relational store.  Job state lives, Id of a queued/running job for the same target, if one exists.          Lets the, Most recent jobs, newest first.          Backs ``GET /api/v1/ingest`` so any pag, Durable job state: persisted to the DB and run via Celery (eager in tests)., test_eager_task_runs_and_records_terminal_state(), test_job_state_persists_across_manager_instances(), test_unknown_job_get_returns_none() (+7 more)
+Cohesion: 0.16
+Nodes (11): JobManager, Durable ingestion-job tracking, backed by the relational store.  Job state lives, True for an active job whose row has gone silent past the cutoff.         SQLite, Most recent jobs, newest first.          Backs ``GET /api/v1/ingest`` so any pag, Id of a queued/running job for the same target, if one exists.          Lets the, Mark orphaned queued/running jobs as failed; return how many.          A crash (, Job, Durable job state: persisted to the DB and run via Celery (eager in tests). (+3 more)
 
 ### Community 4 - "Parse an entire repo · AST parsing engin"
 Cohesion: 0.14
-Nodes (17): CodeEntity, CodeRelationship, Language-agnostic AST parser built on tree-sitter.  Extracts CodeEntity (functio, parse_python_source(), Pure-stdlib Python parser using the built-in `ast` module.  Fallback for when tr, Second-pass resolution of unresolved `calls` edges to real entity IDs.  When sev, Return (target_id, metadata_flag)., SymbolResolver (+9 more)
+Nodes (18): AST parsing engine (Phase 1)., CodeEntity, CodeRelationship, Language-agnostic AST parser built on tree-sitter.  Extracts CodeEntity (functio, parse_python_source(), Pure-stdlib Python parser using the built-in `ast` module.  Fallback for when tr, Second-pass resolution of unresolved `calls` edges to real entity IDs.  When sev, Return (target_id, metadata_flag). (+10 more)
 
 ### Community 5 - "Home() · CodeGraph.tsx · AnswerCard.tsx "
 Cohesion: 0.09
@@ -179,20 +210,20 @@ Cohesion: 0.08
 Nodes (45): graph_widget(), _layout(), Static, pre-laid-out dependency-graph widget (canvas, zero-dependency).  The lay, Deterministic force-directed layout. Mutates nodes with x,y in [-W,W]., available(), build_context(), chat(), explain() (+37 more)
 
 ### Community 8 - "detector.py · Architecture-risk de · Wri"
-Cohesion: 0.06
-Nodes (26): Refactoring recommendation engine (roadmap Phase 10).  Turns the architecture ri, Map architecture risks → actionable refactoring recommendations.  Each risk ``ty, One bounded LLM call producing a short prioritized plan. Returns None on     fai, _rec_id(), recommend_narrative(), persist_risks(), Architecture-risk detection over the code graph.  Each rule is a Cypher query ag, Write detected risks back to the graph as SecurityIssue vertices. (+18 more)
+Cohesion: 0.20
+Nodes (4): Architecture-risk detection over the code graph.  Each rule is a Cypher query ag, Return True for function names that are expected to have no callers., RiskDetector, Risk detection engine (Phase 4): architecture-smell detection over the graph.
 
 ### Community 9 - ".analyze_entity_impa · analyzer.py · Imp"
-Cohesion: 0.07
-Nodes (32): _bounded_depth(), ImpactAnalyzer, Change-impact / blast-radius analysis.  Given a file (or a single entity), walk, Coerce a traversal depth to a safe, bounded int.      The depth is interpolated, Map a repo-relative path to the exact ``File.path`` stored in the graph., Tests covering entities in the file. Needs COVERED_BY edges (Phase 4+         da, Change-impact / blast-radius analysis (Phase 5)., main() (+24 more)
+Cohesion: 0.15
+Nodes (18): ImpactAnalyzer, main(), FakeClient, FakeFileGraph, Phase 5 tests.  Offline against a fake graph client returning canned hop rows; v, Returns a canned File-path listing for resolve_file_path tests., _rows(), test_buckets_direct_and_transitive() (+10 more)
 
 ### Community 10 - "axios · next · lucide-react · package.js"
 Cohesion: 0.07
 Nodes (29): dependencies, axios, lucide-react, next, react, react-dom, react-force-graph-2d, react-force-graph-3d (+21 more)
 
 ### Community 11 - "README.md · Enterprise Codebase  · Embed"
-Cohesion: 0.07
-Nodes (33): Build the graph from a repo, Continuous Integration, Embed a repo, Enterprise Codebase Intelligence Platform, GitHub OAuth (optional), Phase 1 — AST Parser, Phase 2 — Graph Database (ArcadeDB), Phase 3 — Vector DB & Embeddings (ChromaDB) (+25 more)
+Cohesion: 0.22
+Nodes (9): Continuous Integration, Enterprise Codebase Intelligence Platform, GitHub OAuth (optional), Phase 8 — Next.js Frontend, Phase 9 — Docker & Deployment, Quickstart, Screenshots, Setup & run (+1 more)
 
 ### Community 12 - "compilerOptions · allowJs · incremental "
 Cohesion: 0.11
@@ -203,24 +234,24 @@ Cohesion: 0.26
 Nodes (7): BaseHTTPRequestHandler, _examples(), Handler, landing(), main(), _make_server(), _store()
 
 ### Community 14 - "get_llm() · get_vector_store() · get_que"
-Cohesion: 0.07
-Nodes (26): _load_env_file(), _load_env_local(), metrics(), Codebase Intelligence API (Phase 7).  Run from the backend/ directory:     uvico, Load KEY=VALUE overrides from a gitignored .env.local at the repo root.      Let, Attach a correlation id to every request (and its log records)., Load ``.env.local`` (KEY=VALUE) into the environment for native runs.      Docke, Decode a FastAPI-Users JWT (the same secret/audience the auth backend     uses) (+18 more)
+Cohesion: 0.06
+Nodes (28): _load_env_file(), _load_env_local(), metrics(), Codebase Intelligence API (Phase 7).  Run from the backend/ directory:     uvico, Load KEY=VALUE overrides from a gitignored .env.local at the repo root.      Let, Attach a correlation id to every request (and its log records)., Load ``.env.local`` (KEY=VALUE) into the environment for native runs.      Docke, First boot with SEED_DEMO_REPO enabled: ingest the bundled demo repo so     the (+20 more)
 
 ### Community 15 - "Enterprise Codebase  · 16.1 Sample GitHu"
 Cohesion: 0.10
 Nodes (29): _client_id(), _client_secret(), _fetch_github_profile(), _fetch_github_token(), _frontend_url(), github_callback(), github_login(), list_providers() (+21 more)
 
 ### Community 17 - "available() · build_context() · explain("
-Cohesion: 0.08
-Nodes (32): add_member_route(), create_repo_route(), list_members_route(), list_repos_route(), MemberGrant, MemberInfo, Repo ownership + membership management (Phase 2 RBAC).  A repo's creator becomes, remove_member_route() (+24 more)
+Cohesion: 0.09
+Nodes (21): list_repos_route(), Authentication layer (FastAPI-Users: email/password + JWT)., grant_role(), list_repos_for_user(), Per-repo role-based access control (FULL_STACK_GAP_PLAN.md Phase 2).  Roles are, Dependency factory: require at least ``min_role`` on the path's repo_id., Create or update a member's role on a repo (idempotent upsert)., require_repo_role() (+13 more)
 
 ### Community 18 - "2.3 Data Ingestion P · 1.1 AST Parsing E"
 Cohesion: 0.22
 Nodes (15): Multi-turn conversation history (Phase 4)., add_message(), _conv_dict(), create_conversation(), format_history(), get_conversation(), get_messages(), list_conversations() (+7 more)
 
 ### Community 19 - "_parse() · test_detects_calls() · test_p"
-Cohesion: 0.10
-Nodes (25): App-level settings. Service clients read their own env vars in their own constru, Settings, invalidate(), Drop every cached result — call when new data has been ingested., ingest_upload(), Repo ingestion via uploaded ZIP (Phase 3): an alternative to a Git URL.  Flow: r, _safe_extract(), dispatch_ingest() (+17 more)
+Cohesion: 0.14
+Nodes (16): invalidate(), Drop every cached result — call when new data has been ingested., ingest_repo_task(), _invalidate_analysis_caches(), _notify(), pull_model_task(), The ingestion pipeline, dispatched as a durable Celery task.  Steps mirror the m, Fan a job's (already-persisted) terminal state out to in-app + email     notific (+8 more)
 
 ### Community 20 - "sample.py · helper() · .__init__() · Acc"
 Cohesion: 0.31
@@ -235,8 +266,8 @@ Cohesion: 0.22
 Nodes (4): ask(), getRepoFiles(), QueryResult, EXAMPLES
 
 ### Community 24 - "_brief() · _explain() · qa.py · answer()"
-Cohesion: 0.09
-Nodes (20): PROVIDERS, Affected, api, getLlmConfig(), getLlmModels(), getNotifications(), getServiceHealth(), GraphifyLink (+12 more)
+Cohesion: 0.08
+Nodes (30): CommentsPanelProps, PROVIDERS, GraphPage(), Affected, api, Comment, deleteComment(), exportGraphJsonUrl() (+22 more)
 
 ### Community 25 - "4.5 Symbol Resolutio · 4.3 Core Parser M"
 Cohesion: 0.40
@@ -247,7 +278,7 @@ Cohesion: 0.20
 Nodes (10): AI assistance, Analysis, Auto-documentation (wiki), Collaboration & notifications, Data routes (`/api/v1`), Exports & reports, Ingestion & upload, Keys, LLM config, graphify, health (+2 more)
 
 ### Community 27 - "10.3 `main.py` · 10.2 `requirements.t · "
-Cohesion: 0.22
+Cohesion: 0.25
 Nodes (8): 1. What this is, 2. Hard constraints, 3. Technology stack (all free, all shipped), 4. Architecture, 5. Feature matrix (v1.0), 6. Remaining roadmap, 7. Working agreements, Project Plan — Codebase Intelligence Platform
 
 ### Community 28 - "12.4 First-Run Boots · 12.3 `frontend/Do"
@@ -255,24 +286,24 @@ Cohesion: 0.15
 Nodes (20): _init_database(), Create tables for local SQLite dev so the app runs with no setup.     For Postgr, _async_sessionmaker(), _async_url(), get_async_engine(), get_async_session(), get_database_url(), get_engine() (+12 more)
 
 ### Community 29 - "5.3 Full Graph Schem · 5.2 Python Client"
-Cohesion: 0.06
-Nodes (36): build_narrative(), format_findings(), pdf_available(), Risk-report rendering (Phase 3): a self-contained HTML report, plus an optional, One line per finding, for the narrative prompt., LLM executive summary of the risk findings (Phase 4 item 4)., to_pdf(), docgen_modules() (+28 more)
+Cohesion: 0.19
+Nodes (13): build_skeleton(), build_wiki(), _entity_line(), purpose_narrative(), Per-module documentation from the code graph (roadmap v1.3).  The graph already, Deterministic markdown page for one module dict (see ``collect``).      If ``mod, Concatenate pages into a single wiki document with an index section., One bounded LLM call producing a short prose purpose for a module.      Returns (+5 more)
 
 ### Community 31 - "Nav.tsx · metadata · LINKS · layout.tsx "
-Cohesion: 0.08
-Nodes (29): metadata, ActivityFeed(), AuthContext, AuthContextValue, AuthProvider(), useAuth(), CommentsPanel(), CommentsPanelProps (+21 more)
+Cohesion: 0.09
+Nodes (24): metadata, ActivityFeed(), AuthContext, AuthContextValue, AuthProvider(), useAuth(), CommentsPanel(), LlmConfigEditor() (+16 more)
 
 ### Community 32 - "sample.js · helper() · Account · .constr"
 Cohesion: 0.47
 Nodes (3): Account, helper(), validateUser()
 
 ### Community 33 - "11.5 Acceptance Crit · 11.4 Graph Visual"
-Cohesion: 0.12
-Nodes (22): FastAPI backend (Phase 7)., impact(), AI summarization endpoint (Phase 4): summarize a file/module.  Provide ``code``, summarize_route(), SummarizeRequest, _is_blocked_ip(), Input validators for user-supplied repo URLs and file paths.  Kept dependency-fr, Raised when user input fails a security check. (+14 more)
+Cohesion: 0.10
+Nodes (26): FastAPI backend (Phase 7)., impact(), IngestRequest, list_ingest_jobs(), Recent jobs, newest first — lets the frontend's global progress bar     discover, start_ingest(), AI summarization endpoint (Phase 4): summarize a file/module.  Provide ``code``, summarize_route() (+18 more)
 
 ### Community 34 - "6.1 Install · 6.3 AST-Aware Chunki · 6.5"
-Cohesion: 0.15
-Nodes (13): Audit logging: persist security-relevant actions to the ``audit_log`` table.  Ph, CommentCreate, CommentOut, create_comment(), list_comments(), Collaboration (Phase 5): threaded comments on risks and graph nodes., List comments for a specific target., Add a new comment to a target. (+5 more)
+Cohesion: 0.47
+Nodes (4): _backdate(), Orphaned-job reconciliation (v1.4).  A crash can leave rows in "running" forever, test_silent_active_job_is_flagged_stale_and_swept(), test_terminal_jobs_never_stale()
 
 ### Community 35 - "9.2 LLM-to-Cypher Tr · 9.1 Query Router "
 Cohesion: 0.29
@@ -295,7 +326,7 @@ Cohesion: 0.33
 Nodes (5): ADR 0003: ArcadeDB over Neo4j, Consequences, Context, Decision, Status
 
 ### Community 40 - "14.3 Integration Tes · 14.1 Unit Test Co"
-Cohesion: 0.33
+Cohesion: 0.40
 Nodes (5): ADR 0004: Ollama and open-weight LLMs (no paid model APIs), Consequences, Context, Decision, Status
 
 ### Community 41 - "7.3 Persisting Risks · 7.4 Acceptance Cr"
@@ -303,8 +334,8 @@ Cohesion: 0.33
 Nodes (5): ADR 0005: FastAPI-Users for auth (integrate, don't reinvent), Consequences, Context, Decision, Status
 
 ### Community 42 - "PART 15 — MONITORING · 15.2 Metrics to T"
-Cohesion: 0.19
-Nodes (13): cached(), Process-local TTL cache for expensive, ingest-derived read endpoints.  Analysis, Return ``compute()``'s result, memoized under *key* until TTL/invalidate.      `, cached_hotspots(), hotspots(), _latest_repo_path(), Hotspots for a repo, cached per (repo, limit) until the next ingest.     build_h, cached_risks() (+5 more)
+Cohesion: 0.16
+Nodes (15): cached(), Process-local TTL cache for expensive, ingest-derived read endpoints.  Analysis, Return ``compute()``'s result, memoized under *key* until TTL/invalidate.      `, cached_hotspots(), hotspots(), _latest_repo_path(), Hotspots for a repo, cached per (repo, limit) until the next ingest.     build_h, cached_refactor() (+7 more)
 
 ### Community 43 - "Community 43"
 Cohesion: 0.39
@@ -319,56 +350,56 @@ Cohesion: 0.22
 Nodes (3): client_with_fake_engine(), _FakeEngine, Multi-turn conversation history: store + multi-turn query wiring (Phase 4).
 
 ### Community 46 - "Community 46"
-Cohesion: 0.18
-Nodes (4): DocgenPage, generateDocs(), getDocgenModules(), getWikiMarkdown()
+Cohesion: 0.14
+Nodes (6): ICONS, STYLES, DocgenPage, generateDocs(), getDocgenModules(), getWikiMarkdown()
 
 ### Community 48 - "__init__.py · FastAPI backend (Pha"
 Cohesion: 0.13
-Nodes (29): client_ip(), Best-effort client IP, honouring a single X-Forwarded-For hop (the value     a r, Append one audit event. Swallows all errors (logs a warning) so auditing     can, record_audit(), delete_comment(), Delete a comment (must be the author)., _attachment(), _check_format() (+21 more)
+Nodes (30): client_ip(), Audit logging: persist security-relevant actions to the ``audit_log`` table.  Ph, Best-effort client IP, honouring a single X-Forwarded-For hop (the value     a r, Append one audit event. Swallows all errors (logs a warning) so auditing     can, record_audit(), delete_comment(), Delete a comment (must be the author)., _attachment() (+22 more)
 
 ### Community 54 - "Community 54"
 Cohesion: 0.15
 Nodes (17): list_keys(), create_api_key(), generate_key(), hash_key(), list_api_keys(), Per-user API keys: generation, hashing, verification, lifecycle.  Phase 2 (FULL_, Issue a new key for ``user_id``. Returns ``(raw_key, metadata)``.      The raw k, Mark a key revoked. Scoped to ``user_id`` so users can't revoke others'     keys (+9 more)
 
 ### Community 58 - "Community 58"
-Cohesion: 0.25
-Nodes (9): AST parsing engine (Phase 1)., file_hash(), _ignored(), _load_ignore_paths(), Repository traversal and incremental-change detection helpers., Load simple path ignores from .graphifyignore plus built-in generated     direct, Yield file paths for all (optionally only parseable) source files., SHA-256 of file content; used for incremental update detection. (+1 more)
+Cohesion: 0.28
+Nodes (8): file_hash(), _ignored(), _load_ignore_paths(), Repository traversal and incremental-change detection helpers., Load simple path ignores from .graphifyignore plus built-in generated     direct, Yield file paths for all (optionally only parseable) source files., SHA-256 of file content; used for incremental update detection., walk_repository()
 
 ### Community 59 - "Community 59"
-Cohesion: 0.10
-Nodes (28): _NoopLimiter, Per-client rate limiting via slowapi, with a no-op fallback.  If slowapi is not, AI code review core (Phase 4): LLM commentary on a diff.  Separated from the rou, ConversationCreate, ConversationInfo, create_conversation_route(), get_messages_route(), list_conversations_route() (+20 more)
+Cohesion: 0.12
+Nodes (24): AI code review core (Phase 4): LLM commentary on a diff.  Separated from the rou, ConversationCreate, ConversationInfo, create_conversation_route(), get_messages_route(), list_conversations_route(), MessageInfo, Conversation management for multi-turn Q&A (Phase 4).  Create a conversation to (+16 more)
 
 ### Community 60 - "Community 60"
 Cohesion: 0.06
-Nodes (32): build_hotspots(), collect_file_complexity(), _complexity_only_hotspots(), _display_path(), FileComplexity, _lookup_keys(), Hotspot analysis: combine git churn with graph-derived complexity., Aggregate complexity per file from Function vertices.      Aggregation is done i (+24 more)
+Nodes (34): ABC, build_hotspots(), collect_file_complexity(), _complexity_only_hotspots(), _display_path(), FileComplexity, _lookup_keys(), Hotspot analysis: combine git churn with graph-derived complexity. (+26 more)
 
 ### Community 62 - "Community 62"
-Cohesion: 0.10
-Nodes (19): clone_repo(), run_ingestion(), _run_ingestion_locked(), parse_repository(), Parse an entire repo: returns (entities, resolved_relationships)., ArcadeDBClient, ArcadeDBError, Thin HTTP client for ArcadeDB.  Wraps ArcadeDB's REST API (https://docs.arcadedb (+11 more)
+Cohesion: 0.13
+Nodes (12): ArcadeDBClient, ArcadeDBError, Thin HTTP client for ArcadeDB.  Wraps ArcadeDB's REST API (https://docs.arcadedb, Raised when ArcadeDB returns a non-2xx response., Run an idempotent read., Run a write/DDL statement., Incremental re-indexing driven by per-file SHA-256 hashes.  A small SQLite key-v, Graph database layer (Phase 2): ArcadeDB ingestion + incremental updates. (+4 more)
 
 ### Community 68 - "Community 68"
 Cohesion: 0.08
-Nodes (37): ABC, list_notifications(), NotificationInfo, In-app notification REST API (Phase 3). JWT-protected; users see only their own, read_all(), read_one(), Notification, In-app notification (Phase 3). Durable + cross-process: the worker writes     a (+29 more)
+Nodes (36): list_notifications(), NotificationInfo, In-app notification REST API (Phase 3). JWT-protected; users see only their own, read_all(), read_one(), Notification, In-app notification (Phase 3). Durable + cross-process: the worker writes     a, notify_job_completion() (+28 more)
 
 ### Community 69 - "Community 69"
 Cohesion: 0.36
 Nodes (9): _parse(), test_detects_calls(), test_extracts_imports(), test_extracts_inheritance(), test_parses_javascript(), test_parses_python_functions_and_class(), test_python_docstring_and_complexity(), test_symbol_resolution_links_call() (+1 more)
 
 ### Community 70 - "Community 70"
-Cohesion: 0.15
-Nodes (20): get_graph_client(), get_llm(), get_query_engine(), get_vector_store(), Lazily-constructed singleton service clients for dependency injection.  Construc, Build the client from the effective config (free/local providers only).      Not, docgen_generate(), docgen_wiki() (+12 more)
+Cohesion: 0.16
+Nodes (20): get_graph_client(), get_llm(), get_query_engine(), get_vector_store(), Lazily-constructed singleton service clients for dependency injection.  Construc, Build the client from the effective config (free/local providers only).      Not, docgen_generate(), docgen_modules() (+12 more)
 
 ### Community 71 - "Community 71"
-Cohesion: 0.16
-Nodes (20): create_repo(), Create a repo and grant its creator the ``owner`` role., Base, Declarative base for all ORM models., Relational metadata store (SQLAlchemy).  Default DATABASE_URL is a local SQLite, ApiKey, AuditLog, Comment (+12 more)
+Cohesion: 0.17
+Nodes (19): create_repo(), Create a repo and grant its creator the ``owner`` role., Base, Declarative base for all ORM models., Relational metadata store (SQLAlchemy).  Default DATABASE_URL is a local SQLite, ApiKey, AuditLog, Comment (+11 more)
 
 ### Community 73 - "Community 73"
 Cohesion: 0.27
 Nodes (5): client_with_fake_llm(), _FakeLLM, AI code review core + endpoint (Phase 4 item 5)., test_review_caps_diff(), test_review_diff_renders_prompt()
 
 ### Community 75 - "Community 75"
-Cohesion: 0.17
-Nodes (6): FileHashStore, IncrementalUpdater, Incremental re-indexing driven by per-file SHA-256 hashes.  A small SQLite key-v, Persistent ``file_path -> hash`` map backed by SQLite., Re-index only changed/added files and prune deleted ones., Remove the File node and every entity defined in it.
+Cohesion: 0.19
+Nodes (5): FileHashStore, IncrementalUpdater, Persistent ``file_path -> hash`` map backed by SQLite., Re-index only changed/added files and prune deleted ones., Remove the File node and every entity defined in it.
 
 ### Community 76 - "Community 76"
 Cohesion: 0.14
@@ -392,7 +423,7 @@ Nodes (6): CodebaseAnalysis, collect_git_insights(), _git(), _is_git_repo(), Git
 
 ### Community 81 - "Community 81"
 Cohesion: 0.09
-Nodes (30): Proven-tool SAST integration: Bandit and Ruff security rules.  The builtin regex, All external-tool findings plus per-tool availability flags., Run a tool and parse its stdout as JSON; None on any failure.      Non-zero exit, Bandit findings for *repo_path*, or None if the tool is unusable., Ruff flake8-bandit (S) findings, or None if the tool is unusable., _rel(), run_bandit(), run_external_tools() (+22 more)
+Nodes (29): Proven-tool SAST integration: Bandit and Ruff security rules.  The builtin regex, All external-tool findings plus per-tool availability flags., Run a tool and parse its stdout as JSON; None on any failure.      Non-zero exit, Bandit findings for *repo_path*, or None if the tool is unusable., Ruff flake8-bandit (S) findings, or None if the tool is unusable., _rel(), run_bandit(), run_external_tools() (+21 more)
 
 ### Community 82 - "Community 82"
 Cohesion: 0.25
@@ -423,8 +454,8 @@ Cohesion: 0.40
 Nodes (4): Run migrations in 'offline' mode.      This configures the context with just a U, Run migrations in 'online' mode.      In this scenario we need to create an Engi, run_migrations_offline(), run_migrations_online()
 
 ### Community 95 - "Community 95"
-Cohesion: 0.06
-Nodes (28): ConfigError, effective_config(), _env_default(), _load_row(), public_config(), Effective LLM configuration: DB override layer over the ``LLM_*`` env vars.  The, (base_url, model) defaults for a provider from the environment., Full config for internal use — includes the decrypted ``api_key``. (+20 more)
+Cohesion: 0.07
+Nodes (27): ConfigError, effective_config(), _env_default(), _load_row(), public_config(), Effective LLM configuration: DB override layer over the ``LLM_*`` env vars.  The, (base_url, model) defaults for a provider from the environment., Full config for internal use — includes the decrypted ``api_key``. (+19 more)
 
 ### Community 96 - "Community 96"
 Cohesion: 0.22
@@ -433,6 +464,10 @@ Nodes (9): SecurityTable(), SEVERITY_COLOR, exportSecurityUrl(), getSecurity(), 
 ### Community 97 - "Community 97"
 Cohesion: 0.20
 Nodes (14): bm25_scores(), BM25 lexical scoring + reciprocal-rank fusion for the semantic path.  Chroma's v, Code-aware tokens: splits snake_case and camelCase, lowercases., Okapi BM25 score of *query* against each document., Fuse vector order (as returned) with BM25 order via RRF; truncate to     *top_k*, rerank_hybrid(), tokenize(), _chroma() (+6 more)
+
+### Community 98 - "Community 98"
+Cohesion: 0.13
+Nodes (9): _AliveGraph, _DeadGraph, _FakeJobs, v1.4 first-boot demo seeding.  All offline: the job store, dispatcher, and graph, The bundled repo must ship with the backend and yield a rich graph:     classes,, test_demo_repo_exists_and_parses(), test_seeds_on_first_boot(), test_skips_when_graph_down() (+1 more)
 
 ### Community 99 - "Community 99"
 Cohesion: 0.22
@@ -443,16 +478,28 @@ Cohesion: 0.17
 Nodes (12): CodeGraph(), CodeGraphProps, COMMUNITY_COLORS, ForceGraph2D, ForceGraph3D, GraphData, ImpactPage(), RISK_COLOR (+4 more)
 
 ### Community 101 - "Community 101"
-Cohesion: 0.20
-Nodes (8): ICONS, STYLES, exportRefactorUrl(), getRefactor(), RefactorResult, EFFORT_COLOR, RefactorPage(), SEVERITY_COLOR
+Cohesion: 0.25
+Nodes (6): exportRefactorUrl(), getRefactor(), RefactorResult, EFFORT_COLOR, RefactorPage(), SEVERITY_COLOR
+
+### Community 103 - "Community 103"
+Cohesion: 0.16
+Nodes (6): main(), PyShelf entry point — wires the catalog and loan service together., seed_catalog(), Catalog, The catalog — a deliberate god class for the risk detector to find., Owns every item, member, and lookup in the system.      Doing far too much on pu
 
 ### Community 104 - "Community 104"
-Cohesion: 0.50
-Nodes (3): Architecture Decision Records, Contents, Documentation
+Cohesion: 0.33
+Nodes (4): Architecture Decision Records, Contents, Documentation, Screenshots
 
 ### Community 105 - "Community 105"
 Cohesion: 0.16
 Nodes (12): ACTIVE, GlobalIngestProgress(), repoName(), TERMINAL, IngestWorkspace(), statusTone(), TERMINAL, getIngest() (+4 more)
+
+### Community 106 - "Community 106"
+Cohesion: 0.20
+Nodes (11): FakeClient, Phase 4 tests.  Offline against a fake graph client that returns canned query ro, Returns successive preset row-lists from `results`; records writes., test_dead_code_uses_negated_call_pattern(), test_deep_inheritance_uses_configured_depth(), test_god_object_mapping_and_threshold_param(), test_high_complexity_threshold(), test_integration_runs_against_live_graph() (+3 more)
+
+### Community 107 - "Community 107"
+Cohesion: 0.19
+Nodes (6): LibraryItem, Base class for anything the library can lend out., clamp(), make_id(), Shared helpers — deliberately called from every module (shotgun surgery)., slugify()
 
 ### Community 109 - "Community 109"
 Cohesion: 0.22
@@ -462,24 +509,112 @@ Nodes (3): _clean_row(), Phase C tests: LLM config store + secret encryption (fr
 Cohesion: 0.14
 Nodes (19): Any, impact_to_rows(), Tabular exports for risk reports and impact analysis (Phase 3).  Pure builders (, Flatten the impact summary's direct/transitive entity lists into rows., refactor_to_rows(), render(), risks_to_rows(), security_to_rows() (+11 more)
 
-### Community 113 - "Community 113"
-Cohesion: 0.32
-Nodes (7): GraphPage(), exportGraphJsonUrl(), exportGraphReportUrl(), getGraphifyGraph(), getGraphifyStats(), GraphifyGraph, GraphifyStats
+### Community 111 - "Community 111"
+Cohesion: 0.29
+Nodes (6): HybridRetriever, _norm_path(), Hybrid retrieval: structural (graph) first for structural questions, with a sema, Vector search over a wider pool, re-ranked with BM25 (RRF fusion).          No m, Drop candidates from previously ingested repos and duplicate chunks.      The Ch, _scope_to_latest_repo()
+
+### Community 112 - "Community 112"
+Cohesion: 0.15
+Nodes (9): Refactoring recommendation engine (roadmap Phase 10).  Turns the architecture ri, Map architecture risks → actionable refactoring recommendations.  Each risk ``ty, One bounded LLM call producing a short prioritized plan. Returns None on     fai, _rec_id(), recommend_narrative(), _FakeDetector, Phase 10 tests — risk→recommendation mapping, ordering, and narrative., test_maps_risks_and_orders_by_severity_then_effort() (+1 more)
+
+### Community 114 - "Community 114"
+Cohesion: 0.19
+Nodes (5): AudioBook, Book, Magazine, Domain models for PyShelf., Books on tape — deepest point of the inheritance chain.
+
+### Community 115 - "Community 115"
+Cohesion: 0.19
+Nodes (13): Phase 4 — Risk Detection Engine, Phase 5 — Change Impact / Blast Radius, Phase 6 — Hybrid Retrieval + LLM Q&A, Phase 7 — FastAPI Backend, Run, Run, Run, Run (+5 more)
+
+### Community 120 - "Community 120"
+Cohesion: 0.16
+Nodes (19): CommentCreate, CommentOut, create_comment(), list_comments(), Collaboration (Phase 5): threaded comments on risks and graph nodes., List comments for a specific target., Add a new comment to a target., add_member_route() (+11 more)
+
+### Community 123 - "Community 123"
+Cohesion: 0.22
+Nodes (11): clone_repo(), run_ingestion(), _run_ingestion_locked(), parse_repository(), Parse an entire repo: returns (entities, resolved_relationships)., apply_schema(), Create all vertex/edge types and indexes on the database., persist_risks() (+3 more)
+
+### Community 124 - "Community 124"
+Cohesion: 0.22
+Nodes (8): build_narrative(), format_findings(), pdf_available(), Risk-report rendering (Phase 3): a self-contained HTML report, plus an optional, One line per finding, for the narrative prompt., LLM executive summary of the risk findings (Phase 4 item 4)., to_pdf(), RuntimeError
+
+### Community 125 - "Community 125"
+Cohesion: 0.50
+Nodes (4): maybe_seed_demo_repo(), First-boot demo seeding (v1.4).  When ``SEED_DEMO_REPO`` is enabled and no inges, Dispatch a demo-repo ingestion on first boot; return its job id.      Returns No, seed_enabled()
+
+### Community 126 - "Community 126"
+Cohesion: 0.18
+Nodes (11): Added, Added, Added, Added, Changed, Changelog, Fixed, [v1.0.0] — 2026-06-29 (+3 more)
+
+### Community 127 - "Community 127"
+Cohesion: 0.20
+Nodes (5): _bounded_depth(), Change-impact / blast-radius analysis.  Given a file (or a single entity), walk, Coerce a traversal depth to a safe, bounded int.      The depth is interpolated, Change-impact / blast-radius analysis (Phase 5)., test_risk_level_thresholds()
+
+### Community 128 - "Community 128"
+Cohesion: 0.23
+Nodes (9): BadLLM, FakeGraph, OkLLM, Roadmap v1.3 tests — module skeletons, wiki assembly, LLM degrade, endpoints., test_endpoints_with_fake_graph(), test_generate_all_modules_sorted_and_filtered(), test_generate_narrative_on_and_degraded(), test_generate_pages_carry_repo_relative_display() (+1 more)
+
+### Community 129 - "Community 129"
+Cohesion: 0.26
+Nodes (9): App-level settings. Service clients read their own env vars in their own constru, Settings, ingest_upload(), Repo ingestion via uploaded ZIP (Phase 3): an alternative to a Git URL.  Flow: r, _safe_extract(), dispatch_ingest(), Kick off an ingestion without blocking the HTTP request.      In eager mode (dev, UploadFile (+1 more)
+
+### Community 130 - "Community 130"
+Cohesion: 0.22
+Nodes (6): display_path(), Render one page per module: ``[{"module": path, "markdown": md}]``.          ``m, Repo-relative display form of a graph file path.      The graph stores paths exa, Distinct source-file paths the graph knows about, sorted., All facts needed to document one module (source file)., test_display_path_strips_ingest_root_only()
+
+### Community 131 - "Community 131"
+Cohesion: 0.29
+Nodes (8): Handle a return end-to-end. Long on purpose (long-method smell)., _deliver(), Outbound messages. ``send_sms`` is dead code on purpose., Never called from anywhere — the dead-code rule should flag this., send_overdue_notice(), send_receipt(), send_sms(), cents_to_display()
+
+### Community 132 - "Community 132"
+Cohesion: 0.31
+Nodes (7): _CaptureClient, The variable-length depth interpolated into Cypher must be a bounded int., test_deep_inheritance_normal_value_interpolates_bounded(), test_deep_inheritance_rejects_non_numeric_threshold(), test_impact_depth_clamped_to_max(), test_impact_depth_floored_at_one(), test_impact_depth_normal_value_passes_through()
+
+### Community 133 - "Community 133"
+Cohesion: 0.22
+Nodes (5): Contributing, Conventions, Dev setup, Ground rules, Project board
+
+### Community 134 - "Community 134"
+Cohesion: 0.46
+Nodes (7): _post(), ZIP upload ingestion: happy path enqueues a job, and the archive is rejected whe, test_rejects_empty(), test_rejects_non_zip(), test_rejects_zip_slip(), test_upload_zip_enqueues_job(), _zip()
+
+### Community 136 - "Community 136"
+Cohesion: 0.38
+Nodes (3): Loan, LoanService, Loan lifecycle. ``process_return`` is a deliberately long method.
+
+### Community 140 - "Community 140"
+Cohesion: 0.47
+Nodes (5): _count(), Audit logging: security-relevant actions land in the audit_log table, and a fail, test_query_route_writes_audit_event(), test_record_audit_persists_row(), test_record_audit_swallows_errors()
+
+### Community 143 - "Community 143"
+Cohesion: 0.50
+Nodes (4): Added, Changed, Fixed, [v1.4.0] — 2026-07-17
+
+### Community 144 - "Community 144"
+Cohesion: 0.50
+Nodes (4): Build the graph from a repo, Phase 2 — Graph Database (ArcadeDB), Run ArcadeDB, Test
+
+### Community 145 - "Community 145"
+Cohesion: 0.50
+Nodes (4): Embed a repo, Phase 3 — Vector DB & Embeddings (ChromaDB), Run ChromaDB, Test
+
+### Community 146 - "Community 146"
+Cohesion: 0.50
+Nodes (4): Phase 1 — AST Parser, Run on a repo, Setup, Validated
 
 ## Knowledge Gaps
-- **161 isolated node(s):** `extends`, `LoadState`, `SEVERITY_RANK`, `SECURITY_SEVERITY_COLOR`, `RISK_COLOR` (+156 more)
+- **177 isolated node(s):** `extends`, `LoadState`, `SEVERITY_RANK`, `SECURITY_SEVERITY_COLOR`, `RISK_COLOR` (+172 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **21 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **26 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `run_ingestion()` connect `Community 62` to `.__init__() · Settings · jobs.py · App-l`, `test_index_built() · test_qa_webapp.py ·`, `Embedder · LLM access layer (Ph · CodeEn`, `detector.py · Architecture-risk de · Wri`, `_parse() · test_detects_calls() · test_p`, `Community 59`?**
-  _High betweenness centrality (0.076) - this node is a cross-community bridge._
-- **Why does `record_audit()` connect `__init__.py · FastAPI backend (Pha` to `11.5 Acceptance Crit · 11.4 Graph Visual`, `6.1 Install · 6.3 AST-Aware Chunki · 6.5`, `Community 99`, `Community 70`, `Community 71`, `PART 15 — MONITORING · 15.2 Metrics to T`, `available() · build_context() · explain(`, `_parse() · test_detects_calls() · test_p`, `Community 59`?**
-  _High betweenness centrality (0.070) - this node is a cross-community bridge._
-- **Why does `parse_repository()` connect `Community 62` to `Parse an entire repo · AST parsing engin`, `Embedder · LLM access layer (Ph · CodeEn`, `Community 44`, `Community 78`, `Community 58`, `Community 60`?**
-  _High betweenness centrality (0.063) - this node is a cross-community bridge._
+- **Why does `parse_repository()` connect `Community 123` to `Community 98`, `Parse an entire repo · AST parsing engin`, `Embedder · LLM access layer (Ph · CodeEn`, `Community 44`, `Community 78`, `Community 58`, `Community 60`?**
+  _High betweenness centrality (0.067) - this node is a cross-community bridge._
+- **Why does `run_ingestion()` connect `Community 123` to `11.5 Acceptance Crit · 11.4 Graph Visual`, `Community 129`, `.__init__() · Settings · jobs.py · App-l`, `test_index_built() · test_qa_webapp.py ·`, `Embedder · LLM access layer (Ph · CodeEn`, `detector.py · Architecture-risk de · Wri`, `_parse() · test_detects_calls() · test_p`, `Community 62`?**
+  _High betweenness centrality (0.064) - this node is a cross-community bridge._
+- **Why does `record_audit()` connect `__init__.py · FastAPI backend (Pha` to `11.5 Acceptance Crit · 11.4 Graph Visual`, `Community 129`, `Community 99`, `Community 70`, `Community 71`, `PART 15 — MONITORING · 15.2 Metrics to T`, `Community 140`, `Community 120`, `Community 59`?**
+  _High betweenness centrality (0.064) - this node is a cross-community bridge._
 - **Are the 6 inferred relationships involving `Principal` (e.g. with `ConversationCreate` and `ConversationInfo`) actually correct?**
   _`Principal` has 6 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 16 inferred relationships involving `analyze_repository()` (e.g. with `parse_repository()` and `main()`) actually correct?**
@@ -487,4 +622,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Are the 17 inferred relationships involving `RiskDetector` (e.g. with `export_risks()` and `report_narrative()`) actually correct?**
   _`RiskDetector` has 17 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `Self-contained codebase analysis engine (no external services required).  Comput`, `Minimal directed-graph helpers (stdlib only) replacing the bits of networkx that`, `Iterable of (node, degree) pairs that is also callable: dv(n) -> degree.` to the rest of the system?**
-  _462 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _498 weakly-connected nodes found - possible documentation gaps or missing edges._

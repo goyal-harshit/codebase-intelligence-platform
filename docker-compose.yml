@@ -128,6 +128,9 @@ services:
       LLM_MODEL: "qwen2.5-coder:7b"
       # Embedding token window per chunk (lower = faster ingest). See .env.example.
       EMBED_MAX_TOKENS: "${EMBED_MAX_TOKENS:-256}"
+      # First boot only: auto-ingest the bundled PyShelf demo repo so the UI
+      # has data immediately. Set SEED_DEMO_REPO=false to boot empty.
+      SEED_DEMO_REPO: "${SEED_DEMO_REPO:-true}"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:

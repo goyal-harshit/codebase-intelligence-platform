@@ -9,6 +9,7 @@ from .generator import (
     DocGenerator,
     build_skeleton,
     build_wiki,
+    display_path,
     purpose_narrative,
 )
 
@@ -17,5 +18,6 @@ __all__ = [
     "DocGenerator",
     "build_skeleton",
     "build_wiki",
+    "display_path",
     "purpose_narrative",
 ]

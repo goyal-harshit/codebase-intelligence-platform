@@ -48,7 +48,10 @@ export default function GlobalIngestProgress() {
           ACTIVE.has(seen.get(j.job_id) ?? "")
       );
       seenRef.current = new Map(jobs.map((j) => [j.job_id, j.status]));
-      const active = jobs.find((j) => ACTIVE.has(j.status)) ?? null;
+      // Skip stale rows: a crashed run can leave status "running" forever,
+      // and a two-week-old "embedding 6%" banner helps nobody.
+      const active =
+        jobs.find((j) => ACTIVE.has(j.status) && !j.stale) ?? null;
       setActiveJob(active);
       if (justFinished) {
         setNotice(justFinished);

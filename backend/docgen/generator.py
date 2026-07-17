@@ -35,11 +35,33 @@ _ENTITY_LABELS = ("Class", "Interface", "Function")
 _CLASS_TYPES = {"class", "implementation", "interface"}
 
 
-class DocGenerator:
-    """Collects per-module facts from the graph and renders wiki pages."""
+def display_path(path: str, root: Optional[str]) -> str:
+    """Repo-relative display form of a graph file path.
 
-    def __init__(self, client: "ArcadeDBClient") -> None:
+    The graph stores paths exactly as ingested (absolute for local repo_path
+    ingests, ``data/repos/...`` for clones), which makes ugly wiki titles.
+    Stripping the ingest root — when it actually prefixes the path — leaves
+    the repo-relative name; unrelated/legacy paths pass through unchanged.
+    """
+    norm = path.replace("\\", "/")
+    if root:
+        prefix = root.replace("\\", "/").rstrip("/") + "/"
+        if norm.startswith(prefix):
+            return norm[len(prefix):]
+    return norm
+
+
+class DocGenerator:
+    """Collects per-module facts from the graph and renders wiki pages.
+
+    ``display_root`` (usually the latest completed ingest's repo path) is only
+    cosmetic: module *identifiers* stay the exact graph paths, page titles and
+    cross-references show them relative to the root.
+    """
+
+    def __init__(self, client: "ArcadeDBClient", display_root: Optional[str] = None) -> None:
         self.client = client
+        self.display_root = display_root
 
     # -- graph access --------------------------------------------------------
 
@@ -108,9 +130,15 @@ class DocGenerator:
         pages: list[dict] = []
         for i, path in enumerate(wanted):
             mod = self.collect(path)
+            mod["display"] = display_path(path, self.display_root)
+            mod["used_by_display"] = [
+                display_path(p, self.display_root) for p in mod["used_by"]
+            ]
             if narrative and llm is not None and i < MAX_NARRATIVE_MODULES:
                 mod["purpose"] = purpose_narrative(mod, llm)
-            pages.append({"module": path, "markdown": build_skeleton(mod)})
+            pages.append(
+                {"module": path, "display": mod["display"], "markdown": build_skeleton(mod)}
+            )
         return pages
 
 
@@ -120,7 +148,7 @@ def build_skeleton(module: dict) -> str:
     If ``module["purpose"]`` is set (LLM pass succeeded) a Purpose section is
     included; otherwise the page is pure inventory.
     """
-    path = module["path"]
+    path = module.get("display") or module["path"]
     lines: list[str] = [f"# `{path}`", ""]
 
     purpose = module.get("purpose")
@@ -149,7 +177,7 @@ def build_skeleton(module: dict) -> str:
     lines.append("## Dependencies")
     lines.append("")
     imports = module.get("imports") or []
-    used_by = module.get("used_by") or []
+    used_by = module.get("used_by_display") or module.get("used_by") or []
     lines.append(
         "**Imports:** " + (", ".join(f"`{m}`" for m in imports) if imports else "_none recorded_")
     )
@@ -164,7 +192,10 @@ def build_wiki(pages: list[dict]) -> str:
     """Concatenate pages into a single wiki document with an index section."""
     out: list[str] = ["# Project Wiki", "", "## Index", ""]
     if pages:
-        out += [f"- [`{p['module']}`](#{_slug(p['module'])})" for p in pages]
+        out += [
+            f"- [`{p.get('display') or p['module']}`](#{_slug(p.get('display') or p['module'])})"
+            for p in pages
+        ]
     else:
         out.append("_No documented modules._")
     out.append("")
@@ -185,8 +216,8 @@ def purpose_narrative(module: dict, llm: "LLMClient", max_entities: int = 20) ->
     ]
     prompt = (
         "You are writing developer documentation. In 2-4 sentences, describe "
-        f"the purpose of the module `{module['path']}` based only on the facts "
-        "below. Be concrete; do not invent behavior.\n\n"
+        f"the purpose of the module `{module.get('display') or module['path']}` "
+        "based only on the facts below. Be concrete; do not invent behavior.\n\n"
         f"Entities: {'; '.join(names) or '(none)'}\n"
         f"Imports: {', '.join(module.get('imports') or []) or '(none)'}\n"
         f"Used by: {', '.join(module.get('used_by') or []) or '(none)'}"

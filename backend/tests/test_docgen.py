@@ -33,6 +33,25 @@ def test_skeleton_lists_inventory_and_dependencies():
     assert "## Purpose" not in md  # no narrative -> pure inventory
 
 
+def test_display_path_strips_ingest_root_only():
+    from docgen import display_path
+
+    root = "C:\\repos\\myproj"
+    assert display_path("C:\\repos\\myproj\\pkg\\mod.py", root) == "pkg/mod.py"
+    assert display_path("data/repos/flask/src/app.py", "data/repos/flask") == "src/app.py"
+    # Unrelated/legacy paths and missing root pass through (normalized).
+    assert display_path("other\\place\\x.py", root) == "other/place/x.py"
+    assert display_path("src/app.py", None) == "src/app.py"
+
+
+def test_generate_pages_carry_repo_relative_display():
+    gen = DocGenerator(FakeGraph(), display_root="src")
+    pages = gen.generate(modules=["src/app.py"])
+    assert pages[0]["module"] == "src/app.py"  # id stays the graph path
+    assert pages[0]["display"] == "app.py"
+    assert pages[0]["markdown"].startswith("# `app.py`")
+
+
 def test_skeleton_with_purpose_and_empty_module():
     md = build_skeleton(dict(FIXTURE, purpose="Handles app startup."))
     assert "## Purpose" in md and "Handles app startup." in md
@@ -144,7 +163,10 @@ def test_endpoints_with_fake_graph():
     try:
         r = client.get("/api/v1/docgen/modules")
         assert r.status_code == 200
-        assert r.json() == {"modules": ["src/app.py", "src/util.py"], "total": 2}
+        body = r.json()
+        assert body["modules"] == ["src/app.py", "src/util.py"]
+        assert body["total"] == 2
+        assert "display_root" in body  # cosmetic label prefix (may be "")
 
         r = client.post("/api/v1/docgen/generate", json={"modules": ["src/app.py"]})
         assert r.status_code == 200
