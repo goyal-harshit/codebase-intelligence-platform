@@ -1,15 +1,38 @@
+# Environments
 venv/
 .venv/
-__pycache__/
-*.pyc
-node_modules/
-.next/
 .env
 .env*.local
-.claude/
-data/
-*.log
+
+# Python
+__pycache__/
+*.pyc
 .pytest_cache/
 .mypy_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+.next/
 *.tsbuildinfo
+
+# Editors & AI tools
+.idea/
+.vscode/
+.obsidian/
+.junie/
+.claude/
+
+# Generated output (keep locally, never commit)
+graphify-out/
+reports/
+data/
+logs/
+*.docx
+
+# Misc
+*.log
 *.tmp
+*.bak
+.DS_Store
+Thumbs.db
