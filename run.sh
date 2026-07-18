@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Codebase Intelligence — launcher (Linux/macOS)
-# Usage: ./run.sh [--doctor]
+# Usage: ./run.sh            local dev (hot reload)
+#        ./run.sh --docker   full stack in Docker (production-like)
+#        ./run.sh --doctor   environment diagnostics
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -32,7 +34,30 @@ doctor() {
   [ $bad -eq 0 ] && echo "Result: healthy" || { echo "Result: problems found — fix ✗ items above"; exit 1; }
 }
 
-[ "${1:-}" = "--doctor" ] && { doctor; exit 0; }
+docker_deploy() {
+  echo "=========================================="
+  echo " Docker deploy — full stack"
+  echo "=========================================="
+  command -v docker >/dev/null 2>&1 || { err "Docker not found. Install from https://docker.com"; exit 1; }
+  docker info >/dev/null 2>&1 || { err "Docker daemon not running. Start Docker and retry."; exit 1; }
+  [ -f .env ] || { cp .env.example .env; ok "Created .env from .env.example — edit AUTH_SECRET for prod"; }
+  if curl -fsS http://localhost:11434/api/tags >/dev/null 2>&1; then
+    ok "Ollama detected — pulling model (first run only)"
+    ollama pull qwen2.5-coder:7b || warn "Model pull failed; LLM features may be limited"
+  else
+    warn "Ollama not detected on :11434 — LLM features disabled (install from https://ollama.com)"
+  fi
+  echo "Building and starting: postgres, redis, minio, arcadedb, chroma, backend, worker, frontend..."
+  docker compose up -d --build
+  echo
+  ok "Deployed.  Frontend http://localhost:3100 · API http://localhost:8001/docs"
+  echo "  Logs: docker compose logs -f · Stop: docker compose down"
+}
+
+case "${1:-}" in
+  --doctor) doctor; exit 0 ;;
+  --docker) docker_deploy; exit 0 ;;
+esac
 
 echo "=========================================="
 echo " Codebase Intelligence Launcher"

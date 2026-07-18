@@ -12,9 +12,9 @@
 ## Dev setup
 
 ```
-run_local.bat        # Windows: venv + npm install + native backend/frontend
-# or
-docker compose up -d --build
+./install.sh && ./run.sh        # Linux/macOS (Windows: .\install.ps1 then .\run.ps1)
+# or full stack in Docker:
+./run.sh --docker               # Windows: .\run.ps1 -Docker
 ```
 
 Backend tests must pass before merge (CI enforces both):

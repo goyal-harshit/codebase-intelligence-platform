@@ -37,8 +37,8 @@ def _layout(nodes, links, iterations=420, seed=42):
             node["x"] = cx + rnd.uniform(-70, 70)
             node["y"] = cy + rnd.uniform(-70, 70)
 
-    edges = [(idx[l["source"]], idx[l["target"]]) for l in links
-             if l["source"] in idx and l["target"] in idx]
+    edges = [(idx[link["source"]], idx[link["target"]]) for link in links
+             if link["source"] in idx and link["target"] in idx]
 
     area = 900.0 * 900.0
     k = math.sqrt(area / n)          # ideal edge length
@@ -62,8 +62,10 @@ def _layout(nodes, links, iterations=420, seed=42):
                 force = (k * k) / dist2 * dist
                 fx = ddx / dist * force
                 fy = ddy / dist * force
-                dx[i] += fx; dy[i] += fy
-                dx[j] -= fx; dy[j] -= fy
+                dx[i] += fx
+                dy[i] += fy
+                dx[j] -= fx
+                dy[j] -= fy
         # attraction along edges
         for a, b in edges:
             ddx = px[a] - px[b]
@@ -72,8 +74,10 @@ def _layout(nodes, links, iterations=420, seed=42):
             force = (dist * dist) / k
             fx = ddx / dist * force
             fy = ddy / dist * force
-            dx[a] -= fx; dy[a] -= fy
-            dx[b] += fx; dy[b] += fy
+            dx[a] -= fx
+            dy[a] -= fy
+            dx[b] += fx
+            dy[b] += fy
         # gentle gravity to centre
         for i in range(n):
             dx[i] -= px[i] * 0.012

@@ -21,37 +21,45 @@ More in [docs/screenshots/](docs/screenshots/).
 
 ## Quickstart
 
-Two ways to run the full stack, both work straight after `git clone`:
+One installer, one launcher — works straight after `git clone`:
 
-**Docker (recommended — one click, nothing else to install but Docker Desktop)**
-
-```
-run_ui.bat
-```
-
-Builds and starts everything via `docker-compose.yml` (postgres, redis, minio,
-arcadedb, chroma, backend, worker, frontend) and opens
-http://localhost:3100. On the very first boot the backend auto-ingests the
-bundled **PyShelf demo repo** (`backend/demo_repo/`), so the dashboard, graph,
-risks, impact, and security pages have data before you ingest anything —
-set `SEED_DEMO_REPO=false` in `.env` to boot empty instead. On first run it
-copies `.env.example` to `.env` —
-edit that file to set a real `AUTH_SECRET` / GitHub OAuth keys / LLM settings
-before exposing the stack beyond your machine. Data (Postgres, MinIO, ArcadeDB,
-Chroma, cloned repos) persists in named Docker volumes across restarts;
-`docker compose down` stops the stack without touching them, `docker compose
-down -v` wipes them.
-
-**Local dev (hot reload, needs Python 3.11+/3.12 and Node 20+ on PATH)**
-
-```
-run_local.bat
+```bash
+# Linux / macOS                      # Windows (PowerShell)
+./install.sh                         .\install.ps1
+./run.sh                             .\run.ps1
 ```
 
-Creates `.venv`, installs backend deps, runs `npm install` for the frontend,
-starts ArcadeDB + Chroma in Docker (if available) for graph/vector storage,
-and runs the backend (`uvicorn --reload`) and frontend (`npm run dev`) natively
-in separate windows.
+`install` checks prerequisites (Git, Python 3.11+, Node 20+, Docker optional),
+creates `.venv`, installs backend + frontend dependencies, and writes `.env`
+from `.env.example`. `run` verifies the environment, picks free ports
+automatically, starts ArcadeDB + Chroma in Docker (if available), and launches
+the backend and frontend with logs under `logs/`. `Ctrl+C` shuts everything
+down cleanly.
+
+**Full production-like stack in Docker** (postgres, redis, minio, arcadedb,
+chroma, backend, worker, frontend):
+
+```bash
+./run.sh --docker        # Windows: .\run.ps1 -Docker
+```
+
+Opens http://localhost:3100. On the very first boot the backend auto-ingests
+the bundled **PyShelf demo repo** (`backend/demo_repo/`), so the dashboard,
+graph, risks, impact, and security pages have data before you ingest anything —
+set `SEED_DEMO_REPO=false` in `.env` to boot empty instead. Edit `.env` to set
+a real `AUTH_SECRET` / GitHub OAuth keys / LLM settings before exposing the
+stack beyond your machine. Data persists in named Docker volumes;
+`docker compose down` stops without touching them, `docker compose down -v`
+wipes them.
+
+**Something not working?**
+
+```bash
+./run.sh --doctor        # Windows: .\run.ps1 -Doctor
+```
+
+diagnoses missing dependencies, unreachable services, and configuration
+problems with actionable fixes.
 
 Prefer running individual pieces locally for development? See the per-phase
 sections below.
@@ -321,7 +329,7 @@ for multi-worker production without changing the route contract.
 cd backend && uvicorn main:app --reload --port 8100
 ```
 
-Swagger UI at http://localhost:8100/docs. (`run_local.bat` picks the first
+Swagger UI at http://localhost:8100/docs. (`run.sh` / `run.ps1` picks the first
 free port from 8100 up and configures the frontend to match.)
 
 ### Test
@@ -370,7 +378,8 @@ npm run dev                         # http://localhost:3000
 ## Phase 9 — Docker & Deployment
 
 One-command stack via [`docker-compose.yml`](docker-compose.yml), started by
-[`run_ui.bat`](run_ui.bat) or directly with `docker compose up -d --build`:
+`./run.sh --docker` (Windows: `.\run.ps1 -Docker`) or directly with
+`docker compose up -d --build`:
 
 | Service | Image | Host port |
 |---|---|---|
@@ -391,7 +400,7 @@ ingestion jobs on the `worker` service and persists cloned repo checkouts in
 the `backend_data` volume so they survive container rebuilds.
 
 ```bash
-run_ui.bat                       # Windows: build + start everything, open browser
+./run.sh --docker                # build + start everything (Windows: .\run.ps1 -Docker)
 docker compose up -d --build     # equivalent, any OS
 docker compose ps                # status
 docker compose logs -f           # logs

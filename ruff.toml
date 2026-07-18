@@ -1,0 +1,26 @@
+# Ruff configuration — single source of truth for lint rules.
+line-length = 120
+target-version = "py311"
+
+# Fixture/demo code is intentionally imperfect: the analyzer and risk
+# detector are *supposed* to find issues there. Never lint it.
+exclude = [
+    "backend/demo_repo",
+    "backend/tests/samples",
+    "backend/data",
+    "backend/migrations",
+    ".venv",
+    "graphify-out",
+]
+
+[lint]
+select = ["E4", "E7", "E9", "F"]
+
+[lint.per-file-ignores]
+# main.py configures env/telemetry before importing the app stack.
+"backend/main.py" = ["E402"]
+"backend/api/security.py" = ["E402"]
+# Tests favour brevity; lambdas as tiny stubs are fine.
+"backend/tests/*" = ["E731", "F841"]
+# Legacy standalone CLI utilities kept for reference; compact style tolerated.
+"scripts/*" = ["E702", "E402", "E731", "E741"]

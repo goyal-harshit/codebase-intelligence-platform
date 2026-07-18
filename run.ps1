@@ -1,6 +1,8 @@
 # Codebase Intelligence — launcher (Windows)
-# Usage: powershell -ExecutionPolicy Bypass -File run.ps1 [-Doctor]
-param([switch]$Doctor)
+# Usage: powershell -ExecutionPolicy Bypass -File run.ps1            local dev (hot reload)
+#        powershell -ExecutionPolicy Bypass -File run.ps1 -Docker    full stack in Docker
+#        powershell -ExecutionPolicy Bypass -File run.ps1 -Doctor    environment diagnostics
+param([switch]$Doctor, [switch]$Docker)
 $ErrorActionPreference = "Stop"
 Set-Location $PSScriptRoot
 
@@ -37,6 +39,29 @@ if ($Doctor) {
   if (Test-Url "http://localhost:11434/api/tags") { OK "Ollama reachable (11434)" } else { Warn "Ollama not reachable - LLM features disabled" }
   if ($bad) { Write-Host "Result: problems found - fix [X] items above"; exit 1 }
   Write-Host "Result: healthy"; exit 0
+}
+
+if ($Docker) {
+  Write-Host "=========================================="
+  Write-Host " Docker deploy — full stack"
+  Write-Host "=========================================="
+  if (-not (Get-Command docker -ErrorAction SilentlyContinue)) { Err "Docker not found. Install Docker Desktop from https://docker.com"; exit 1 }
+  docker info 2>$null | Out-Null
+  if ($LASTEXITCODE -ne 0) { Err "Docker Desktop is not running. Start it and retry."; exit 1 }
+  if (-not (Test-Path .env)) { Copy-Item .env.example .env; OK "Created .env from .env.example - edit AUTH_SECRET for prod" }
+  if (Test-Url "http://localhost:11434/api/tags") {
+    OK "Ollama detected - pulling model (first run only)"
+    ollama pull qwen2.5-coder:7b
+    if ($LASTEXITCODE -ne 0) { Warn "Model pull failed; LLM features may be limited" }
+  } else { Warn "Ollama not detected on :11434 - LLM features disabled (install from https://ollama.com)" }
+  Write-Host "Building and starting: postgres, redis, minio, arcadedb, chroma, backend, worker, frontend..."
+  docker compose up -d --build
+  if ($LASTEXITCODE -ne 0) { Err "Docker deployment failed. See errors above."; exit 1 }
+  Write-Host ""
+  OK "Deployed.  Frontend http://localhost:3100 | API http://localhost:8001/docs"
+  Write-Host "  Logs: docker compose logs -f | Stop: docker compose down"
+  Start-Process "http://localhost:3100"
+  exit 0
 }
 
 Write-Host "=========================================="

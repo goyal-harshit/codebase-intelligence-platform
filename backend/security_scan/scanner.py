@@ -46,7 +46,6 @@ class Rule:
 
 
 def _rules() -> list[Rule]:
-    I = re.IGNORECASE
     return [
         Rule(
             "aws_access_key", "critical",

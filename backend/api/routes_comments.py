@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 
 import db as _db
 from auth import current_active_user
-from db import Comment, ROLE_OWNER
+from db import Comment
 
 from .audit import record_audit
 

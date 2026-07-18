@@ -13,8 +13,9 @@ docker compose up
 
 This starts Postgres, Redis, ArcadeDB, ChromaDB, MinIO, the FastAPI backend (:8001),
 the Celery worker, and the Next.js frontend (:3100) — see `docker-compose.yml`. The
-backend runs Alembic migrations on boot. Helper scripts `scripts/setup.sh` (Linux/macOS)
-and `scripts/setup.ps1` (Windows) cover first-time setup.
+backend runs Alembic migrations on boot. `./run.sh --docker` (Windows:
+`.\run.ps1 -Docker`) covers first-time setup: it creates `.env`, pulls the
+Ollama model when available, and builds + starts the stack.
 
 The LLM is **not** in the compose stack by default: install [Ollama](https://ollama.com)
 on the host and pull a model:

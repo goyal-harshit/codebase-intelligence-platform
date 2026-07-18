@@ -17,7 +17,6 @@ One command (`docker compose up`) brings up the whole stack:
 | `arcadedb` | `arcadedata/arcadedb` | 2480, 2424 | Code knowledge graph (queried in Cypher over the REST API). |
 | `chroma` | `ghcr.io/chroma-core/chroma` | 8003 → 8000 | Vector store for code-chunk embeddings. |
 | `minio` | `minio/minio` | 9000, 9001 | S3-compatible object storage for uploaded repo archives. Falls back to local filesystem when `MINIO_ENDPOINT` is unset. |
-| `app` | root `Dockerfile` | 8500 | Standalone multi-page analyzer (`scripts/serve.py`) with the repo mounted read-only at `/data`. Zero mandatory third-party deps. |
 | Ollama | **host process** (not in compose by default) | 11434 | Local LLM. Containers reach it via `host.docker.internal`; an in-compose `ollama` service is provided commented-out. |
 
 `backend`/`worker` wait on healthchecks for `db`, `redis`, `minio`, `arcadedb` before starting.

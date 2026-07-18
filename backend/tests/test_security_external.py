@@ -1,5 +1,4 @@
 """Bandit/Ruff integration for the security scan (tools run for real)."""
-import shutil
 import subprocess
 import sys
 

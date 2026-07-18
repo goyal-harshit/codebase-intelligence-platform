@@ -1,6 +1,6 @@
 import os
 from analysis import analyze_repository
-from analysis import qa, webapp
+from analysis import qa
 
 SAMPLES = os.path.join(os.path.dirname(__file__), "samples")
 
@@ -30,16 +30,3 @@ def test_qa_file_and_search():
     assert r["kind"] == "file" and r["results"]
     r2 = qa.answer(a.index, "password")
     assert r2["results"]
-
-
-def test_webapp_pages_render():
-    a = _a()
-    base = "/view/x"
-    for fn in (webapp.overview_page(a), webapp.graph_page(a),
-               webapp.risks_page(a), webapp.deps_page(a), webapp.hotspots_page(a)):
-        assert "<h1>" in fn
-    assert "<h1>" in webapp.modules_page(a, base)
-    assert "<h1>" in webapp.functions_page(a, base)
-    assert "<h1>" in webapp.ask_page(a, base, "validate_user")
-    eid = next(iter(a.index["entities"]))
-    assert "<h1>" in webapp.function_detail_page(a, eid, base)

@@ -6,7 +6,6 @@ import html
 import json
 import os
 
-from .engine import CodebaseAnalysis
 from .graph_html import graph_widget
 
 
@@ -76,8 +75,8 @@ def render_html(a):
     ]
     kpi_html = "".join(
         '<div class="kpi"><div class="kpi-val" style="color:%s">%s</div>'
-        '<div class="kpi-label">%s</div></div>' % (c, _e(v), _e(l))
-        for l, v, c in kpis)
+        '<div class="kpi-label">%s</div></div>' % (c, _e(v), _e(label))
+        for label, v, c in kpis)
 
     comp = hs.get("components", {})
     health_body = ('<div class="grade-badge" style="background:%s">%s</div>'

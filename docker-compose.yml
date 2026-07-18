@@ -1,28 +1,4 @@
 services:
-  app:
-    build: .
-    image: codebase-intelligence
-    ports:
-      - "8500:8500"
-    volumes:
-      # Mount the code you want to analyze at /data (use the path box: "/data/<repo>").
-      - ./:/data:ro
-    environment:
-      # Point at a local Ollama for AI explanations (optional). Both LLM clients
-      # honour LLM_BASE_URL / LLM_MODEL; the /v1 suffix is fine for either (the
-      # native client strips it, the OpenAI-compatible client keeps it).
-      # host.docker.internal reaches an Ollama running on the host (see below).
-      LLM_BASE_URL: "http://host.docker.internal:11434/v1"
-      LLM_MODEL: "qwen2.5-coder:7b"
-      # Relational metadata store (users, jobs, repos, audit log). Omit this to
-      # fall back to a local SQLite file (single-node dev).
-      DATABASE_URL: "postgresql+psycopg2://codeintel:codeintel@db:5432/codeintel"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    depends_on:
-      db:
-        condition: service_healthy
-
   db:
     image: postgres:16-alpine
     environment:
