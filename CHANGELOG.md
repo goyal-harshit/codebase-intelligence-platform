@@ -5,6 +5,31 @@ Format follows [Keep a Changelog](https://keepachangelog.com/); versions map to
 the roadmap in [PROJECT_PLAN.md](PROJECT_PLAN.md) §6 and exist as annotated git
 tags.
 
+## [Unreleased]
+
+### Added
+- **Unified cross-platform launchers**: `install.sh`/`install.ps1` (dependency
+  checks, venv + npm bootstrap, `.env` creation) and `run.sh`/`run.ps1`
+  (pre-flight health checks, automatic port detection, file logging, graceful
+  Ctrl+C shutdown). `--docker`/`-Docker` deploys the full compose stack;
+  `--doctor`/`-Doctor` diagnoses environment problems with actionable fixes.
+- Ruff lint gate in CI (`ruff.toml` is the single source of lint config).
+
+### Removed
+- **Legacy Python UI** (`scripts/serve.py`, `backend/analysis/webapp.py`, root
+  `Dockerfile`, compose `app` service on :8500) — the Next.js frontend is the
+  single UI. The `qa` analysis engine and its tests remain.
+- Redundant launchers `run_local.bat`, `run_ui.bat`, `run_legacy_ui.bat`,
+  `run_ui.sh`, `scripts/setup.sh`, `scripts/setup.ps1` — replaced by the
+  unified scripts above.
+- Generated output and editor config untracked from git (`graphify-out/`,
+  `reports/`, `.idea/`, `.obsidian/`, root `.docx`); files remain on disk.
+
+### Fixed
+- All Ruff findings in `backend/` (unused imports/variables, ambiguous
+  single-letter names, multi-statement lines); suite stays green
+  (256 passed, 5 skipped).
+
 ## [v1.4.0] — 2026-07-17
 
 The polish release: a fresh deployment now demos itself, and the release
