@@ -1,10 +1,21 @@
 # Enterprise Codebase Intelligence Platform
 
-Open-source platform that ingests any Git repo, builds a knowledge graph + vector index of its code, and answers plain-English questions, detects architecture risks, and computes change-impact / blast radius.
+[![CI](https://github.com/goyal-harshit/codebase-intelligence-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/goyal-harshit/codebase-intelligence-platform/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/python-3.11%2B-blue)
+![Node](https://img.shields.io/badge/node-20%2B-brightgreen)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.110-009688)
+![Next.js](https://img.shields.io/badge/Next.js-14-black)
+![Tests](https://img.shields.io/badge/tests-256%20passed-success)
 
-See `PROJECT_PLAN.md` for the architecture, feature matrix, and roadmap
-(it supersedes all earlier plan documents). Releases are annotated git tags
-with matching entries in [CHANGELOG.md](CHANGELOG.md); contribution
+Open-source platform that ingests any Git repo, builds a knowledge graph +
+vector index of its code, and answers plain-English questions, detects
+architecture risks, computes change-impact / blast radius, runs SAST security
+scans, recommends refactorings, and auto-generates a documentation wiki —
+entirely on free, self-hosted infrastructure (no paid APIs, no paid cloud).
+
+See [PROJECT_PLAN.md](PROJECT_PLAN.md) for the architecture, feature matrix,
+and roadmap (it supersedes all earlier plan documents). Releases are annotated
+git tags with matching entries in [CHANGELOG.md](CHANGELOG.md); contribution
 conventions live in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Screenshots
@@ -17,7 +28,57 @@ conventions live in [CONTRIBUTING.md](CONTRIBUTING.md).
 |---|---|
 | ![Security](docs/screenshots/security.png) | ![Impact](docs/screenshots/impact.png) |
 
+| Auto-documentation wiki | Refactoring recommendations |
+|---|---|
+| ![Wiki](docs/screenshots/wiki.png) | ![Refactor](docs/screenshots/refactor.png) |
+
 More in [docs/screenshots/](docs/screenshots/).
+
+## Features
+
+- **Repo ingestion** — git clone or archive upload, durable Celery jobs with
+  live progress, incremental re-indexing (SHA-based, only changed files).
+- **Knowledge graph** — tree-sitter AST → ArcadeDB graph
+  (files/functions/classes, calls/contains/inherits/imports) + NetworkX analysis.
+- **Hybrid search & Q&A** — LLM→Cypher structural queries, BGE vector
+  similarity + BM25 lexical fused with RRF, grounded answers with citations
+  via a local Ollama LLM; conversation history.
+- **Analysis suite** — architecture-risk rules, change-impact / blast radius,
+  hotspot heatmap, SAST security dashboard (builtin scanner + Bandit + Ruff S),
+  refactoring recommendations, AI code review & summaries.
+- **Auto-documentation** — deterministic per-module wiki generated from the
+  graph with optional LLM "purpose" pass, browsable at `/wiki`.
+- **Collaboration & ops** — JWT + GitHub OAuth + RBAC + per-user API keys,
+  audit log, comments/activity/notifications (WebSockets), CSV/XLSX exports,
+  HTML/PDF reports, rate limiting, Prometheus metrics, health checks.
+- **One-command deployment** — Docker Compose stack (Postgres, Redis, ArcadeDB,
+  Chroma, MinIO, API, Celery worker, frontend) with first-boot demo seeding.
+
+## Architecture
+
+```text
+                         Next.js Frontend (:3100)
+                                  │
+                         FastAPI Gateway (:8001)
+              JWT / OAuth / API keys / RBAC / rate limits
+                                  │
+        ┌──────────────┬──────────┴─────────┬──────────────────┐
+   Ingestion       Retrieval & Q&A     Analysis            Collaboration
+ (upload/clone)   (hybrid search+LLM) (risks/SAST/impact/  (comments, activity,
+        │                 │            hotspots/refactor)   notifications+WS)
+   tree-sitter      Chroma + BGE            │                    │
+   GitPython        BM25 + Ollama      static analyzers     Celery + Redis
+        └──────────────┴──────────┬─────────┴──────────────────┘
+                                  │
+             PostgreSQL · Redis · ArcadeDB · ChromaDB · MinIO
+                                  │
+                          Docker Compose (one command)
+```
+
+Pipeline: repo → clone → tree-sitter AST → knowledge graph → chunking → BGE
+embeddings → Chroma → hybrid retrieval (graph + vector + lexical) → local LLM →
+grounded answer. Full details in [docs/architecture.md](docs/architecture.md)
+and the ADRs under [docs/adr/](docs/adr/).
 
 ## Quickstart
 
@@ -82,6 +143,10 @@ sections below.
 | 12 | GitHub OAuth sign-in | **Done** |
 | 13 | v1.4 polish: demo seed, changelog + tags, screenshots | **Done** |
 
+The roadmap is complete through v1.4 (see [CHANGELOG.md](CHANGELOG.md));
+unreleased work on `main` currently covers the unified install/run launchers
+and the Ruff lint gate in CI.
+
 ### GitHub OAuth (optional)
 
 Create a free OAuth App at github.com/settings/developers (callback URL:
@@ -117,7 +182,7 @@ python scripts/parse_repo.py /path/to/repo --json out.json
 ### Test
 
 ```bash
-cd backend && python -m pytest tests/ -q
+python -m pytest -q          # from the repo root (pytest.ini sets paths)
 ```
 
 ### Validated
@@ -138,7 +203,7 @@ incremental re-indexing that re-parses only changed files and prunes deleted one
 ```bash
 docker run -d --name arcadedb -p 2480:2480 -p 2424:2424 \
   -e JAVA_OPTS="-Xmx2g" -e arcadedb.server.rootPassword=ChangeMe123! \
-  -v arcadedb_data:/home/arcadedb/databases arcadedb/arcadedb:latest
+  -v arcadedb_data:/home/arcadedb/databases arcadedata/arcadedb:latest
 ```
 
 Connection is configured via env vars: `ARCADEDB_URL` (default
@@ -156,7 +221,7 @@ python scripts/build_graph.py /path/to/repo --incremental  # only changed files
 ### Test
 
 ```bash
-cd backend && python -m pytest tests/test_graph_db.py -q
+python -m pytest backend/tests/test_graph_db.py -q
 ```
 
 Unit tests run offline against a recording fake client (no server needed). Set
@@ -169,7 +234,8 @@ function/class/method) with `BAAI/bge-small-en-v1.5` and stores the vectors in
 ChromaDB for semantic search ("where are passwords validated?"). The embedder
 and Chroma collection are both injectable, and heavy deps (`chromadb`,
 `sentence-transformers`/torch) are imported lazily, so the package loads — and
-its unit tests run — without them installed.
+its unit tests run — without them installed. Re-ingests skip unchanged chunks
+(content SHA-1), cutting warm re-embeds to well under a minute.
 
 ### Run ChromaDB
 
@@ -192,7 +258,7 @@ First run downloads the ~130MB embedding model to `~/.cache/huggingface`.
 ### Test
 
 ```bash
-cd backend && python -m pytest tests/test_vector_db.py -q
+python -m pytest backend/tests/test_vector_db.py -q
 ```
 
 Offline by default (fake embedder + fake collection). Set `CHROMA_INTEGRATION=1`
@@ -236,7 +302,7 @@ python scripts/detect_risks.py --persist        # also write SecurityIssue nodes
 ### Test
 
 ```bash
-cd backend && python -m pytest tests/test_risk_detection.py -q
+python -m pytest backend/tests/test_risk_detection.py -q
 ```
 
 Offline by default (fake graph client returning canned rows). Set
@@ -261,7 +327,7 @@ python scripts/blast_radius.py path/to/file.py --depth 5
 ### Test
 
 ```bash
-cd backend && python -m pytest tests/test_impact.py -q
+python -m pytest backend/tests/test_impact.py -q
 ```
 
 Offline by default. Set `ARCADEDB_INTEGRATION=1` with a populated graph for the
@@ -273,7 +339,8 @@ Answers plain-English questions by routing each one to the right backend:
 
 - **Structural** questions ("who calls X", "what depends on Y") → an LLM
   translates them to Cypher (few-shot) and runs them on the graph.
-- **Semantic** questions ("where are passwords handled") → vector search.
+- **Semantic** questions ("where are passwords handled") → vector similarity
+  fused with BM25 lexical search (reciprocal-rank fusion).
 - Structural queries that error or return nothing **fall back** to semantic.
 
 `QueryEngine.answer()` is the single entry point (used by Phase 7): it
@@ -296,7 +363,7 @@ accepted as fallbacks. A trailing `/v1` on the base URL is handled either way.
 ### Test
 
 ```bash
-cd backend && python -m pytest tests/test_retrieval.py -q
+python -m pytest backend/tests/test_retrieval.py -q
 ```
 
 Offline by default (fake LLM/graph/vectors). Set `OLLAMA_INTEGRATION=1` with a
@@ -304,24 +371,35 @@ running Ollama for the live generation test.
 
 ## Phase 7 — FastAPI Backend
 
-REST API wiring every layer together. The app **boots with no backends
-running** — `/health` always works, and data endpoints return a clear `503`
-(not a crash) until ArcadeDB/Chroma/Ollama are up.
+REST API wiring every layer together — 27 routers versioned under `/api/v1`,
+protected by JWT / OAuth / API keys with RBAC and rate limiting. The app
+**boots with no backends running** — `/health` always works, and data
+endpoints return a clear `503` (not a crash) until ArcadeDB/Chroma/Ollama are up.
+
+Core endpoints:
 
 | Method | Path | Purpose |
 |---|---|---|
-| GET | `/health` | liveness |
+| GET | `/health`, `/api/v1/health/services` | liveness + per-service health |
 | POST | `/api/v1/ingest` | start ingestion (`{repo_url}` or `{repo_path}`) |
-| GET | `/api/v1/ingest/{job_id}` | ingestion job status |
+| POST | `/api/v1/ingest/upload` | ingest an uploaded archive (MinIO-backed) |
+| GET | `/api/v1/ingest/{job_id}` | ingestion job status (list via `/ingest`) |
 | GET | `/api/v1/query?q=` | natural-language Q&A |
 | GET | `/api/v1/impact/{file_path}?depth=` | blast radius |
 | GET | `/api/v1/risks?severity=` | architecture risks |
 | GET | `/api/v1/stats` | codebase counts |
 
-Ingestion runs in an in-process background task with a job-status store
+Beyond the core: `auth` (JWT/OAuth/API keys), `conversations`, `summarize`,
+`review`, `security` (SAST), `refactor`, `hotspots`, `docgen` (wiki),
+`export` (CSV/XLSX), `report` (HTML/PDF), `graphify` (graph viz data),
+`repos`/`files`, `comments`, `activity`, `notifications` (WebSockets),
+`llm-config`, and `audit`. Full surface with request/response examples in
+[docs/api-guide.md](docs/api-guide.md), or live Swagger UI at `/docs`.
+
+Ingestion runs as durable Celery jobs (Redis broker, eager in-process mode for
+tests/dev) with a job-status store
 (`queued → running[cloning→parsing→building_graph→embedding→risk_analysis] →
-complete/failed`). This is swappable for Celery + Redis (master plan §10.5)
-for multi-worker production without changing the route contract.
+complete/failed`); stale jobs are reaped automatically.
 
 ### Run
 
@@ -335,7 +413,7 @@ free port from 8100 up and configures the frontend to match.)
 ### Test
 
 ```bash
-cd backend && python -m pytest tests/test_api.py -q
+python -m pytest backend/tests/test_api.py -q
 ```
 
 Driven by Starlette's `TestClient`; asserts the app boots, lists all routes,
@@ -344,25 +422,26 @@ validates input, and degrades to `503` with no backends.
 ## Phase 8 — Next.js Frontend
 
 Next.js 14 (App Router, TypeScript, Tailwind) talking to the Phase 7 API. Every
-page is wired to a real endpoint:
+page is wired to real endpoints and degrades gracefully when the backend is down:
 
-| Route | Backend endpoint |
+| Route | Purpose |
 |---|---|
-| `/` | `POST /api/v1/ingest` (+ live job-status polling) |
-| `/dashboard` | `GET /api/v1/stats` + `GET /api/v1/risks` |
-| `/query` | `GET /api/v1/query` |
-| `/risks` | `GET /api/v1/risks?severity=` |
-| `/impact` | `GET /api/v1/impact/{file}` + force-graph blast-radius viz |
+| `/` | ingest a repo (clone or upload) + live job-status polling |
+| `/dashboard` | codebase stats, risk overview, hotspot heatmap |
+| `/query` | plain-English Q&A with cited sources |
+| `/graph` | interactive knowledge-graph visualization |
+| `/impact` | blast-radius force-graph for a file/entity |
+| `/risks` | architecture risks, filterable by severity |
+| `/security` | SAST findings dashboard |
+| `/refactor` | refactoring recommendations |
+| `/wiki` | auto-generated per-module documentation |
+| `/reports` | narrative HTML/PDF reports + CSV/XLSX exports |
+| `/notifications` | live notification feed (WebSockets) |
+| `/settings` | LLM provider/model config, API keys |
+| `/login` | email/password + optional GitHub OAuth |
 
-The dependency graph is visualized with `react-force-graph-2d` (dynamically
-imported, client-only). Pages degrade gracefully when the backend is down.
-
-**Deviation from the master plan:** the plan lists 7 pages including a standalone
-`/graph` and `/function/[id]`. Those need `GET /api/v1/graph/{id}` and
-`GET /api/v1/function/{id}` endpoints that Phase 7 doesn't expose yet, so rather
-than ship broken pages the graph visualization is folded into `/impact` (a real,
-working blast-radius graph). The two extra pages can be added once those
-endpoints exist.
+Graphs are rendered with `react-force-graph-2d` (dynamically imported,
+client-only).
 
 ### Setup & run
 
@@ -373,7 +452,7 @@ cp .env.local.example .env.local   # NEXT_PUBLIC_API_URL=http://localhost:8100
 npm run dev                         # http://localhost:3000
 ```
 
-`npm run build` is verified green (all routes compile, types check).
+`npm run build` is verified green (all routes compile, types check, ESLint clean).
 
 ## Phase 9 — Docker & Deployment
 
@@ -386,7 +465,7 @@ One-command stack via [`docker-compose.yml`](docker-compose.yml), started by
 | db (Postgres) | `postgres:16-alpine` | 5433 → 5432 |
 | redis | `redis:7-alpine` | 6380 → 6379 |
 | minio | `minio/minio` | 9000 (API) / 9001 (console) |
-| arcadedb | `arcadedb/arcadedb` | 2480 / 2424 |
+| arcadedb | `arcadedata/arcadedb` | 2480 / 2424 |
 | chroma | `ghcr.io/chroma-core/chroma` | 8003 → 8000 |
 | backend | built from `backend/Dockerfile` | 8001 → 8000 |
 | worker (Celery) | same image as backend | — |
@@ -408,8 +487,37 @@ docker compose down              # stop (keeps data volumes)
 docker compose down -v           # stop and WIPE all data volumes
 ```
 
+Deploying on free tiers (Vercel / Render / Fly / Neon)? See
+[docs/deployment-free-tier.md](docs/deployment-free-tier.md).
+
+## Testing
+
+```bash
+python -m pytest -q        # 256 passed, 5 skipped
+```
+
+The suite is **offline by default**: graph, vector, and LLM clients are
+injectable and replaced with fakes, so no service (and no torch/chromadb
+install) is needed to run it. Opt-in integration tests run against live
+services via `ARCADEDB_INTEGRATION=1`, `CHROMA_INTEGRATION=1`, and
+`OLLAMA_INTEGRATION=1`. Tests use a hermetic throwaway SQLite database and
+eager Celery — nothing touches real data.
+
+## Documentation
+
+| Document | Contents |
+|---|---|
+| [docs/architecture.md](docs/architecture.md) | system diagram, component walkthrough |
+| [docs/api-guide.md](docs/api-guide.md) | full REST API reference with examples |
+| [docs/adr/](docs/adr/) | 5 ADRs: zero-budget local-first, Chroma over Qdrant, ArcadeDB over Neo4j, Ollama, FastAPI-Users |
+| [docs/deployment-free-tier.md](docs/deployment-free-tier.md) | free-tier hosting guide |
+| [docs/index.md](docs/index.md) | docs entry point |
+| [PROJECT_PLAN.md](PROJECT_PLAN.md) | single source of truth: stack, feature matrix, roadmap |
+| [CHANGELOG.md](CHANGELOG.md) | versioned release notes (`v1.0.0`–`v1.4.0` + unreleased) |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | branch/commit conventions, PR checklist |
+
 ## Continuous Integration
 
-[`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on every push/PR:
-`backend-tests` (pytest over `backend/tests`) and `frontend-build`
-(`npm ci && npm run build`).
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs three jobs on every
+push/PR: `lint` (Ruff over `backend` + `scripts`), `backend-tests` (pytest over
+`backend/tests`), and `frontend-build` (`npm ci && npm run lint && npm run build`).
