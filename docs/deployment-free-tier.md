@@ -52,6 +52,15 @@ Authoritative list from the `backend` service env block in `docker-compose.yml`:
 You can host the web-facing pieces for free. Nothing here costs money, but every free
 tier has strings attached — listed honestly.
 
+### Frontend → GitHub Pages (Free)
+
+The repository includes a GitHub Actions workflow (`.github/workflows/deploy-pages.yml`) configured for static export (`output: 'export'`).
+
+To enable:
+1. In your GitHub repository, go to **Settings** &rarr; **Pages**.
+2. Under **Build and deployment &rarr; Source**, select **GitHub Actions** (or select the `gh-pages` branch).
+3. On every push to `main`, GitHub Actions will automatically build `frontend/` into static HTML/JS/CSS assets and deploy them.
+
 ### Frontend → Vercel (free Hobby tier)
 
 Deploy `frontend/` as a Next.js app. `NEXT_PUBLIC_API_URL` is baked in at **build**

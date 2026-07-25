@@ -24,6 +24,7 @@ node_modules/
 .claude/
 
 # Generated output (keep locally, never commit)
+frontend/out/
 graphify-out/
 reports/
 data/
