@@ -213,8 +213,10 @@ export default function CodeGraph({
         (degree >= 4 && globalScale >= 0.3);
 
       if (showLabel) {
-        // Font size clamped: readable but never enormous
-        const fontSize = Math.min(4, Math.max(2.2, 11 / globalScale));
+        // Font size in WORLD units, but designed to produce ~11px on screen.
+        // screenPx = worldUnits * globalScale, so worldUnits = 11 / globalScale.
+        // Cap at 6 world units max (when zoomed in past 1.8x) to prevent giant text.
+        const fontSize = Math.min(6, 11 / globalScale);
         ctx.font = `600 ${fontSize}px Inter, sans-serif`;
         ctx.textAlign = "center";
         ctx.textBaseline = "top";
@@ -262,14 +264,18 @@ export default function CodeGraph({
     >
       {/* Controls */}
       <div className="absolute right-3 top-3 z-10 flex items-center gap-2">
-        {mode === "3d" && (
-          <button
-            onClick={() => fitView()}
-            className="rounded-lg border border-slate-600/40 bg-slate-900/80 px-3 py-1.5 text-xs font-medium text-slate-300 backdrop-blur transition hover:bg-slate-700/60"
-          >
-            Reset view
-          </button>
-        )}
+        <button
+          onClick={() => {
+            if (mode === "3d") {
+              fitView();
+            } else {
+              fg2dRef.current?.zoomToFit(400, 40);
+            }
+          }}
+          className="rounded-lg border border-slate-600/40 bg-slate-900/80 px-3 py-1.5 text-xs font-medium text-slate-300 backdrop-blur transition hover:bg-slate-700/60"
+        >
+          Reset view
+        </button>
         <div className="flex overflow-hidden rounded-lg border border-slate-600/40 bg-slate-900/80 text-xs font-medium backdrop-blur">
           {(["3d", "2d"] as const).map((m) => (
             <button
@@ -291,7 +297,7 @@ export default function CodeGraph({
       <div className="pointer-events-none absolute bottom-3 left-3 z-10 rounded-md bg-slate-900/85 px-3 py-1.5 text-[11px] text-slate-300 backdrop-blur border border-slate-800">
         {mode === "3d"
           ? "3D · Drag rotate · Scroll zoom · Labels always face camera"
-          : "2D · Scroll zoom · Drag pan · Arrows show dependency flow"}
+          : "2D · Scroll zoom · Drag pan · Click node to inspect · Arrows = dependency flow"}
       </div>
 
       {mode === "3d" ? (

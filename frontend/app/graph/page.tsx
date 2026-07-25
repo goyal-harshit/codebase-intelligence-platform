@@ -22,7 +22,7 @@ export default function GraphPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedNode, setSelectedNode] = useState<any | null>(null);
-  const [view, setView] = useState<"overview" | "code">("overview");
+  const [view, setView] = useState<"overview" | "code">("code");
 
   /* Filters */
   const [search, setSearch] = useState("");
@@ -292,12 +292,6 @@ export default function GraphPage() {
                 height={640}
               />
             </div>
-          ) : filteredGraph.nodes.length === 0 ? (
-            <StateBlock
-              state="empty"
-              title="Choose a module or search for a symbol"
-              detail="The full graph is intentionally not drawn at once, so the explorer stays readable and responsive."
-            />
           ) : (
             <div className="flex gap-4 h-[640px]">
               <div className="flex-1 min-w-0 h-full">
