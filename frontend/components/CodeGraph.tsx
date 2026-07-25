@@ -124,10 +124,11 @@ export default function CodeGraph({
       const baseR = Math.max(3, Math.sqrt(degree) * 1.2);
       (sprite as any).position.y = baseR + (sprite.textHeight / 2) + 2.5;
 
-      if (sprite.material) {
-        sprite.material.depthTest = true;
-        sprite.material.depthWrite = false;
-        sprite.renderOrder = 999;
+      const mat = (sprite as any).material;
+      if (mat) {
+        mat.depthTest = true;
+        mat.depthWrite = false;
+        (sprite as any).renderOrder = 999;
       }
       return sprite;
     },
