@@ -24,6 +24,7 @@ import {
   X,
 } from "lucide-react";
 import { checkBackendHealth } from "@/lib/api";
+import { useAuth } from "@/components/AuthProvider";
 
 const LINKS = [
   { href: "/", label: "Ingest", icon: UploadCloud },
