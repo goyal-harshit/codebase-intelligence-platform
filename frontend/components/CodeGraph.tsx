@@ -16,9 +16,15 @@ const ForceGraph3D = dynamic(
   { ssr: false },
 );
 
-const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), {
-  ssr: false,
-});
+const ForceGraph2D = dynamic(
+  async () => {
+    const { default: FG } = await import("react-force-graph-2d");
+    const Wrapper = ({ fgRef, ...props }: any) => <FG {...props} ref={fgRef} />;
+    Wrapper.displayName = "ForceGraph2DWrapper";
+    return Wrapper;
+  },
+  { ssr: false },
+);
 
 export interface GraphData {
   nodes: { id: string; name: string; type?: string; community?: number; size?: number; file?: string }[];
@@ -249,10 +255,9 @@ export default function CodeGraph({
         (degree >= 4 && globalScale >= 0.3);
 
       if (showLabel) {
-        // Font size in WORLD units, but designed to produce ~11px on screen.
-        // screenPx = worldUnits * globalScale, so worldUnits = 11 / globalScale.
-        // Cap at 6 world units max (when zoomed in past 1.8x) to prevent giant text.
-        const fontSize = Math.min(6, 11 / globalScale);
+        // Font targets ~8px on screen. screenPx = worldUnits * globalScale.
+        // worldUnits = 8 / globalScale. Cap at 4.5 world units when zoomed in.
+        const fontSize = Math.min(4.5, 8 / globalScale);
         ctx.font = `600 ${fontSize}px Inter, sans-serif`;
         ctx.textAlign = "center";
         ctx.textBaseline = "top";
@@ -382,7 +387,7 @@ export default function CodeGraph({
         />
       ) : (
         <ForceGraph2D
-          ref={fg2dRef}
+          fgRef={fg2dRef}
           graphData={data}
           nodeLabel="name"
           nodeAutoColorBy="type"
@@ -412,6 +417,10 @@ export default function CodeGraph({
           enableNodeDrag={true}
           enableZoomInteraction={true}
           onNodeClick={onNodeClick}
+          onEngineStop={() => {
+            // Auto-fit the 2D view once the layout settles
+            fg2dRef.current?.zoomToFit(400, 50);
+          }}
         />
       )}
     </div>
