@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import * as THREE from "three";
 import SpriteText from "three-spritetext";
 
 const ForceGraph3D = dynamic(
@@ -19,7 +20,7 @@ const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), {
 });
 
 export interface GraphData {
-  nodes: { id: string; name: string; type?: string; community?: number; size?: number }[];
+  nodes: { id: string; name: string; type?: string; community?: number; size?: number; file?: string }[];
   links: { source: string | any; target: string | any; weight?: number }[];
 }
 
@@ -55,6 +56,7 @@ export default function CodeGraph({
   const didTuneForces = useRef(false);
   const [width, setWidth] = useState(760);
   const [mode, setMode] = useState<"3d" | "2d">("2d");
+  const [selectedNode, setSelectedNode] = useState<any>(null);
 
   useEffect(() => {
     if (!ref.current) return;
@@ -81,11 +83,11 @@ export default function CodeGraph({
   /* Calculate dynamic force repulsion based on codebase massiveness & canvas size */
   const nodeCount = Math.max(1, data.nodes.length);
   const dynamicCharge = useMemo(() => {
-    return -Math.max(400, Math.min(1800, ((width * height) / nodeCount) * 0.45));
+    return -Math.max(450, Math.min(2000, ((width * height) / nodeCount) * 0.5));
   }, [width, height, nodeCount]);
 
   const dynamicDistance = useMemo(() => {
-    return Math.max(90, Math.min(280, (Math.min(width, height) / Math.sqrt(nodeCount)) * 1.5));
+    return Math.max(100, Math.min(300, (Math.min(width, height) / Math.sqrt(nodeCount)) * 1.6));
   }, [width, height, nodeCount]);
 
   // Apply dynamic force repulsion and collision detection to 2D Graph
@@ -114,31 +116,38 @@ export default function CodeGraph({
     fg3dRef.current?.zoomToFit(ms, 45);
   }, []);
 
-  const labelThreshold = useMemo(() => {
-    if (data.nodes.length <= 50) return 0;
-    if (data.nodes.length <= 200) return 2;
-    return 6;
-  }, [data.nodes.length]);
-
-  /* Billboarded 3D text sprites with collision offsets and camera-fading depth sorting */
+  /* 3D Custom Group rendering: Sphere + Text Sprite mounted strictly above sphere */
   const nodeThreeObject = useCallback(
     (node: any) => {
+      const group = new THREE.Group();
       const degree = nodeDegree.get(node.id) || 1;
-      if (degree < labelThreshold) return undefined as any;
+      const sphereRadius = Math.max(3.5, Math.sqrt(degree) * 1.4);
 
-      const sprite = new SpriteText(node.name || node.id);
+      // 1. Glowing 3D Sphere Mesh
+      const geometry = new THREE.SphereGeometry(sphereRadius, 16, 16);
+      const material = new THREE.MeshLambertMaterial({
+        color: communityColor(node.community),
+        transparent: true,
+        opacity: 0.95,
+      });
+      const sphereMesh = new THREE.Mesh(geometry, material);
+      group.add(sphereMesh);
+
+      // 2. Billboarded Text Sprite placed strictly ABOVE the sphere
+      const labelText = node.name || node.id;
+      const sprite = new SpriteText(labelText);
       sprite.color = "#ffffff";
-      sprite.backgroundColor = "rgba(15, 23, 42, 0.85)";
+      sprite.backgroundColor = "rgba(15, 23, 42, 0.9)";
       sprite.padding = [2, 5];
       sprite.borderRadius = 4;
       sprite.borderWidth = 0.5;
-      sprite.borderColor = "rgba(255, 255, 255, 0.25)";
+      sprite.borderColor = "rgba(255, 255, 255, 0.3)";
       sprite.fontWeight = "600";
       sprite.fontFace = "Inter, sans-serif";
-      sprite.textHeight = Math.min(4.5 + Math.sqrt(degree) * 0.5, 9);
+      sprite.textHeight = Math.min(4.5 + Math.sqrt(degree) * 0.5, 8.5);
 
-      const baseR = Math.max(3.5, Math.sqrt(degree) * 1.3);
-      (sprite as any).position.y = baseR + (sprite.textHeight / 2) + 3;
+      // Position sprite strictly ABOVE top edge of sphere
+      (sprite as any).position.y = sphereRadius + (sprite.textHeight / 2) + 2.5;
 
       const mat = (sprite as any).material;
       if (mat) {
@@ -146,36 +155,41 @@ export default function CodeGraph({
         mat.depthWrite = false;
         (sprite as any).renderOrder = 999;
       }
-      return sprite;
+
+      group.add(sprite);
+      return group;
     },
-    [nodeDegree, labelThreshold],
+    [nodeDegree],
   );
 
-  /* Fly the camera smoothly to the clicked node */
-  const handle3DNodeClick = useCallback(
+  /* Fly camera to clicked node and open Inspector HUD */
+  const handleNodeClick = useCallback(
     (node: any) => {
-      const fg = fg3dRef.current;
-      if (fg && Number.isFinite(node.x)) {
-        const distance = 95;
-        const len = Math.hypot(node.x, node.y, node.z) || 1;
-        const ratio = 1 + distance / len;
-        fg.cameraPosition(
-          { x: node.x * ratio, y: node.y * ratio, z: node.z * ratio },
-          node,
-          1200,
-        );
+      setSelectedNode(node);
+      if (mode === "3d") {
+        const fg = fg3dRef.current;
+        if (fg && Number.isFinite(node.x)) {
+          const distance = 95;
+          const len = Math.hypot(node.x, node.y, node.z) || 1;
+          const ratio = 1 + distance / len;
+          fg.cameraPosition(
+            { x: node.x * ratio, y: node.y * ratio, z: node.z * ratio },
+            node,
+            1200,
+          );
+        }
       }
       onNodeClick?.(node);
     },
-    [onNodeClick],
+    [mode, onNodeClick],
   );
 
-  /* 2D Canvas rendering with Level of Detail (LOD) zoom scaling & anti-collision pills */
+  /* 2D Canvas rendering with mathematical non-overlapping pill positioning */
   const nodeCanvasObject = useCallback(
     (node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
       const label = node.name || node.id;
       const degree = nodeDegree.get(node.id) || 1;
-      const r = Math.max(3.5, Math.sqrt(degree) * 1.6) + (1 / globalScale);
+      const r = Math.max(4, Math.sqrt(degree) * 1.7) + (1 / globalScale);
 
       // 1. Outer glowing halo ring
       ctx.beginPath();
@@ -185,7 +199,7 @@ export default function CodeGraph({
       ctx.fill();
       ctx.globalAlpha = 1.0;
 
-      // 2. Node sphere body
+      // 2. Main Node circle
       ctx.beginPath();
       ctx.arc(node.x, node.y, r, 0, 2 * Math.PI);
       ctx.fillStyle = communityColor(node.community);
@@ -196,47 +210,71 @@ export default function CodeGraph({
       ctx.strokeStyle = "#ffffff";
       ctx.stroke();
 
-      // 4. Dynamic Level of Detail (LOD) Label Rendering
-      // Macro View (zoom < 0.65x): Suppress secondary labels to avoid clutter
-      // Overview/Detail View (zoom >= 0.65x or high-degree hub nodes): Render clean dark pill boxes
+      // 4. Dynamic Level of Detail (LOD) Text Pill rendering
+      // Text Pill starts strictly BELOW node circle at y = node.y + r + gap
       const shouldRenderLabel =
-        globalScale >= 0.65 || (degree >= 6 && globalScale >= 0.35);
+        globalScale >= 0.55 || (degree >= 4 && globalScale >= 0.3);
 
       if (shouldRenderLabel) {
-        const fontSize = Math.min(Math.max(8 / globalScale, 2.5), 11);
+        const fontSize = Math.min(Math.max(8.5 / globalScale, 2.5), 11);
         ctx.font = `600 ${fontSize}px Inter, sans-serif`;
         ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
+        ctx.textBaseline = "top";
 
         const textWidth = ctx.measureText(label).width;
-        const paddingX = 4 / globalScale;
-        const paddingY = 2 / globalScale;
-        const labelY = node.y + r + (fontSize / 2) + (4 / globalScale);
+        const paddingX = 5 / globalScale;
+        const paddingY = 2.5 / globalScale;
 
-        ctx.fillStyle = "rgba(15, 23, 42, 0.88)";
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.25)";
-        ctx.lineWidth = 0.5 / globalScale;
-
-        const rectX = node.x - textWidth / 2 - paddingX;
-        const rectY = labelY - fontSize / 2 - paddingY;
+        // Top of pill box is strictly BELOW bottom edge of node circle (node.y + r)
+        const gap = 3 / globalScale;
+        const rectY = node.y + r + gap;
         const rectW = textWidth + paddingX * 2;
         const rectH = fontSize + paddingY * 2;
+        const rectX = node.x - textWidth / 2 - paddingX;
+
+        // Dark pill background
+        ctx.fillStyle = "rgba(15, 23, 42, 0.9)";
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
+        ctx.lineWidth = 0.5 / globalScale;
 
         ctx.beginPath();
         if (typeof (ctx as any).roundRect === "function") {
-          (ctx as any).roundRect(rectX, rectY, rectW, rectH, 3 / globalScale);
+          (ctx as any).roundRect(rectX, rectY, rectW, rectH, 3.5 / globalScale);
         } else {
           ctx.rect(rectX, rectY, rectW, rectH);
         }
         ctx.fill();
         ctx.stroke();
 
+        // White text inside pill box
         ctx.fillStyle = "#ffffff";
-        ctx.fillText(label, node.x, labelY);
+        ctx.fillText(label, node.x, rectY + paddingY);
       }
     },
     [nodeDegree],
   );
+
+  // Find connected neighbors of selected node
+  const selectedNeighbors = useMemo(() => {
+    if (!selectedNode) return [];
+    const nodeId = selectedNode.id;
+    const neighbors: { node: any; direction: "in" | "out" }[] = [];
+
+    data.links.forEach((l) => {
+      const sId = typeof l.source === "object" ? l.source.id : l.source;
+      const tId = typeof l.target === "object" ? l.target.id : l.target;
+
+      if (sId === nodeId) {
+        const targetNode = data.nodes.find((n) => n.id === tId);
+        if (targetNode) neighbors.push({ node: targetNode, direction: "out" });
+      } else if (tId === nodeId) {
+        const sourceNode = data.nodes.find((n) => n.id === sId);
+        if (sourceNode) neighbors.push({ node: sourceNode, direction: "in" });
+      }
+    });
+
+    return neighbors;
+  }, [selectedNode, data]);
 
   if (data.nodes.length === 0)
     return (
@@ -279,9 +317,64 @@ export default function CodeGraph({
       {/* Navigation & LOD Info Bar */}
       <div className="pointer-events-none absolute bottom-3 left-3 z-10 rounded-md bg-slate-900/85 px-3 py-1.5 text-[11px] text-slate-300 backdrop-blur border border-slate-800">
         {mode === "3d"
-          ? "3D View · Drag to rotate · Scroll to zoom · Right-drag to pan · Animated flow particles show direction"
-          : "2D View · Dynamic LOD Zoom active · Arrows & flowing particles indicate dependency direction"}
+          ? "3D View · Drag to rotate · Scroll to zoom · Right-drag to pan · Click node to inspect"
+          : "2D View · Zero-overlap labels · Click node to open inspector"}
       </div>
+
+      {/* Floating Node Inspector HUD Drawer */}
+      {selectedNode && (
+        <div className="absolute bottom-3 right-3 z-20 w-80 rounded-lg border border-slate-700/80 bg-slate-900/95 p-3.5 shadow-2xl backdrop-blur text-xs text-slate-200 animate-in fade-in slide-in-from-bottom-2">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-2 mb-2">
+            <span className="font-semibold text-sm text-indigo-400 flex items-center gap-1.5 truncate">
+              <span
+                className="h-2.5 w-2.5 rounded-full inline-block shrink-0"
+                style={{ backgroundColor: communityColor(selectedNode.community) }}
+              />
+              {selectedNode.name || selectedNode.id}
+            </span>
+            <button
+              onClick={() => setSelectedNode(null)}
+              className="text-slate-400 hover:text-white p-0.5 text-sm leading-none"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="space-y-1.5 text-[11px] text-slate-300">
+            <p className="font-mono text-slate-400 truncate">{selectedNode.file || selectedNode.id}</p>
+            <div className="flex items-center gap-2 pt-1">
+              <span className="rounded bg-slate-800 px-2 py-0.5 text-slate-300">
+                Community C{selectedNode.community ?? "?"}
+              </span>
+              <span className="rounded bg-slate-800 px-2 py-0.5 text-slate-300">
+                Degree: {nodeDegree.get(selectedNode.id) || 1}
+              </span>
+            </div>
+
+            {selectedNeighbors.length > 0 && (
+              <div className="pt-2">
+                <p className="font-semibold text-slate-400 mb-1">
+                  Connected Modules ({selectedNeighbors.length}):
+                </p>
+                <div className="max-h-32 overflow-y-auto space-y-1 pr-1">
+                  {selectedNeighbors.slice(0, 8).map(({ node, direction }) => (
+                    <button
+                      key={node.id}
+                      onClick={() => handleNodeClick(node)}
+                      className="w-full text-left flex items-center justify-between rounded bg-slate-800/60 px-2 py-1 hover:bg-indigo-950/60 transition"
+                    >
+                      <span className="truncate text-slate-200">{node.name || node.id}</span>
+                      <span className="text-[10px] text-indigo-400 font-mono ml-1">
+                        {direction === "out" ? "→ depends" : "← caller"}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {mode === "3d" ? (
         <ForceGraph3D
@@ -295,12 +388,8 @@ export default function CodeGraph({
           nodeLabel={(n: any) =>
             `${n.name || n.id}${n.type ? ` · ${n.type}` : ""} · Community ${n.community ?? "?"}`
           }
-          nodeColor={(n: any) => communityColor(n.community)}
-          nodeVal={(n: any) => Math.max(3.5, n.size || (nodeDegree.get(n.id) || 1) * 1.5)}
-          nodeOpacity={0.95}
-          nodeResolution={16}
           nodeThreeObject={nodeThreeObject}
-          nodeThreeObjectExtend={true}
+          nodeThreeObjectExtend={false}
           /* Directional arrows & animated flow particles in 3D */
           linkDirectionalArrowLength={4.5}
           linkDirectionalArrowRelPos={0.88}
@@ -329,7 +418,7 @@ export default function CodeGraph({
           enableNodeDrag={false}
           enableNavigationControls={true}
           showNavInfo={false}
-          onNodeClick={handle3DNodeClick}
+          onNodeClick={handleNodeClick}
         />
       ) : (
         <ForceGraph2D
@@ -340,7 +429,7 @@ export default function CodeGraph({
           nodeCanvasObject={nodeCanvasObject}
           nodePointerAreaPaint={(node: any, color, ctx) => {
             const degree = nodeDegree.get(node.id) || 1;
-            const r = Math.max(3.5, Math.sqrt(degree) * 1.6) + 3;
+            const r = Math.max(4, Math.sqrt(degree) * 1.7) + 3;
             ctx.beginPath();
             ctx.arc(node.x, node.y, r, 0, 2 * Math.PI);
             ctx.fillStyle = color;
@@ -364,7 +453,7 @@ export default function CodeGraph({
           d3VelocityDecay={0.25}
           enableNodeDrag={true}
           enableZoomInteraction={true}
-          onNodeClick={onNodeClick}
+          onNodeClick={handleNodeClick}
         />
       )}
     </div>
