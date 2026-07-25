@@ -98,14 +98,16 @@ export default function CodeGraph({
     if (nodeCount <= 20) return -120;
     if (nodeCount <= 80) return -90;
     if (nodeCount <= 200) return -65;
-    return -45;
+    if (nodeCount <= 400) return -50;
+    return -35;
   }, [nodeCount]);
 
   const dynamicDistance = useMemo(() => {
     if (nodeCount <= 20) return 70;
     if (nodeCount <= 80) return 55;
     if (nodeCount <= 200) return 40;
-    return 30;
+    if (nodeCount <= 400) return 32;
+    return 25;
   }, [nodeCount]);
 
   /* Node visual radius: degree-scaled but reasonable.
@@ -250,9 +252,9 @@ export default function CodeGraph({
       // 3. Label — ALWAYS visible for small/medium graphs.
       //    For massive graphs (500+), hide low-degree labels when zoomed out.
       const showLabel =
-        nodeCount <= 100 ||
-        globalScale >= 0.6 ||
-        (degree >= 4 && globalScale >= 0.3);
+        nodeCount <= 400 ||
+        globalScale >= 0.5 ||
+        (degree >= 3 && globalScale >= 0.25);
 
       if (showLabel) {
         // Font targets ~8px on screen. screenPx = worldUnits * globalScale.

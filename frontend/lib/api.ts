@@ -543,167 +543,6171 @@ const MOCK_INGEST_JOB: IngestJob = {
 };
 
 const MOCK_GRAPHIFY_STATS: GraphifyStats = {
-  nodes: 54,
-  edges: 112,
-  communities: 6,
+  nodes: 320,
+  edges: 976,
+  communities: 8,
   available: true,
 };
 
 const MOCK_GRAPHIFY_GRAPH: GraphifyGraph = {
   community_labels: {
-    "0": "Core API",
-    "1": "Database ORM",
-    "2": "Ingestion Engine",
-    "3": "Graph Topology",
-    "4": "Vector RAG",
-    "5": "Frontend App",
-  },
+    "0": "Core API & Routing",
+    "1": "Database & ORM Layer",
+    "2": "AST Ingestion Engine",
+    "3": "Graph Topology & Analysis",
+    "4": "Vector Search & RAG Pipeline",
+    "5": "Frontend Web Application",
+    "6": "Security & Compliance Scanners",
+    "7": "Standalone Utilities & Microservices"
+},
   nodes: [
-    /* Community 0: Core API & Routing */
-    { id: "backend/main.py", name: "main.py", type: "file", community: 0, file: "backend/main.py" },
-    { id: "backend/api/routes_ingest.py", name: "routes_ingest.py", type: "file", community: 0, file: "backend/api/routes_ingest.py" },
-    { id: "backend/api/routes_query.py", name: "routes_query.py", type: "file", community: 0, file: "backend/api/routes_query.py" },
-    { id: "backend/api/routes_risks.py", name: "routes_risks.py", type: "file", community: 0, file: "backend/api/routes_risks.py" },
-    { id: "backend/api/routes_security.py", name: "routes_security.py", type: "file", community: 0, file: "backend/api/routes_security.py" },
-    { id: "backend/api/routes_refactor.py", name: "routes_refactor.py", type: "file", community: 0, file: "backend/api/routes_refactor.py" },
-    { id: "backend/api/routes_graph.py", name: "routes_graph.py", type: "file", community: 0, file: "backend/api/routes_graph.py" },
-    { id: "backend/auth/jwt.py", name: "jwt.py", type: "file", community: 0, file: "backend/auth/jwt.py" },
-    { id: "backend/auth/service.py", name: "auth_service.py", type: "file", community: 0, file: "backend/auth/service.py" },
-    { id: "backend/config/settings.py", name: "settings.py", type: "file", community: 0, file: "backend/config/settings.py" },
-
-    /* Community 1: Database Models & ORM */
-    { id: "backend/database/models.py", name: "models.py", type: "file", community: 1, file: "backend/database/models.py" },
-    { id: "backend/database/session.py", name: "session.py", type: "file", community: 1, file: "backend/database/session.py" },
-    { id: "backend/database/migrations.py", name: "migrations.py", type: "file", community: 1, file: "backend/database/migrations.py" },
-    { id: "backend/database/user_model.py", name: "user_model.py", type: "file", community: 1, file: "backend/database/user_model.py" },
-    { id: "backend/database/repo_model.py", name: "repo_model.py", type: "file", community: 1, file: "backend/database/repo_model.py" },
-    { id: "backend/database/job_model.py", name: "job_model.py", type: "file", community: 1, file: "backend/database/job_model.py" },
-    { id: "backend/database/risk_model.py", name: "risk_model.py", type: "file", community: 1, file: "backend/database/risk_model.py" },
-    { id: "backend/database/finding_model.py", name: "finding_model.py", type: "file", community: 1, file: "backend/database/finding_model.py" },
-    { id: "backend/database/comment_model.py", name: "comment_model.py", type: "file", community: 1, file: "backend/database/comment_model.py" },
-
-    /* Community 2: Ingestion & Parser Engine */
-    { id: "backend/services/ingest.py", name: "ingest.py", type: "file", community: 2, file: "backend/services/ingest.py" },
-    { id: "backend/parsers/ast_python.py", name: "ast_python.py", type: "file", community: 2, file: "backend/parsers/ast_python.py" },
-    { id: "backend/parsers/ast_typescript.py", name: "ast_typescript.py", type: "file", community: 2, file: "backend/parsers/ast_typescript.py" },
-    { id: "backend/parsers/ast_javascript.py", name: "ast_javascript.py", type: "file", community: 2, file: "backend/parsers/ast_javascript.py" },
-    { id: "backend/parsers/zip_extractor.py", name: "zip_extractor.py", type: "file", community: 2, file: "backend/parsers/zip_extractor.py" },
-    { id: "backend/parsers/git_cloner.py", name: "git_cloner.py", type: "file", community: 2, file: "backend/parsers/git_cloner.py" },
-    { id: "backend/services/celery_worker.py", name: "celery_worker.py", type: "file", community: 2, file: "backend/services/celery_worker.py" },
-    { id: "backend/services/task_queue.py", name: "task_queue.py", type: "file", community: 2, file: "backend/services/task_queue.py" },
-    { id: "backend/cache/redis_store.py", name: "redis_store.py", type: "file", community: 2, file: "backend/cache/redis_store.py" },
-
-    /* Community 3: Knowledge Graph & Topology */
-    { id: "backend/graph/builder.py", name: "builder.py", type: "file", community: 3, file: "backend/graph/builder.py" },
-    { id: "backend/graph/arcadedb_driver.py", name: "arcadedb_driver.py", type: "file", community: 3, file: "backend/graph/arcadedb_driver.py" },
-    { id: "backend/graph/cypher_generator.py", name: "cypher_generator.py", type: "file", community: 3, file: "backend/graph/cypher_generator.py" },
-    { id: "backend/graph/cycle_detector.py", name: "cycle_detector.py", type: "file", community: 3, file: "backend/graph/cycle_detector.py" },
-    { id: "backend/graph/impact_analyzer.py", name: "impact_analyzer.py", type: "file", community: 3, file: "backend/graph/impact_analyzer.py" },
-    { id: "backend/graph/hotspot_calculator.py", name: "hotspot_calculator.py", type: "file", community: 3, file: "backend/graph/hotspot_calculator.py" },
-    { id: "backend/graph/community_detector.py", name: "community_detector.py", type: "file", community: 3, file: "backend/graph/community_detector.py" },
-    { id: "backend/graph/pagerank.py", name: "pagerank.py", type: "file", community: 3, file: "backend/graph/pagerank.py" },
-    { id: "backend/graph/schema.py", name: "graph_schema.py", type: "file", community: 3, file: "backend/graph/schema.py" },
-
-    /* Community 4: Vector Search & LLM RAG */
-    { id: "backend/vector/chroma_client.py", name: "chroma_client.py", type: "file", community: 4, file: "backend/vector/chroma_client.py" },
-    { id: "backend/vector/embeddings.py", name: "embeddings.py", type: "file", community: 4, file: "backend/vector/embeddings.py" },
-    { id: "backend/vector/chunker.py", name: "chunker.py", type: "file", community: 4, file: "backend/vector/chunker.py" },
-    { id: "backend/llm/client.py", name: "llm_client.py", type: "file", community: 4, file: "backend/llm/client.py" },
-    { id: "backend/llm/ollama_adapter.py", name: "ollama_adapter.py", type: "file", community: 4, file: "backend/llm/ollama_adapter.py" },
-    { id: "backend/llm/prompts.py", name: "prompts.py", type: "file", community: 4, file: "backend/llm/prompts.py" },
-    { id: "backend/llm/rag_engine.py", name: "rag_engine.py", type: "file", community: 4, file: "backend/llm/rag_engine.py" },
-    { id: "backend/llm/narrative_generator.py", name: "narrative_generator.py", type: "file", community: 4, file: "backend/llm/narrative_generator.py" },
-
-    /* Community 5: Frontend Web App */
-    { id: "frontend/app/page.tsx", name: "page.tsx", type: "file", community: 5, file: "frontend/app/page.tsx" },
-    { id: "frontend/app/dashboard/page.tsx", name: "dashboard/page.tsx", type: "file", community: 5, file: "frontend/app/dashboard/page.tsx" },
-    { id: "frontend/app/graph/page.tsx", name: "graph/page.tsx", type: "file", community: 5, file: "frontend/app/graph/page.tsx" },
-    { id: "frontend/app/query/page.tsx", name: "query/page.tsx", type: "file", community: 5, file: "frontend/app/query/page.tsx" },
-    { id: "frontend/app/impact/page.tsx", name: "impact/page.tsx", type: "file", community: 5, file: "frontend/app/impact/page.tsx" },
-    { id: "frontend/app/risks/page.tsx", name: "risks/page.tsx", type: "file", community: 5, file: "frontend/app/risks/page.tsx" },
-    { id: "frontend/app/security/page.tsx", name: "security/page.tsx", type: "file", community: 5, file: "frontend/app/security/page.tsx" },
-    { id: "frontend/components/CodeGraph.tsx", name: "CodeGraph.tsx", type: "file", community: 5, file: "frontend/components/CodeGraph.tsx" },
-    { id: "frontend/components/Nav.tsx", name: "Nav.tsx", type: "file", community: 5, file: "frontend/components/Nav.tsx" },
-  ],
+    {
+        "id": "backend/api/route_01.py",
+        "name": "route_01.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_01.py"
+    },
+    {
+        "id": "backend/api/route_02.py",
+        "name": "route_02.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_02.py"
+    },
+    {
+        "id": "backend/api/route_03.py",
+        "name": "route_03.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_03.py"
+    },
+    {
+        "id": "backend/api/route_04.py",
+        "name": "route_04.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_04.py"
+    },
+    {
+        "id": "backend/api/route_05.py",
+        "name": "route_05.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_05.py"
+    },
+    {
+        "id": "backend/api/route_06.py",
+        "name": "route_06.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_06.py"
+    },
+    {
+        "id": "backend/api/route_07.py",
+        "name": "route_07.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_07.py"
+    },
+    {
+        "id": "backend/api/route_08.py",
+        "name": "route_08.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_08.py"
+    },
+    {
+        "id": "backend/api/route_09.py",
+        "name": "route_09.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_09.py"
+    },
+    {
+        "id": "backend/api/route_10.py",
+        "name": "route_10.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_10.py"
+    },
+    {
+        "id": "backend/api/route_11.py",
+        "name": "route_11.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_11.py"
+    },
+    {
+        "id": "backend/api/route_12.py",
+        "name": "route_12.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_12.py"
+    },
+    {
+        "id": "backend/api/route_13.py",
+        "name": "route_13.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_13.py"
+    },
+    {
+        "id": "backend/api/route_14.py",
+        "name": "route_14.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_14.py"
+    },
+    {
+        "id": "backend/api/route_15.py",
+        "name": "route_15.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_15.py"
+    },
+    {
+        "id": "backend/api/route_16.py",
+        "name": "route_16.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_16.py"
+    },
+    {
+        "id": "backend/api/route_17.py",
+        "name": "route_17.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_17.py"
+    },
+    {
+        "id": "backend/api/route_18.py",
+        "name": "route_18.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_18.py"
+    },
+    {
+        "id": "backend/api/route_19.py",
+        "name": "route_19.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_19.py"
+    },
+    {
+        "id": "backend/api/route_20.py",
+        "name": "route_20.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_20.py"
+    },
+    {
+        "id": "backend/api/route_21.py",
+        "name": "route_21.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_21.py"
+    },
+    {
+        "id": "backend/api/route_22.py",
+        "name": "route_22.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_22.py"
+    },
+    {
+        "id": "backend/api/route_23.py",
+        "name": "route_23.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_23.py"
+    },
+    {
+        "id": "backend/api/route_24.py",
+        "name": "route_24.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_24.py"
+    },
+    {
+        "id": "backend/api/route_25.py",
+        "name": "route_25.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_25.py"
+    },
+    {
+        "id": "backend/api/route_26.py",
+        "name": "route_26.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_26.py"
+    },
+    {
+        "id": "backend/api/route_27.py",
+        "name": "route_27.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_27.py"
+    },
+    {
+        "id": "backend/api/route_28.py",
+        "name": "route_28.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_28.py"
+    },
+    {
+        "id": "backend/api/route_29.py",
+        "name": "route_29.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_29.py"
+    },
+    {
+        "id": "backend/api/route_30.py",
+        "name": "route_30.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_30.py"
+    },
+    {
+        "id": "backend/api/route_31.py",
+        "name": "route_31.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_31.py"
+    },
+    {
+        "id": "backend/api/route_32.py",
+        "name": "route_32.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_32.py"
+    },
+    {
+        "id": "backend/api/route_33.py",
+        "name": "route_33.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_33.py"
+    },
+    {
+        "id": "backend/api/route_34.py",
+        "name": "route_34.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_34.py"
+    },
+    {
+        "id": "backend/api/route_35.py",
+        "name": "route_35.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_35.py"
+    },
+    {
+        "id": "backend/api/route_36.py",
+        "name": "route_36.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_36.py"
+    },
+    {
+        "id": "backend/api/route_37.py",
+        "name": "route_37.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_37.py"
+    },
+    {
+        "id": "backend/api/route_38.py",
+        "name": "route_38.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_38.py"
+    },
+    {
+        "id": "backend/api/route_39.py",
+        "name": "route_39.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_39.py"
+    },
+    {
+        "id": "backend/api/route_40.py",
+        "name": "route_40.py",
+        "type": "file",
+        "community": 0,
+        "file": "backend/api/route_40.py"
+    },
+    {
+        "id": "backend/database/model_01.py",
+        "name": "model_01.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_01.py"
+    },
+    {
+        "id": "backend/database/model_02.py",
+        "name": "model_02.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_02.py"
+    },
+    {
+        "id": "backend/database/model_03.py",
+        "name": "model_03.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_03.py"
+    },
+    {
+        "id": "backend/database/model_04.py",
+        "name": "model_04.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_04.py"
+    },
+    {
+        "id": "backend/database/model_05.py",
+        "name": "model_05.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_05.py"
+    },
+    {
+        "id": "backend/database/model_06.py",
+        "name": "model_06.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_06.py"
+    },
+    {
+        "id": "backend/database/model_07.py",
+        "name": "model_07.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_07.py"
+    },
+    {
+        "id": "backend/database/model_08.py",
+        "name": "model_08.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_08.py"
+    },
+    {
+        "id": "backend/database/model_09.py",
+        "name": "model_09.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_09.py"
+    },
+    {
+        "id": "backend/database/model_10.py",
+        "name": "model_10.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_10.py"
+    },
+    {
+        "id": "backend/database/model_11.py",
+        "name": "model_11.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_11.py"
+    },
+    {
+        "id": "backend/database/model_12.py",
+        "name": "model_12.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_12.py"
+    },
+    {
+        "id": "backend/database/model_13.py",
+        "name": "model_13.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_13.py"
+    },
+    {
+        "id": "backend/database/model_14.py",
+        "name": "model_14.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_14.py"
+    },
+    {
+        "id": "backend/database/model_15.py",
+        "name": "model_15.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_15.py"
+    },
+    {
+        "id": "backend/database/model_16.py",
+        "name": "model_16.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_16.py"
+    },
+    {
+        "id": "backend/database/model_17.py",
+        "name": "model_17.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_17.py"
+    },
+    {
+        "id": "backend/database/model_18.py",
+        "name": "model_18.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_18.py"
+    },
+    {
+        "id": "backend/database/model_19.py",
+        "name": "model_19.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_19.py"
+    },
+    {
+        "id": "backend/database/model_20.py",
+        "name": "model_20.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_20.py"
+    },
+    {
+        "id": "backend/database/model_21.py",
+        "name": "model_21.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_21.py"
+    },
+    {
+        "id": "backend/database/model_22.py",
+        "name": "model_22.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_22.py"
+    },
+    {
+        "id": "backend/database/model_23.py",
+        "name": "model_23.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_23.py"
+    },
+    {
+        "id": "backend/database/model_24.py",
+        "name": "model_24.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_24.py"
+    },
+    {
+        "id": "backend/database/model_25.py",
+        "name": "model_25.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_25.py"
+    },
+    {
+        "id": "backend/database/model_26.py",
+        "name": "model_26.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_26.py"
+    },
+    {
+        "id": "backend/database/model_27.py",
+        "name": "model_27.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_27.py"
+    },
+    {
+        "id": "backend/database/model_28.py",
+        "name": "model_28.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_28.py"
+    },
+    {
+        "id": "backend/database/model_29.py",
+        "name": "model_29.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_29.py"
+    },
+    {
+        "id": "backend/database/model_30.py",
+        "name": "model_30.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_30.py"
+    },
+    {
+        "id": "backend/database/model_31.py",
+        "name": "model_31.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_31.py"
+    },
+    {
+        "id": "backend/database/model_32.py",
+        "name": "model_32.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_32.py"
+    },
+    {
+        "id": "backend/database/model_33.py",
+        "name": "model_33.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_33.py"
+    },
+    {
+        "id": "backend/database/model_34.py",
+        "name": "model_34.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_34.py"
+    },
+    {
+        "id": "backend/database/model_35.py",
+        "name": "model_35.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_35.py"
+    },
+    {
+        "id": "backend/database/model_36.py",
+        "name": "model_36.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_36.py"
+    },
+    {
+        "id": "backend/database/model_37.py",
+        "name": "model_37.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_37.py"
+    },
+    {
+        "id": "backend/database/model_38.py",
+        "name": "model_38.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_38.py"
+    },
+    {
+        "id": "backend/database/model_39.py",
+        "name": "model_39.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_39.py"
+    },
+    {
+        "id": "backend/database/model_40.py",
+        "name": "model_40.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_40.py"
+    },
+    {
+        "id": "backend/database/model_41.py",
+        "name": "model_41.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_41.py"
+    },
+    {
+        "id": "backend/database/model_42.py",
+        "name": "model_42.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_42.py"
+    },
+    {
+        "id": "backend/database/model_43.py",
+        "name": "model_43.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_43.py"
+    },
+    {
+        "id": "backend/database/model_44.py",
+        "name": "model_44.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_44.py"
+    },
+    {
+        "id": "backend/database/model_45.py",
+        "name": "model_45.py",
+        "type": "file",
+        "community": 1,
+        "file": "backend/database/model_45.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_01.py",
+        "name": "ast_parser_01.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_01.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_02.py",
+        "name": "ast_parser_02.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_02.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_03.py",
+        "name": "ast_parser_03.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_03.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_04.py",
+        "name": "ast_parser_04.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_04.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_05.py",
+        "name": "ast_parser_05.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_05.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_06.py",
+        "name": "ast_parser_06.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_06.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_07.py",
+        "name": "ast_parser_07.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_07.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_08.py",
+        "name": "ast_parser_08.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_08.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_09.py",
+        "name": "ast_parser_09.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_09.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_10.py",
+        "name": "ast_parser_10.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_10.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_11.py",
+        "name": "ast_parser_11.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_11.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_12.py",
+        "name": "ast_parser_12.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_12.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_13.py",
+        "name": "ast_parser_13.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_13.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_14.py",
+        "name": "ast_parser_14.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_14.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_15.py",
+        "name": "ast_parser_15.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_15.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_16.py",
+        "name": "ast_parser_16.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_16.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_17.py",
+        "name": "ast_parser_17.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_17.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_18.py",
+        "name": "ast_parser_18.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_18.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_19.py",
+        "name": "ast_parser_19.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_19.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_20.py",
+        "name": "ast_parser_20.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_20.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_21.py",
+        "name": "ast_parser_21.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_21.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_22.py",
+        "name": "ast_parser_22.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_22.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_23.py",
+        "name": "ast_parser_23.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_23.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_24.py",
+        "name": "ast_parser_24.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_24.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_25.py",
+        "name": "ast_parser_25.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_25.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_26.py",
+        "name": "ast_parser_26.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_26.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_27.py",
+        "name": "ast_parser_27.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_27.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_28.py",
+        "name": "ast_parser_28.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_28.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_29.py",
+        "name": "ast_parser_29.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_29.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_30.py",
+        "name": "ast_parser_30.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_30.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_31.py",
+        "name": "ast_parser_31.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_31.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_32.py",
+        "name": "ast_parser_32.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_32.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_33.py",
+        "name": "ast_parser_33.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_33.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_34.py",
+        "name": "ast_parser_34.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_34.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_35.py",
+        "name": "ast_parser_35.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_35.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_36.py",
+        "name": "ast_parser_36.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_36.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_37.py",
+        "name": "ast_parser_37.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_37.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_38.py",
+        "name": "ast_parser_38.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_38.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_39.py",
+        "name": "ast_parser_39.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_39.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_40.py",
+        "name": "ast_parser_40.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_40.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_41.py",
+        "name": "ast_parser_41.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_41.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_42.py",
+        "name": "ast_parser_42.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_42.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_43.py",
+        "name": "ast_parser_43.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_43.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_44.py",
+        "name": "ast_parser_44.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_44.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_45.py",
+        "name": "ast_parser_45.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_45.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_46.py",
+        "name": "ast_parser_46.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_46.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_47.py",
+        "name": "ast_parser_47.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_47.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_48.py",
+        "name": "ast_parser_48.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_48.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_49.py",
+        "name": "ast_parser_49.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_49.py"
+    },
+    {
+        "id": "backend/parser/ast_parser_50.py",
+        "name": "ast_parser_50.py",
+        "type": "file",
+        "community": 2,
+        "file": "backend/parser/ast_parser_50.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_01.py",
+        "name": "graph_engine_01.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_01.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_02.py",
+        "name": "graph_engine_02.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_02.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_03.py",
+        "name": "graph_engine_03.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_03.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_04.py",
+        "name": "graph_engine_04.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_04.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_05.py",
+        "name": "graph_engine_05.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_05.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_06.py",
+        "name": "graph_engine_06.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_06.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_07.py",
+        "name": "graph_engine_07.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_07.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_08.py",
+        "name": "graph_engine_08.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_08.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_09.py",
+        "name": "graph_engine_09.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_09.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_10.py",
+        "name": "graph_engine_10.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_10.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_11.py",
+        "name": "graph_engine_11.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_11.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_12.py",
+        "name": "graph_engine_12.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_12.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_13.py",
+        "name": "graph_engine_13.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_13.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_14.py",
+        "name": "graph_engine_14.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_14.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_15.py",
+        "name": "graph_engine_15.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_15.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_16.py",
+        "name": "graph_engine_16.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_16.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_17.py",
+        "name": "graph_engine_17.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_17.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_18.py",
+        "name": "graph_engine_18.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_18.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_19.py",
+        "name": "graph_engine_19.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_19.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_20.py",
+        "name": "graph_engine_20.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_20.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_21.py",
+        "name": "graph_engine_21.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_21.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_22.py",
+        "name": "graph_engine_22.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_22.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_23.py",
+        "name": "graph_engine_23.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_23.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_24.py",
+        "name": "graph_engine_24.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_24.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_25.py",
+        "name": "graph_engine_25.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_25.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_26.py",
+        "name": "graph_engine_26.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_26.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_27.py",
+        "name": "graph_engine_27.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_27.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_28.py",
+        "name": "graph_engine_28.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_28.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_29.py",
+        "name": "graph_engine_29.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_29.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_30.py",
+        "name": "graph_engine_30.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_30.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_31.py",
+        "name": "graph_engine_31.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_31.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_32.py",
+        "name": "graph_engine_32.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_32.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_33.py",
+        "name": "graph_engine_33.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_33.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_34.py",
+        "name": "graph_engine_34.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_34.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_35.py",
+        "name": "graph_engine_35.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_35.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_36.py",
+        "name": "graph_engine_36.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_36.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_37.py",
+        "name": "graph_engine_37.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_37.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_38.py",
+        "name": "graph_engine_38.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_38.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_39.py",
+        "name": "graph_engine_39.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_39.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_40.py",
+        "name": "graph_engine_40.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_40.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_41.py",
+        "name": "graph_engine_41.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_41.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_42.py",
+        "name": "graph_engine_42.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_42.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_43.py",
+        "name": "graph_engine_43.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_43.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_44.py",
+        "name": "graph_engine_44.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_44.py"
+    },
+    {
+        "id": "backend/graph/graph_engine_45.py",
+        "name": "graph_engine_45.py",
+        "type": "file",
+        "community": 3,
+        "file": "backend/graph/graph_engine_45.py"
+    },
+    {
+        "id": "backend/rag/vector_service_01.py",
+        "name": "vector_service_01.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_01.py"
+    },
+    {
+        "id": "backend/rag/vector_service_02.py",
+        "name": "vector_service_02.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_02.py"
+    },
+    {
+        "id": "backend/rag/vector_service_03.py",
+        "name": "vector_service_03.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_03.py"
+    },
+    {
+        "id": "backend/rag/vector_service_04.py",
+        "name": "vector_service_04.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_04.py"
+    },
+    {
+        "id": "backend/rag/vector_service_05.py",
+        "name": "vector_service_05.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_05.py"
+    },
+    {
+        "id": "backend/rag/vector_service_06.py",
+        "name": "vector_service_06.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_06.py"
+    },
+    {
+        "id": "backend/rag/vector_service_07.py",
+        "name": "vector_service_07.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_07.py"
+    },
+    {
+        "id": "backend/rag/vector_service_08.py",
+        "name": "vector_service_08.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_08.py"
+    },
+    {
+        "id": "backend/rag/vector_service_09.py",
+        "name": "vector_service_09.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_09.py"
+    },
+    {
+        "id": "backend/rag/vector_service_10.py",
+        "name": "vector_service_10.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_10.py"
+    },
+    {
+        "id": "backend/rag/vector_service_11.py",
+        "name": "vector_service_11.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_11.py"
+    },
+    {
+        "id": "backend/rag/vector_service_12.py",
+        "name": "vector_service_12.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_12.py"
+    },
+    {
+        "id": "backend/rag/vector_service_13.py",
+        "name": "vector_service_13.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_13.py"
+    },
+    {
+        "id": "backend/rag/vector_service_14.py",
+        "name": "vector_service_14.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_14.py"
+    },
+    {
+        "id": "backend/rag/vector_service_15.py",
+        "name": "vector_service_15.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_15.py"
+    },
+    {
+        "id": "backend/rag/vector_service_16.py",
+        "name": "vector_service_16.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_16.py"
+    },
+    {
+        "id": "backend/rag/vector_service_17.py",
+        "name": "vector_service_17.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_17.py"
+    },
+    {
+        "id": "backend/rag/vector_service_18.py",
+        "name": "vector_service_18.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_18.py"
+    },
+    {
+        "id": "backend/rag/vector_service_19.py",
+        "name": "vector_service_19.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_19.py"
+    },
+    {
+        "id": "backend/rag/vector_service_20.py",
+        "name": "vector_service_20.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_20.py"
+    },
+    {
+        "id": "backend/rag/vector_service_21.py",
+        "name": "vector_service_21.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_21.py"
+    },
+    {
+        "id": "backend/rag/vector_service_22.py",
+        "name": "vector_service_22.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_22.py"
+    },
+    {
+        "id": "backend/rag/vector_service_23.py",
+        "name": "vector_service_23.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_23.py"
+    },
+    {
+        "id": "backend/rag/vector_service_24.py",
+        "name": "vector_service_24.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_24.py"
+    },
+    {
+        "id": "backend/rag/vector_service_25.py",
+        "name": "vector_service_25.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_25.py"
+    },
+    {
+        "id": "backend/rag/vector_service_26.py",
+        "name": "vector_service_26.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_26.py"
+    },
+    {
+        "id": "backend/rag/vector_service_27.py",
+        "name": "vector_service_27.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_27.py"
+    },
+    {
+        "id": "backend/rag/vector_service_28.py",
+        "name": "vector_service_28.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_28.py"
+    },
+    {
+        "id": "backend/rag/vector_service_29.py",
+        "name": "vector_service_29.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_29.py"
+    },
+    {
+        "id": "backend/rag/vector_service_30.py",
+        "name": "vector_service_30.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_30.py"
+    },
+    {
+        "id": "backend/rag/vector_service_31.py",
+        "name": "vector_service_31.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_31.py"
+    },
+    {
+        "id": "backend/rag/vector_service_32.py",
+        "name": "vector_service_32.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_32.py"
+    },
+    {
+        "id": "backend/rag/vector_service_33.py",
+        "name": "vector_service_33.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_33.py"
+    },
+    {
+        "id": "backend/rag/vector_service_34.py",
+        "name": "vector_service_34.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_34.py"
+    },
+    {
+        "id": "backend/rag/vector_service_35.py",
+        "name": "vector_service_35.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_35.py"
+    },
+    {
+        "id": "backend/rag/vector_service_36.py",
+        "name": "vector_service_36.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_36.py"
+    },
+    {
+        "id": "backend/rag/vector_service_37.py",
+        "name": "vector_service_37.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_37.py"
+    },
+    {
+        "id": "backend/rag/vector_service_38.py",
+        "name": "vector_service_38.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_38.py"
+    },
+    {
+        "id": "backend/rag/vector_service_39.py",
+        "name": "vector_service_39.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_39.py"
+    },
+    {
+        "id": "backend/rag/vector_service_40.py",
+        "name": "vector_service_40.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_40.py"
+    },
+    {
+        "id": "backend/rag/vector_service_41.py",
+        "name": "vector_service_41.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_41.py"
+    },
+    {
+        "id": "backend/rag/vector_service_42.py",
+        "name": "vector_service_42.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_42.py"
+    },
+    {
+        "id": "backend/rag/vector_service_43.py",
+        "name": "vector_service_43.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_43.py"
+    },
+    {
+        "id": "backend/rag/vector_service_44.py",
+        "name": "vector_service_44.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_44.py"
+    },
+    {
+        "id": "backend/rag/vector_service_45.py",
+        "name": "vector_service_45.py",
+        "type": "file",
+        "community": 4,
+        "file": "backend/rag/vector_service_45.py"
+    },
+    {
+        "id": "frontend/components/ui/component_01.tsx",
+        "name": "component_01.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_01.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_02.tsx",
+        "name": "component_02.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_02.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_03.tsx",
+        "name": "component_03.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_03.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_04.tsx",
+        "name": "component_04.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_04.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_05.tsx",
+        "name": "component_05.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_05.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_06.tsx",
+        "name": "component_06.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_06.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_07.tsx",
+        "name": "component_07.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_07.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_08.tsx",
+        "name": "component_08.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_08.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_09.tsx",
+        "name": "component_09.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_09.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_10.tsx",
+        "name": "component_10.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_10.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_11.tsx",
+        "name": "component_11.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_11.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_12.tsx",
+        "name": "component_12.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_12.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_13.tsx",
+        "name": "component_13.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_13.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_14.tsx",
+        "name": "component_14.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_14.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_15.tsx",
+        "name": "component_15.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_15.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_16.tsx",
+        "name": "component_16.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_16.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_17.tsx",
+        "name": "component_17.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_17.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_18.tsx",
+        "name": "component_18.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_18.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_19.tsx",
+        "name": "component_19.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_19.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_20.tsx",
+        "name": "component_20.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_20.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_21.tsx",
+        "name": "component_21.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_21.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_22.tsx",
+        "name": "component_22.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_22.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_23.tsx",
+        "name": "component_23.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_23.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_24.tsx",
+        "name": "component_24.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_24.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_25.tsx",
+        "name": "component_25.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_25.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_26.tsx",
+        "name": "component_26.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_26.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_27.tsx",
+        "name": "component_27.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_27.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_28.tsx",
+        "name": "component_28.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_28.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_29.tsx",
+        "name": "component_29.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_29.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_30.tsx",
+        "name": "component_30.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_30.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_31.tsx",
+        "name": "component_31.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_31.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_32.tsx",
+        "name": "component_32.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_32.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_33.tsx",
+        "name": "component_33.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_33.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_34.tsx",
+        "name": "component_34.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_34.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_35.tsx",
+        "name": "component_35.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_35.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_36.tsx",
+        "name": "component_36.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_36.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_37.tsx",
+        "name": "component_37.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_37.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_38.tsx",
+        "name": "component_38.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_38.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_39.tsx",
+        "name": "component_39.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_39.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_40.tsx",
+        "name": "component_40.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_40.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_41.tsx",
+        "name": "component_41.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_41.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_42.tsx",
+        "name": "component_42.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_42.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_43.tsx",
+        "name": "component_43.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_43.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_44.tsx",
+        "name": "component_44.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_44.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_45.tsx",
+        "name": "component_45.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_45.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_46.tsx",
+        "name": "component_46.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_46.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_47.tsx",
+        "name": "component_47.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_47.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_48.tsx",
+        "name": "component_48.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_48.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_49.tsx",
+        "name": "component_49.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_49.tsx"
+    },
+    {
+        "id": "frontend/components/ui/component_50.tsx",
+        "name": "component_50.tsx",
+        "type": "file",
+        "community": 5,
+        "file": "frontend/components/ui/component_50.tsx"
+    },
+    {
+        "id": "backend/security/scanner_01.py",
+        "name": "scanner_01.py",
+        "type": "file",
+        "community": 6,
+        "file": "backend/security/scanner_01.py"
+    },
+    {
+        "id": "backend/security/scanner_02.py",
+        "name": "scanner_02.py",
+        "type": "file",
+        "community": 6,
+        "file": "backend/security/scanner_02.py"
+    },
+    {
+        "id": "backend/security/scanner_03.py",
+        "name": "scanner_03.py",
+        "type": "file",
+        "community": 6,
+        "file": "backend/security/scanner_03.py"
+    },
+    {
+        "id": "backend/security/scanner_04.py",
+        "name": "scanner_04.py",
+        "type": "file",
+        "community": 6,
+        "file": "backend/security/scanner_04.py"
+    },
+    {
+        "id": "backend/security/scanner_05.py",
+        "name": "scanner_05.py",
+        "type": "file",
+        "community": 6,
+        "file": "backend/security/scanner_05.py"
+    },
+    {
+        "id": "backend/security/scanner_06.py",
+        "name": "scanner_06.py",
+        "type": "file",
+        "community": 6,
+        "file": "backend/security/scanner_06.py"
+    },
+    {
+        "id": "backend/security/scanner_07.py",
+        "name": "scanner_07.py",
+        "type": "file",
+        "community": 6,
+        "file": "backend/security/scanner_07.py"
+    },
+    {
+        "id": "backend/security/scanner_08.py",
+        "name": "scanner_08.py",
+        "type": "file",
+        "community": 6,
+        "file": "backend/security/scanner_08.py"
+    },
+    {
+        "id": "backend/security/scanner_09.py",
+        "name": "scanner_09.py",
+        "type": "file",
+        "community": 6,
+        "file": "backend/security/scanner_09.py"
+    },
+    {
+        "id": "backend/security/scanner_10.py",
+        "name": "scanner_10.py",
+        "type": "file",
+        "community": 6,
+        "file": "backend/security/scanner_10.py"
+    },
+    {
+        "id": "backend/security/scanner_11.py",
+        "name": "scanner_11.py",
+        "type": "file",
+        "community": 6,
+        "file": "backend/security/scanner_11.py"
+    },
+    {
+        "id": "backend/security/scanner_12.py",
+        "name": "scanner_12.py",
+        "type": "file",
+        "community": 6,
+        "file": "backend/security/scanner_12.py"
+    },
+    {
+        "id": "backend/security/scanner_13.py",
+        "name": "scanner_13.py",
+        "type": "file",
+        "community": 6,
+        "file": "backend/security/scanner_13.py"
+    },
+    {
+        "id": "backend/security/scanner_14.py",
+        "name": "scanner_14.py",
+        "type": "file",
+        "community": 6,
+        "file": "backend/security/scanner_14.py"
+    },
+    {
+        "id": "backend/security/scanner_15.py",
+        "name": "scanner_15.py",
+        "type": "file",
+        "community": 6,
+        "file": "backend/security/scanner_15.py"
+    },
+    {
+        "id": "backend/security/scanner_16.py",
+        "name": "scanner_16.py",
+        "type": "file",
+        "community": 6,
+        "file": "backend/security/scanner_16.py"
+    },
+    {
+        "id": "backend/security/scanner_17.py",
+        "name": "scanner_17.py",
+        "type": "file",
+        "community": 6,
+        "file": "backend/security/scanner_17.py"
+    },
+    {
+        "id": "backend/security/scanner_18.py",
+        "name": "scanner_18.py",
+        "type": "file",
+        "community": 6,
+        "file": "backend/security/scanner_18.py"
+    },
+    {
+        "id": "backend/security/scanner_19.py",
+        "name": "scanner_19.py",
+        "type": "file",
+        "community": 6,
+        "file": "backend/security/scanner_19.py"
+    },
+    {
+        "id": "backend/security/scanner_20.py",
+        "name": "scanner_20.py",
+        "type": "file",
+        "community": 6,
+        "file": "backend/security/scanner_20.py"
+    },
+    {
+        "id": "utils/helpers/standalone_util_01.py",
+        "name": "standalone_util_01.py",
+        "type": "file",
+        "community": 7,
+        "file": "utils/helpers/standalone_util_01.py"
+    },
+    {
+        "id": "utils/helpers/standalone_util_02.py",
+        "name": "standalone_util_02.py",
+        "type": "file",
+        "community": 7,
+        "file": "utils/helpers/standalone_util_02.py"
+    },
+    {
+        "id": "utils/helpers/standalone_util_03.py",
+        "name": "standalone_util_03.py",
+        "type": "file",
+        "community": 7,
+        "file": "utils/helpers/standalone_util_03.py"
+    },
+    {
+        "id": "utils/helpers/standalone_util_04.py",
+        "name": "standalone_util_04.py",
+        "type": "file",
+        "community": 7,
+        "file": "utils/helpers/standalone_util_04.py"
+    },
+    {
+        "id": "utils/helpers/standalone_util_05.py",
+        "name": "standalone_util_05.py",
+        "type": "file",
+        "community": 7,
+        "file": "utils/helpers/standalone_util_05.py"
+    },
+    {
+        "id": "utils/helpers/standalone_util_06.py",
+        "name": "standalone_util_06.py",
+        "type": "file",
+        "community": 7,
+        "file": "utils/helpers/standalone_util_06.py"
+    },
+    {
+        "id": "utils/helpers/standalone_util_07.py",
+        "name": "standalone_util_07.py",
+        "type": "file",
+        "community": 7,
+        "file": "utils/helpers/standalone_util_07.py"
+    },
+    {
+        "id": "utils/helpers/standalone_util_08.py",
+        "name": "standalone_util_08.py",
+        "type": "file",
+        "community": 7,
+        "file": "utils/helpers/standalone_util_08.py"
+    },
+    {
+        "id": "utils/helpers/standalone_util_09.py",
+        "name": "standalone_util_09.py",
+        "type": "file",
+        "community": 7,
+        "file": "utils/helpers/standalone_util_09.py"
+    },
+    {
+        "id": "utils/helpers/standalone_util_10.py",
+        "name": "standalone_util_10.py",
+        "type": "file",
+        "community": 7,
+        "file": "utils/helpers/standalone_util_10.py"
+    },
+    {
+        "id": "utils/helpers/standalone_util_11.py",
+        "name": "standalone_util_11.py",
+        "type": "file",
+        "community": 7,
+        "file": "utils/helpers/standalone_util_11.py"
+    },
+    {
+        "id": "utils/helpers/standalone_util_12.py",
+        "name": "standalone_util_12.py",
+        "type": "file",
+        "community": 7,
+        "file": "utils/helpers/standalone_util_12.py"
+    },
+    {
+        "id": "utils/helpers/standalone_util_13.py",
+        "name": "standalone_util_13.py",
+        "type": "file",
+        "community": 7,
+        "file": "utils/helpers/standalone_util_13.py"
+    },
+    {
+        "id": "utils/helpers/standalone_util_14.py",
+        "name": "standalone_util_14.py",
+        "type": "file",
+        "community": 7,
+        "file": "utils/helpers/standalone_util_14.py"
+    },
+    {
+        "id": "utils/helpers/standalone_util_15.py",
+        "name": "standalone_util_15.py",
+        "type": "file",
+        "community": 7,
+        "file": "utils/helpers/standalone_util_15.py"
+    },
+    {
+        "id": "utils/helpers/standalone_util_16.py",
+        "name": "standalone_util_16.py",
+        "type": "file",
+        "community": 7,
+        "file": "utils/helpers/standalone_util_16.py"
+    },
+    {
+        "id": "utils/helpers/standalone_util_17.py",
+        "name": "standalone_util_17.py",
+        "type": "file",
+        "community": 7,
+        "file": "utils/helpers/standalone_util_17.py"
+    },
+    {
+        "id": "utils/helpers/standalone_util_18.py",
+        "name": "standalone_util_18.py",
+        "type": "file",
+        "community": 7,
+        "file": "utils/helpers/standalone_util_18.py"
+    },
+    {
+        "id": "utils/helpers/standalone_util_19.py",
+        "name": "standalone_util_19.py",
+        "type": "file",
+        "community": 7,
+        "file": "utils/helpers/standalone_util_19.py"
+    },
+    {
+        "id": "utils/helpers/standalone_util_20.py",
+        "name": "standalone_util_20.py",
+        "type": "file",
+        "community": 7,
+        "file": "utils/helpers/standalone_util_20.py"
+    },
+    {
+        "id": "utils/helpers/standalone_util_21.py",
+        "name": "standalone_util_21.py",
+        "type": "file",
+        "community": 7,
+        "file": "utils/helpers/standalone_util_21.py"
+    },
+    {
+        "id": "utils/helpers/standalone_util_22.py",
+        "name": "standalone_util_22.py",
+        "type": "file",
+        "community": 7,
+        "file": "utils/helpers/standalone_util_22.py"
+    },
+    {
+        "id": "utils/helpers/standalone_util_23.py",
+        "name": "standalone_util_23.py",
+        "type": "file",
+        "community": 7,
+        "file": "utils/helpers/standalone_util_23.py"
+    },
+    {
+        "id": "utils/helpers/standalone_util_24.py",
+        "name": "standalone_util_24.py",
+        "type": "file",
+        "community": 7,
+        "file": "utils/helpers/standalone_util_24.py"
+    },
+    {
+        "id": "utils/helpers/standalone_util_25.py",
+        "name": "standalone_util_25.py",
+        "type": "file",
+        "community": 7,
+        "file": "utils/helpers/standalone_util_25.py"
+    }
+],
   links: [
-    /* API & Routing Connections */
-    { source: "backend/main.py", target: "backend/api/routes_ingest.py" },
-    { source: "backend/main.py", target: "backend/api/routes_query.py" },
-    { source: "backend/main.py", target: "backend/api/routes_risks.py" },
-    { source: "backend/main.py", target: "backend/api/routes_security.py" },
-    { source: "backend/main.py", target: "backend/api/routes_refactor.py" },
-    { source: "backend/main.py", target: "backend/api/routes_graph.py" },
-    { source: "backend/main.py", target: "backend/config/settings.py" },
-    { source: "backend/main.py", target: "backend/auth/jwt.py" },
-    { source: "backend/api/routes_ingest.py", target: "backend/services/ingest.py" },
-    { source: "backend/api/routes_query.py", target: "backend/llm/rag_engine.py" },
-    { source: "backend/api/routes_risks.py", target: "backend/graph/cycle_detector.py" },
-    { source: "backend/api/routes_security.py", target: "backend/database/finding_model.py" },
-    { source: "backend/api/routes_refactor.py", target: "backend/graph/hotspot_calculator.py" },
-    { source: "backend/api/routes_graph.py", target: "backend/graph/builder.py" },
-    { source: "backend/auth/service.py", target: "backend/database/user_model.py" },
-    { source: "backend/auth/jwt.py", target: "backend/auth/service.py" },
-
-    /* Database Connections */
-    { source: "backend/database/session.py", target: "backend/config/settings.py" },
-    { source: "backend/database/models.py", target: "backend/database/session.py" },
-    { source: "backend/database/migrations.py", target: "backend/database/models.py" },
-    { source: "backend/database/models.py", target: "backend/database/user_model.py" },
-    { source: "backend/database/models.py", target: "backend/database/repo_model.py" },
-    { source: "backend/database/models.py", target: "backend/database/job_model.py" },
-    { source: "backend/database/models.py", target: "backend/database/risk_model.py" },
-    { source: "backend/database/models.py", target: "backend/database/finding_model.py" },
-    { source: "backend/database/models.py", target: "backend/database/comment_model.py" },
-    { source: "backend/database/models.py", target: "backend/auth/service.py" },
-
-    /* Ingestion & Parser Connections */
-    { source: "backend/services/ingest.py", target: "backend/parsers/git_cloner.py" },
-    { source: "backend/services/ingest.py", target: "backend/parsers/zip_extractor.py" },
-    { source: "backend/services/ingest.py", target: "backend/parsers/ast_python.py" },
-    { source: "backend/services/ingest.py", target: "backend/parsers/ast_typescript.py" },
-    { source: "backend/services/ingest.py", target: "backend/parsers/ast_javascript.py" },
-    { source: "backend/services/ingest.py", target: "backend/graph/builder.py" },
-    { source: "backend/services/ingest.py", target: "backend/vector/embeddings.py" },
-    { source: "backend/services/ingest.py", target: "backend/cache/redis_store.py" },
-    { source: "backend/services/celery_worker.py", target: "backend/services/task_queue.py" },
-    { source: "backend/services/task_queue.py", target: "backend/cache/redis_store.py" },
-    { source: "backend/services/celery_worker.py", target: "backend/services/ingest.py" },
-
-    /* Knowledge Graph & Topology Connections */
-    { source: "backend/graph/builder.py", target: "backend/graph/arcadedb_driver.py" },
-    { source: "backend/graph/builder.py", target: "backend/graph/schema.py" },
-    { source: "backend/graph/arcadedb_driver.py", target: "backend/graph/cypher_generator.py" },
-    { source: "backend/graph/cycle_detector.py", target: "backend/graph/builder.py" },
-    { source: "backend/graph/impact_analyzer.py", target: "backend/graph/builder.py" },
-    { source: "backend/graph/hotspot_calculator.py", target: "backend/graph/builder.py" },
-    { source: "backend/graph/community_detector.py", target: "backend/graph/builder.py" },
-    { source: "backend/graph/pagerank.py", target: "backend/graph/builder.py" },
-    { source: "backend/graph/impact_analyzer.py", target: "backend/graph/cypher_generator.py" },
-
-    /* Vector & LLM Connections */
-    { source: "backend/vector/embeddings.py", target: "backend/vector/chunker.py" },
-    { source: "backend/vector/embeddings.py", target: "backend/vector/chroma_client.py" },
-    { source: "backend/llm/rag_engine.py", target: "backend/vector/chroma_client.py" },
-    { source: "backend/llm/rag_engine.py", target: "backend/graph/cypher_generator.py" },
-    { source: "backend/llm/rag_engine.py", target: "backend/llm/client.py" },
-    { source: "backend/llm/client.py", target: "backend/llm/ollama_adapter.py" },
-    { source: "backend/llm/client.py", target: "backend/llm/prompts.py" },
-    { source: "backend/llm/narrative_generator.py", target: "backend/llm/client.py" },
-
-    /* Frontend UI Connections */
-    { source: "frontend/app/page.tsx", target: "frontend/components/Nav.tsx" },
-    { source: "frontend/app/dashboard/page.tsx", target: "frontend/components/Nav.tsx" },
-    { source: "frontend/app/graph/page.tsx", target: "frontend/components/CodeGraph.tsx" },
-    { source: "frontend/app/graph/page.tsx", target: "frontend/components/Nav.tsx" },
-    { source: "frontend/app/query/page.tsx", target: "frontend/components/Nav.tsx" },
-    { source: "frontend/app/impact/page.tsx", target: "frontend/components/Nav.tsx" },
-    { source: "frontend/app/risks/page.tsx", target: "frontend/components/Nav.tsx" },
-    { source: "frontend/app/security/page.tsx", target: "frontend/components/Nav.tsx" },
-    { source: "frontend/app/dashboard/page.tsx", target: "backend/api/routes_risks.py" },
-    { source: "frontend/app/graph/page.tsx", target: "backend/api/routes_graph.py" },
-    { source: "frontend/app/query/page.tsx", target: "backend/api/routes_query.py" },
-    { source: "frontend/app/impact/page.tsx", target: "backend/graph/impact_analyzer.py" },
-  ],
+    {
+        "source": "backend/database/model_37.py",
+        "target": "backend/database/model_38.py"
+    },
+    {
+        "source": "backend/rag/vector_service_15.py",
+        "target": "backend/rag/vector_service_16.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_44.py",
+        "target": "backend/parser/ast_parser_45.py"
+    },
+    {
+        "source": "backend/rag/vector_service_35.py",
+        "target": "backend/rag/vector_service_31.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_43.py",
+        "target": "backend/parser/ast_parser_07.py"
+    },
+    {
+        "source": "backend/rag/vector_service_41.py",
+        "target": "backend/rag/vector_service_42.py"
+    },
+    {
+        "source": "frontend/components/ui/component_20.tsx",
+        "target": "frontend/components/ui/component_37.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_08.py",
+        "target": "backend/parser/ast_parser_05.py"
+    },
+    {
+        "source": "backend/database/model_10.py",
+        "target": "backend/database/model_13.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_29.py",
+        "target": "backend/graph/graph_engine_17.py"
+    },
+    {
+        "source": "backend/database/model_35.py",
+        "target": "backend/database/model_45.py"
+    },
+    {
+        "source": "backend/rag/vector_service_08.py",
+        "target": "backend/rag/vector_service_37.py"
+    },
+    {
+        "source": "backend/api/route_01.py",
+        "target": "backend/api/route_02.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_44.py",
+        "target": "backend/api/route_15.py"
+    },
+    {
+        "source": "backend/security/scanner_14.py",
+        "target": "backend/database/model_29.py"
+    },
+    {
+        "source": "backend/rag/vector_service_09.py",
+        "target": "backend/rag/vector_service_41.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_21.py",
+        "target": "backend/graph/graph_engine_22.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_35.py",
+        "target": "backend/graph/graph_engine_39.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_47.py",
+        "target": "backend/parser/ast_parser_48.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_16.py",
+        "target": "backend/parser/ast_parser_18.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_33.py",
+        "target": "backend/graph/graph_engine_34.py"
+    },
+    {
+        "source": "backend/api/route_18.py",
+        "target": "backend/api/route_01.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_36.py",
+        "target": "backend/graph/graph_engine_37.py"
+    },
+    {
+        "source": "backend/api/route_38.py",
+        "target": "backend/api/route_39.py"
+    },
+    {
+        "source": "backend/api/route_11.py",
+        "target": "backend/api/route_35.py"
+    },
+    {
+        "source": "backend/security/scanner_19.py",
+        "target": "backend/parser/ast_parser_15.py"
+    },
+    {
+        "source": "backend/rag/vector_service_15.py",
+        "target": "backend/parser/ast_parser_41.py"
+    },
+    {
+        "source": "backend/api/route_18.py",
+        "target": "backend/api/route_16.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_28.py",
+        "target": "backend/parser/ast_parser_09.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_45.py",
+        "target": "backend/graph/graph_engine_02.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_35.py",
+        "target": "backend/graph/graph_engine_04.py"
+    },
+    {
+        "source": "backend/api/route_20.py",
+        "target": "backend/api/route_33.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_03.py",
+        "target": "backend/parser/ast_parser_46.py"
+    },
+    {
+        "source": "frontend/components/ui/component_36.tsx",
+        "target": "frontend/components/ui/component_01.tsx"
+    },
+    {
+        "source": "backend/graph/graph_engine_43.py",
+        "target": "backend/parser/ast_parser_01.py"
+    },
+    {
+        "source": "backend/database/model_16.py",
+        "target": "backend/database/model_15.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_14.py",
+        "target": "backend/parser/ast_parser_46.py"
+    },
+    {
+        "source": "backend/rag/vector_service_07.py",
+        "target": "backend/rag/vector_service_08.py"
+    },
+    {
+        "source": "frontend/components/ui/component_05.tsx",
+        "target": "frontend/components/ui/component_44.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_18.tsx",
+        "target": "frontend/components/ui/component_12.tsx"
+    },
+    {
+        "source": "backend/graph/graph_engine_06.py",
+        "target": "backend/graph/graph_engine_16.py"
+    },
+    {
+        "source": "backend/security/scanner_16.py",
+        "target": "backend/security/scanner_12.py"
+    },
+    {
+        "source": "backend/database/model_17.py",
+        "target": "backend/rag/vector_service_44.py"
+    },
+    {
+        "source": "frontend/components/ui/component_28.tsx",
+        "target": "frontend/components/ui/component_08.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_13.tsx",
+        "target": "frontend/components/ui/component_14.tsx"
+    },
+    {
+        "source": "backend/graph/graph_engine_36.py",
+        "target": "backend/graph/graph_engine_29.py"
+    },
+    {
+        "source": "frontend/components/ui/component_46.tsx",
+        "target": "frontend/components/ui/component_47.tsx"
+    },
+    {
+        "source": "backend/api/route_21.py",
+        "target": "backend/api/route_22.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_01.py",
+        "target": "backend/parser/ast_parser_43.py"
+    },
+    {
+        "source": "backend/security/scanner_04.py",
+        "target": "frontend/components/ui/component_29.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_02.py",
+        "target": "backend/rag/vector_service_32.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_46.py",
+        "target": "frontend/components/ui/component_49.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_23.py",
+        "target": "backend/rag/vector_service_45.py"
+    },
+    {
+        "source": "backend/api/route_09.py",
+        "target": "backend/api/route_33.py"
+    },
+    {
+        "source": "backend/api/route_17.py",
+        "target": "backend/api/route_36.py"
+    },
+    {
+        "source": "backend/database/model_22.py",
+        "target": "backend/database/model_07.py"
+    },
+    {
+        "source": "backend/api/route_33.py",
+        "target": "backend/api/route_12.py"
+    },
+    {
+        "source": "backend/database/model_19.py",
+        "target": "backend/database/model_28.py"
+    },
+    {
+        "source": "backend/database/model_18.py",
+        "target": "backend/database/model_19.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_44.py",
+        "target": "backend/parser/ast_parser_16.py"
+    },
+    {
+        "source": "frontend/components/ui/component_11.tsx",
+        "target": "frontend/components/ui/component_16.tsx"
+    },
+    {
+        "source": "backend/database/model_03.py",
+        "target": "backend/api/route_20.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_38.py",
+        "target": "backend/database/model_21.py"
+    },
+    {
+        "source": "backend/api/route_17.py",
+        "target": "backend/database/model_04.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_48.py",
+        "target": "backend/parser/ast_parser_49.py"
+    },
+    {
+        "source": "backend/security/scanner_11.py",
+        "target": "backend/security/scanner_13.py"
+    },
+    {
+        "source": "backend/security/scanner_08.py",
+        "target": "backend/security/scanner_09.py"
+    },
+    {
+        "source": "backend/rag/vector_service_31.py",
+        "target": "backend/rag/vector_service_42.py"
+    },
+    {
+        "source": "frontend/components/ui/component_16.tsx",
+        "target": "frontend/components/ui/component_46.tsx"
+    },
+    {
+        "source": "backend/security/scanner_07.py",
+        "target": "backend/parser/ast_parser_25.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_23.py",
+        "target": "backend/graph/graph_engine_24.py"
+    },
+    {
+        "source": "backend/api/route_39.py",
+        "target": "backend/api/route_21.py"
+    },
+    {
+        "source": "backend/database/model_26.py",
+        "target": "backend/database/model_43.py"
+    },
+    {
+        "source": "backend/database/model_14.py",
+        "target": "backend/database/model_35.py"
+    },
+    {
+        "source": "backend/api/route_38.py",
+        "target": "backend/api/route_28.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_46.py",
+        "target": "backend/parser/ast_parser_47.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_10.py",
+        "target": "backend/parser/ast_parser_11.py"
+    },
+    {
+        "source": "backend/rag/vector_service_31.py",
+        "target": "backend/rag/vector_service_18.py"
+    },
+    {
+        "source": "backend/rag/vector_service_36.py",
+        "target": "backend/rag/vector_service_34.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_15.py",
+        "target": "backend/graph/graph_engine_16.py"
+    },
+    {
+        "source": "frontend/components/ui/component_29.tsx",
+        "target": "frontend/components/ui/component_45.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_41.tsx",
+        "target": "frontend/components/ui/component_32.tsx"
+    },
+    {
+        "source": "backend/api/route_36.py",
+        "target": "frontend/components/ui/component_47.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_38.py",
+        "target": "backend/api/route_36.py"
+    },
+    {
+        "source": "backend/rag/vector_service_17.py",
+        "target": "backend/rag/vector_service_18.py"
+    },
+    {
+        "source": "backend/rag/vector_service_18.py",
+        "target": "backend/rag/vector_service_19.py"
+    },
+    {
+        "source": "backend/database/model_04.py",
+        "target": "backend/database/model_05.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_40.py",
+        "target": "backend/graph/graph_engine_22.py"
+    },
+    {
+        "source": "frontend/components/ui/component_08.tsx",
+        "target": "frontend/components/ui/component_50.tsx"
+    },
+    {
+        "source": "backend/security/scanner_16.py",
+        "target": "backend/security/scanner_10.py"
+    },
+    {
+        "source": "backend/security/scanner_14.py",
+        "target": "backend/security/scanner_16.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_19.py",
+        "target": "backend/api/route_38.py"
+    },
+    {
+        "source": "backend/rag/vector_service_40.py",
+        "target": "backend/rag/vector_service_10.py"
+    },
+    {
+        "source": "backend/database/model_01.py",
+        "target": "backend/database/model_30.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_37.py",
+        "target": "backend/graph/graph_engine_25.py"
+    },
+    {
+        "source": "backend/api/route_07.py",
+        "target": "backend/api/route_23.py"
+    },
+    {
+        "source": "backend/database/model_04.py",
+        "target": "backend/database/model_38.py"
+    },
+    {
+        "source": "backend/api/route_33.py",
+        "target": "backend/graph/graph_engine_15.py"
+    },
+    {
+        "source": "backend/database/model_05.py",
+        "target": "backend/database/model_44.py"
+    },
+    {
+        "source": "backend/database/model_05.py",
+        "target": "backend/database/model_35.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_44.py",
+        "target": "backend/database/model_31.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_24.py",
+        "target": "backend/database/model_07.py"
+    },
+    {
+        "source": "backend/database/model_43.py",
+        "target": "backend/database/model_44.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_36.py",
+        "target": "backend/parser/ast_parser_27.py"
+    },
+    {
+        "source": "backend/database/model_28.py",
+        "target": "backend/database/model_29.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_44.py",
+        "target": "backend/parser/ast_parser_35.py"
+    },
+    {
+        "source": "backend/api/route_28.py",
+        "target": "backend/api/route_03.py"
+    },
+    {
+        "source": "backend/api/route_30.py",
+        "target": "backend/api/route_10.py"
+    },
+    {
+        "source": "backend/database/model_26.py",
+        "target": "backend/database/model_27.py"
+    },
+    {
+        "source": "backend/security/scanner_16.py",
+        "target": "backend/security/scanner_08.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_23.py",
+        "target": "backend/parser/ast_parser_42.py"
+    },
+    {
+        "source": "backend/api/route_39.py",
+        "target": "backend/api/route_40.py"
+    },
+    {
+        "source": "backend/database/model_22.py",
+        "target": "backend/graph/graph_engine_30.py"
+    },
+    {
+        "source": "backend/api/route_10.py",
+        "target": "backend/api/route_11.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_40.py",
+        "target": "backend/parser/ast_parser_21.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_04.py",
+        "target": "frontend/components/ui/component_19.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_04.py",
+        "target": "backend/api/route_22.py"
+    },
+    {
+        "source": "backend/security/scanner_19.py",
+        "target": "backend/security/scanner_11.py"
+    },
+    {
+        "source": "backend/database/model_30.py",
+        "target": "backend/database/model_31.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_24.py",
+        "target": "backend/parser/ast_parser_38.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_39.py",
+        "target": "backend/graph/graph_engine_40.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_12.py",
+        "target": "backend/graph/graph_engine_45.py"
+    },
+    {
+        "source": "backend/api/route_08.py",
+        "target": "backend/api/route_25.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_22.py",
+        "target": "backend/parser/ast_parser_14.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_41.py",
+        "target": "backend/parser/ast_parser_28.py"
+    },
+    {
+        "source": "backend/database/model_42.py",
+        "target": "backend/database/model_35.py"
+    },
+    {
+        "source": "backend/api/route_02.py",
+        "target": "backend/api/route_36.py"
+    },
+    {
+        "source": "frontend/components/ui/component_21.tsx",
+        "target": "frontend/components/ui/component_22.tsx"
+    },
+    {
+        "source": "backend/security/scanner_05.py",
+        "target": "backend/security/scanner_03.py"
+    },
+    {
+        "source": "backend/rag/vector_service_07.py",
+        "target": "backend/rag/vector_service_28.py"
+    },
+    {
+        "source": "frontend/components/ui/component_35.tsx",
+        "target": "backend/parser/ast_parser_42.py"
+    },
+    {
+        "source": "backend/rag/vector_service_11.py",
+        "target": "backend/rag/vector_service_12.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_19.py",
+        "target": "frontend/components/ui/component_02.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_27.tsx",
+        "target": "frontend/components/ui/component_28.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_08.py",
+        "target": "backend/parser/ast_parser_17.py"
+    },
+    {
+        "source": "backend/rag/vector_service_34.py",
+        "target": "backend/rag/vector_service_35.py"
+    },
+    {
+        "source": "backend/database/model_44.py",
+        "target": "backend/database/model_45.py"
+    },
+    {
+        "source": "backend/database/model_40.py",
+        "target": "backend/database/model_41.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_17.py",
+        "target": "frontend/components/ui/component_30.tsx"
+    },
+    {
+        "source": "utils/helpers/standalone_util_05.py",
+        "target": "utils/helpers/standalone_util_06.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_34.py",
+        "target": "backend/graph/graph_engine_30.py"
+    },
+    {
+        "source": "backend/database/model_28.py",
+        "target": "backend/database/model_23.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_36.py",
+        "target": "backend/parser/ast_parser_10.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_43.py",
+        "target": "backend/parser/ast_parser_13.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_28.py",
+        "target": "backend/parser/ast_parser_39.py"
+    },
+    {
+        "source": "frontend/components/ui/component_05.tsx",
+        "target": "frontend/components/ui/component_11.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_16.py",
+        "target": "backend/rag/vector_service_20.py"
+    },
+    {
+        "source": "frontend/components/ui/component_05.tsx",
+        "target": "frontend/components/ui/component_26.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_44.py",
+        "target": "backend/rag/vector_service_45.py"
+    },
+    {
+        "source": "backend/security/scanner_11.py",
+        "target": "backend/parser/ast_parser_08.py"
+    },
+    {
+        "source": "backend/rag/vector_service_33.py",
+        "target": "backend/rag/vector_service_42.py"
+    },
+    {
+        "source": "backend/security/scanner_13.py",
+        "target": "backend/security/scanner_05.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_23.py",
+        "target": "backend/security/scanner_01.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_31.py",
+        "target": "backend/graph/graph_engine_32.py"
+    },
+    {
+        "source": "backend/database/model_39.py",
+        "target": "backend/database/model_40.py"
+    },
+    {
+        "source": "backend/database/model_30.py",
+        "target": "backend/security/scanner_09.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_44.py",
+        "target": "backend/parser/ast_parser_41.py"
+    },
+    {
+        "source": "backend/security/scanner_16.py",
+        "target": "backend/security/scanner_02.py"
+    },
+    {
+        "source": "backend/rag/vector_service_38.py",
+        "target": "frontend/components/ui/component_36.tsx"
+    },
+    {
+        "source": "backend/api/route_14.py",
+        "target": "backend/rag/vector_service_38.py"
+    },
+    {
+        "source": "backend/rag/vector_service_04.py",
+        "target": "backend/rag/vector_service_36.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_08.py",
+        "target": "backend/database/model_43.py"
+    },
+    {
+        "source": "frontend/components/ui/component_39.tsx",
+        "target": "frontend/components/ui/component_31.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_42.tsx",
+        "target": "frontend/components/ui/component_29.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_30.tsx",
+        "target": "frontend/components/ui/component_45.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_33.tsx",
+        "target": "frontend/components/ui/component_34.tsx"
+    },
+    {
+        "source": "backend/graph/graph_engine_15.py",
+        "target": "backend/graph/graph_engine_13.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_33.py",
+        "target": "backend/parser/ast_parser_20.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_22.py",
+        "target": "backend/graph/graph_engine_23.py"
+    },
+    {
+        "source": "backend/database/model_21.py",
+        "target": "backend/database/model_04.py"
+    },
+    {
+        "source": "backend/rag/vector_service_31.py",
+        "target": "backend/rag/vector_service_32.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_05.py",
+        "target": "backend/parser/ast_parser_16.py"
+    },
+    {
+        "source": "frontend/components/ui/component_48.tsx",
+        "target": "frontend/components/ui/component_21.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_43.tsx",
+        "target": "frontend/components/ui/component_06.tsx"
+    },
+    {
+        "source": "backend/database/model_13.py",
+        "target": "backend/database/model_35.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_14.py",
+        "target": "backend/graph/graph_engine_15.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_45.py",
+        "target": "backend/parser/ast_parser_46.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_18.py",
+        "target": "backend/parser/ast_parser_19.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_27.py",
+        "target": "backend/graph/graph_engine_28.py"
+    },
+    {
+        "source": "frontend/components/ui/component_49.tsx",
+        "target": "frontend/components/ui/component_12.tsx"
+    },
+    {
+        "source": "backend/security/scanner_05.py",
+        "target": "backend/database/model_35.py"
+    },
+    {
+        "source": "backend/api/route_02.py",
+        "target": "backend/database/model_06.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_29.py",
+        "target": "backend/parser/ast_parser_36.py"
+    },
+    {
+        "source": "backend/database/model_29.py",
+        "target": "backend/database/model_30.py"
+    },
+    {
+        "source": "frontend/components/ui/component_15.tsx",
+        "target": "frontend/components/ui/component_44.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_48.py",
+        "target": "backend/parser/ast_parser_43.py"
+    },
+    {
+        "source": "frontend/components/ui/component_03.tsx",
+        "target": "frontend/components/ui/component_30.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_29.py",
+        "target": "backend/parser/ast_parser_30.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_43.py",
+        "target": "backend/parser/ast_parser_17.py"
+    },
+    {
+        "source": "backend/database/model_11.py",
+        "target": "backend/database/model_25.py"
+    },
+    {
+        "source": "backend/database/model_09.py",
+        "target": "backend/database/model_37.py"
+    },
+    {
+        "source": "backend/rag/vector_service_32.py",
+        "target": "backend/rag/vector_service_36.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_36.py",
+        "target": "backend/parser/ast_parser_01.py"
+    },
+    {
+        "source": "backend/database/model_39.py",
+        "target": "backend/database/model_03.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_04.py",
+        "target": "backend/graph/graph_engine_36.py"
+    },
+    {
+        "source": "backend/rag/vector_service_30.py",
+        "target": "backend/parser/ast_parser_33.py"
+    },
+    {
+        "source": "backend/security/scanner_13.py",
+        "target": "frontend/components/ui/component_18.tsx"
+    },
+    {
+        "source": "backend/api/route_30.py",
+        "target": "backend/api/route_34.py"
+    },
+    {
+        "source": "backend/database/model_27.py",
+        "target": "backend/database/model_28.py"
+    },
+    {
+        "source": "backend/security/scanner_14.py",
+        "target": "backend/security/scanner_15.py"
+    },
+    {
+        "source": "backend/api/route_21.py",
+        "target": "backend/security/scanner_20.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_23.py",
+        "target": "backend/rag/vector_service_37.py"
+    },
+    {
+        "source": "backend/security/scanner_10.py",
+        "target": "backend/graph/graph_engine_44.py"
+    },
+    {
+        "source": "frontend/components/ui/component_01.tsx",
+        "target": "frontend/components/ui/component_02.tsx"
+    },
+    {
+        "source": "backend/api/route_32.py",
+        "target": "backend/api/route_26.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_44.py",
+        "target": "backend/graph/graph_engine_45.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_40.py",
+        "target": "backend/api/route_36.py"
+    },
+    {
+        "source": "backend/database/model_07.py",
+        "target": "backend/database/model_04.py"
+    },
+    {
+        "source": "backend/security/scanner_11.py",
+        "target": "backend/security/scanner_12.py"
+    },
+    {
+        "source": "backend/api/route_18.py",
+        "target": "backend/rag/vector_service_02.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_13.py",
+        "target": "backend/parser/ast_parser_27.py"
+    },
+    {
+        "source": "backend/rag/vector_service_18.py",
+        "target": "backend/rag/vector_service_40.py"
+    },
+    {
+        "source": "backend/security/scanner_04.py",
+        "target": "backend/security/scanner_17.py"
+    },
+    {
+        "source": "frontend/components/ui/component_15.tsx",
+        "target": "frontend/components/ui/component_50.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_30.py",
+        "target": "backend/rag/vector_service_37.py"
+    },
+    {
+        "source": "frontend/components/ui/component_15.tsx",
+        "target": "frontend/components/ui/component_16.tsx"
+    },
+    {
+        "source": "backend/api/route_14.py",
+        "target": "backend/api/route_15.py"
+    },
+    {
+        "source": "backend/security/scanner_19.py",
+        "target": "backend/security/scanner_20.py"
+    },
+    {
+        "source": "frontend/components/ui/component_06.tsx",
+        "target": "frontend/components/ui/component_39.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_19.py",
+        "target": "backend/rag/vector_service_15.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_37.py",
+        "target": "backend/graph/graph_engine_38.py"
+    },
+    {
+        "source": "backend/rag/vector_service_24.py",
+        "target": "backend/rag/vector_service_11.py"
+    },
+    {
+        "source": "backend/rag/vector_service_25.py",
+        "target": "backend/rag/vector_service_22.py"
+    },
+    {
+        "source": "frontend/components/ui/component_27.tsx",
+        "target": "frontend/components/ui/component_39.tsx"
+    },
+    {
+        "source": "backend/security/scanner_09.py",
+        "target": "backend/security/scanner_01.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_17.py",
+        "target": "backend/parser/ast_parser_33.py"
+    },
+    {
+        "source": "backend/rag/vector_service_22.py",
+        "target": "backend/rag/vector_service_01.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_33.py",
+        "target": "backend/parser/ast_parser_26.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_30.py",
+        "target": "backend/graph/graph_engine_21.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_29.py",
+        "target": "backend/graph/graph_engine_05.py"
+    },
+    {
+        "source": "backend/database/model_01.py",
+        "target": "backend/database/model_06.py"
+    },
+    {
+        "source": "backend/rag/vector_service_02.py",
+        "target": "backend/rag/vector_service_06.py"
+    },
+    {
+        "source": "backend/rag/vector_service_38.py",
+        "target": "backend/graph/graph_engine_10.py"
+    },
+    {
+        "source": "backend/database/model_16.py",
+        "target": "backend/database/model_31.py"
+    },
+    {
+        "source": "frontend/components/ui/component_16.tsx",
+        "target": "frontend/components/ui/component_08.tsx"
+    },
+    {
+        "source": "backend/graph/graph_engine_28.py",
+        "target": "backend/graph/graph_engine_38.py"
+    },
+    {
+        "source": "backend/api/route_29.py",
+        "target": "backend/api/route_38.py"
+    },
+    {
+        "source": "backend/database/model_17.py",
+        "target": "backend/database/model_30.py"
+    },
+    {
+        "source": "backend/rag/vector_service_08.py",
+        "target": "backend/rag/vector_service_35.py"
+    },
+    {
+        "source": "backend/security/scanner_07.py",
+        "target": "backend/security/scanner_08.py"
+    },
+    {
+        "source": "backend/security/scanner_01.py",
+        "target": "backend/rag/vector_service_18.py"
+    },
+    {
+        "source": "backend/api/route_33.py",
+        "target": "backend/api/route_07.py"
+    },
+    {
+        "source": "backend/database/model_16.py",
+        "target": "backend/database/model_11.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_17.py",
+        "target": "backend/graph/graph_engine_06.py"
+    },
+    {
+        "source": "backend/rag/vector_service_30.py",
+        "target": "backend/rag/vector_service_28.py"
+    },
+    {
+        "source": "backend/api/route_19.py",
+        "target": "backend/api/route_40.py"
+    },
+    {
+        "source": "frontend/components/ui/component_36.tsx",
+        "target": "frontend/components/ui/component_09.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_23.py",
+        "target": "backend/parser/ast_parser_24.py"
+    },
+    {
+        "source": "backend/rag/vector_service_18.py",
+        "target": "backend/rag/vector_service_03.py"
+    },
+    {
+        "source": "frontend/components/ui/component_22.tsx",
+        "target": "frontend/components/ui/component_23.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_40.py",
+        "target": "backend/parser/ast_parser_48.py"
+    },
+    {
+        "source": "backend/rag/vector_service_19.py",
+        "target": "backend/rag/vector_service_45.py"
+    },
+    {
+        "source": "backend/database/model_09.py",
+        "target": "backend/database/model_10.py"
+    },
+    {
+        "source": "backend/database/model_36.py",
+        "target": "backend/database/model_37.py"
+    },
+    {
+        "source": "frontend/components/ui/component_43.tsx",
+        "target": "frontend/components/ui/component_13.tsx"
+    },
+    {
+        "source": "backend/api/route_25.py",
+        "target": "backend/api/route_18.py"
+    },
+    {
+        "source": "frontend/components/ui/component_43.tsx",
+        "target": "frontend/components/ui/component_44.tsx"
+    },
+    {
+        "source": "backend/database/model_37.py",
+        "target": "backend/database/model_06.py"
+    },
+    {
+        "source": "backend/rag/vector_service_39.py",
+        "target": "backend/rag/vector_service_45.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_18.py",
+        "target": "backend/parser/ast_parser_05.py"
+    },
+    {
+        "source": "frontend/components/ui/component_31.tsx",
+        "target": "frontend/components/ui/component_34.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_03.py",
+        "target": "backend/parser/ast_parser_31.py"
+    },
+    {
+        "source": "backend/api/route_25.py",
+        "target": "backend/api/route_39.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_27.py",
+        "target": "backend/graph/graph_engine_04.py"
+    },
+    {
+        "source": "frontend/components/ui/component_36.tsx",
+        "target": "frontend/components/ui/component_49.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_34.py",
+        "target": "backend/parser/ast_parser_35.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_28.py",
+        "target": "backend/parser/ast_parser_05.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_09.py",
+        "target": "backend/graph/graph_engine_30.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_17.py",
+        "target": "backend/parser/ast_parser_18.py"
+    },
+    {
+        "source": "backend/security/scanner_20.py",
+        "target": "backend/rag/vector_service_06.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_11.py",
+        "target": "backend/graph/graph_engine_12.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_35.py",
+        "target": "backend/graph/graph_engine_30.py"
+    },
+    {
+        "source": "backend/rag/vector_service_06.py",
+        "target": "backend/rag/vector_service_18.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_01.py",
+        "target": "backend/graph/graph_engine_02.py"
+    },
+    {
+        "source": "frontend/components/ui/component_20.tsx",
+        "target": "frontend/components/ui/component_06.tsx"
+    },
+    {
+        "source": "backend/api/route_23.py",
+        "target": "backend/api/route_24.py"
+    },
+    {
+        "source": "backend/database/model_20.py",
+        "target": "backend/database/model_16.py"
+    },
+    {
+        "source": "frontend/components/ui/component_05.tsx",
+        "target": "frontend/components/ui/component_06.tsx"
+    },
+    {
+        "source": "backend/api/route_21.py",
+        "target": "backend/api/route_14.py"
+    },
+    {
+        "source": "backend/database/model_41.py",
+        "target": "backend/database/model_04.py"
+    },
+    {
+        "source": "backend/rag/vector_service_45.py",
+        "target": "backend/rag/vector_service_17.py"
+    },
+    {
+        "source": "backend/rag/vector_service_45.py",
+        "target": "backend/rag/vector_service_12.py"
+    },
+    {
+        "source": "backend/database/model_42.py",
+        "target": "backend/database/model_24.py"
+    },
+    {
+        "source": "backend/api/route_26.py",
+        "target": "backend/graph/graph_engine_28.py"
+    },
+    {
+        "source": "backend/database/model_03.py",
+        "target": "backend/database/model_22.py"
+    },
+    {
+        "source": "frontend/components/ui/component_39.tsx",
+        "target": "frontend/components/ui/component_17.tsx"
+    },
+    {
+        "source": "backend/graph/graph_engine_16.py",
+        "target": "backend/graph/graph_engine_18.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_43.py",
+        "target": "backend/parser/ast_parser_27.py"
+    },
+    {
+        "source": "frontend/components/ui/component_40.tsx",
+        "target": "frontend/components/ui/component_04.tsx"
+    },
+    {
+        "source": "backend/api/route_11.py",
+        "target": "backend/api/route_30.py"
+    },
+    {
+        "source": "frontend/components/ui/component_32.tsx",
+        "target": "frontend/components/ui/component_29.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_42.tsx",
+        "target": "backend/database/model_41.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_36.py",
+        "target": "backend/parser/ast_parser_09.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_32.py",
+        "target": "backend/graph/graph_engine_41.py"
+    },
+    {
+        "source": "backend/security/scanner_16.py",
+        "target": "backend/security/scanner_17.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_19.py",
+        "target": "backend/parser/ast_parser_39.py"
+    },
+    {
+        "source": "backend/security/scanner_18.py",
+        "target": "backend/security/scanner_19.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_02.py",
+        "target": "backend/graph/graph_engine_06.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_24.py",
+        "target": "backend/parser/ast_parser_25.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_33.py",
+        "target": "backend/parser/ast_parser_17.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_11.py",
+        "target": "backend/parser/ast_parser_29.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_25.py",
+        "target": "backend/graph/graph_engine_26.py"
+    },
+    {
+        "source": "backend/rag/vector_service_20.py",
+        "target": "backend/rag/vector_service_44.py"
+    },
+    {
+        "source": "frontend/components/ui/component_32.tsx",
+        "target": "backend/api/route_29.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_08.py",
+        "target": "backend/parser/ast_parser_07.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_35.py",
+        "target": "backend/graph/graph_engine_02.py"
+    },
+    {
+        "source": "backend/rag/vector_service_35.py",
+        "target": "backend/rag/vector_service_36.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_10.py",
+        "target": "backend/graph/graph_engine_15.py"
+    },
+    {
+        "source": "backend/api/route_09.py",
+        "target": "backend/api/route_10.py"
+    },
+    {
+        "source": "backend/database/model_36.py",
+        "target": "backend/database/model_15.py"
+    },
+    {
+        "source": "backend/api/route_12.py",
+        "target": "backend/api/route_13.py"
+    },
+    {
+        "source": "backend/database/model_34.py",
+        "target": "backend/database/model_21.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_19.py",
+        "target": "backend/graph/graph_engine_20.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_26.py",
+        "target": "backend/parser/ast_parser_27.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_42.py",
+        "target": "backend/parser/ast_parser_34.py"
+    },
+    {
+        "source": "frontend/components/ui/component_29.tsx",
+        "target": "frontend/components/ui/component_20.tsx"
+    },
+    {
+        "source": "backend/api/route_03.py",
+        "target": "frontend/components/ui/component_20.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_15.py",
+        "target": "backend/parser/ast_parser_13.py"
+    },
+    {
+        "source": "backend/rag/vector_service_27.py",
+        "target": "backend/rag/vector_service_32.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_14.py",
+        "target": "backend/parser/ast_parser_15.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_45.py",
+        "target": "backend/parser/ast_parser_10.py"
+    },
+    {
+        "source": "backend/database/model_11.py",
+        "target": "backend/database/model_12.py"
+    },
+    {
+        "source": "frontend/components/ui/component_16.tsx",
+        "target": "frontend/components/ui/component_17.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_26.py",
+        "target": "backend/api/route_01.py"
+    },
+    {
+        "source": "frontend/components/ui/component_47.tsx",
+        "target": "frontend/components/ui/component_48.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_01.tsx",
+        "target": "frontend/components/ui/component_43.tsx"
+    },
+    {
+        "source": "backend/database/model_27.py",
+        "target": "backend/database/model_32.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_32.py",
+        "target": "backend/graph/graph_engine_33.py"
+    },
+    {
+        "source": "frontend/components/ui/component_46.tsx",
+        "target": "frontend/components/ui/component_19.tsx"
+    },
+    {
+        "source": "backend/security/scanner_04.py",
+        "target": "backend/graph/graph_engine_16.py"
+    },
+    {
+        "source": "backend/rag/vector_service_19.py",
+        "target": "backend/rag/vector_service_31.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_43.py",
+        "target": "backend/graph/graph_engine_41.py"
+    },
+    {
+        "source": "backend/database/model_20.py",
+        "target": "backend/database/model_30.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_29.py",
+        "target": "backend/graph/graph_engine_40.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_11.py",
+        "target": "backend/graph/graph_engine_30.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_21.py",
+        "target": "backend/graph/graph_engine_14.py"
+    },
+    {
+        "source": "backend/security/scanner_03.py",
+        "target": "backend/security/scanner_11.py"
+    },
+    {
+        "source": "backend/rag/vector_service_02.py",
+        "target": "backend/rag/vector_service_03.py"
+    },
+    {
+        "source": "frontend/components/ui/component_48.tsx",
+        "target": "frontend/components/ui/component_49.tsx"
+    },
+    {
+        "source": "backend/graph/graph_engine_02.py",
+        "target": "backend/graph/graph_engine_03.py"
+    },
+    {
+        "source": "backend/api/route_33.py",
+        "target": "backend/api/route_39.py"
+    },
+    {
+        "source": "backend/database/model_26.py",
+        "target": "backend/database/model_09.py"
+    },
+    {
+        "source": "backend/rag/vector_service_30.py",
+        "target": "backend/rag/vector_service_31.py"
+    },
+    {
+        "source": "backend/api/route_17.py",
+        "target": "backend/api/route_18.py"
+    },
+    {
+        "source": "backend/database/model_42.py",
+        "target": "backend/database/model_43.py"
+    },
+    {
+        "source": "backend/database/model_08.py",
+        "target": "backend/database/model_09.py"
+    },
+    {
+        "source": "backend/database/model_04.py",
+        "target": "backend/database/model_33.py"
+    },
+    {
+        "source": "backend/rag/vector_service_23.py",
+        "target": "backend/rag/vector_service_28.py"
+    },
+    {
+        "source": "frontend/components/ui/component_41.tsx",
+        "target": "frontend/components/ui/component_42.tsx"
+    },
+    {
+        "source": "backend/security/scanner_05.py",
+        "target": "backend/security/scanner_17.py"
+    },
+    {
+        "source": "frontend/components/ui/component_11.tsx",
+        "target": "backend/database/model_12.py"
+    },
+    {
+        "source": "backend/security/scanner_18.py",
+        "target": "backend/graph/graph_engine_40.py"
+    },
+    {
+        "source": "backend/api/route_22.py",
+        "target": "backend/api/route_07.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_21.py",
+        "target": "backend/graph/graph_engine_35.py"
+    },
+    {
+        "source": "backend/rag/vector_service_01.py",
+        "target": "backend/rag/vector_service_37.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_34.py",
+        "target": "backend/graph/graph_engine_35.py"
+    },
+    {
+        "source": "frontend/components/ui/component_43.tsx",
+        "target": "frontend/components/ui/component_26.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_21.py",
+        "target": "backend/rag/vector_service_22.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_12.py",
+        "target": "backend/graph/graph_engine_04.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_18.py",
+        "target": "backend/parser/ast_parser_03.py"
+    },
+    {
+        "source": "backend/database/model_35.py",
+        "target": "backend/database/model_04.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_03.py",
+        "target": "backend/parser/ast_parser_04.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_43.py",
+        "target": "backend/parser/ast_parser_49.py"
+    },
+    {
+        "source": "backend/database/model_09.py",
+        "target": "backend/security/scanner_18.py"
+    },
+    {
+        "source": "backend/security/scanner_06.py",
+        "target": "backend/security/scanner_07.py"
+    },
+    {
+        "source": "backend/api/route_07.py",
+        "target": "backend/api/route_35.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_06.py",
+        "target": "backend/graph/graph_engine_09.py"
+    },
+    {
+        "source": "frontend/components/ui/component_18.tsx",
+        "target": "frontend/components/ui/component_19.tsx"
+    },
+    {
+        "source": "backend/graph/graph_engine_20.py",
+        "target": "backend/graph/graph_engine_21.py"
+    },
+    {
+        "source": "backend/database/model_30.py",
+        "target": "backend/database/model_04.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_09.py",
+        "target": "frontend/components/ui/component_06.tsx"
+    },
+    {
+        "source": "backend/database/model_17.py",
+        "target": "backend/database/model_14.py"
+    },
+    {
+        "source": "backend/api/route_33.py",
+        "target": "backend/api/route_34.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_27.py",
+        "target": "backend/graph/graph_engine_22.py"
+    },
+    {
+        "source": "backend/rag/vector_service_28.py",
+        "target": "backend/rag/vector_service_12.py"
+    },
+    {
+        "source": "frontend/components/ui/component_10.tsx",
+        "target": "frontend/components/ui/component_37.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_37.tsx",
+        "target": "frontend/components/ui/component_19.tsx"
+    },
+    {
+        "source": "backend/database/model_04.py",
+        "target": "backend/database/model_26.py"
+    },
+    {
+        "source": "backend/rag/vector_service_38.py",
+        "target": "backend/rag/vector_service_18.py"
+    },
+    {
+        "source": "backend/database/model_07.py",
+        "target": "backend/database/model_43.py"
+    },
+    {
+        "source": "frontend/components/ui/component_36.tsx",
+        "target": "frontend/components/ui/component_37.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_14.tsx",
+        "target": "frontend/components/ui/component_41.tsx"
+    },
+    {
+        "source": "backend/database/model_16.py",
+        "target": "backend/database/model_18.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_20.py",
+        "target": "backend/parser/ast_parser_15.py"
+    },
+    {
+        "source": "backend/api/route_08.py",
+        "target": "backend/api/route_02.py"
+    },
+    {
+        "source": "frontend/components/ui/component_07.tsx",
+        "target": "frontend/components/ui/component_49.tsx"
+    },
+    {
+        "source": "backend/database/model_40.py",
+        "target": "backend/database/model_06.py"
+    },
+    {
+        "source": "backend/rag/vector_service_16.py",
+        "target": "backend/rag/vector_service_27.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_09.py",
+        "target": "backend/parser/ast_parser_17.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_19.py",
+        "target": "backend/graph/graph_engine_33.py"
+    },
+    {
+        "source": "backend/rag/vector_service_33.py",
+        "target": "backend/rag/vector_service_34.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_12.py",
+        "target": "backend/parser/ast_parser_13.py"
+    },
+    {
+        "source": "backend/rag/vector_service_38.py",
+        "target": "backend/rag/vector_service_39.py"
+    },
+    {
+        "source": "frontend/components/ui/component_03.tsx",
+        "target": "frontend/components/ui/component_04.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_10.py",
+        "target": "backend/rag/vector_service_11.py"
+    },
+    {
+        "source": "backend/rag/vector_service_11.py",
+        "target": "backend/rag/vector_service_20.py"
+    },
+    {
+        "source": "backend/api/route_15.py",
+        "target": "backend/api/route_07.py"
+    },
+    {
+        "source": "backend/api/route_03.py",
+        "target": "backend/api/route_04.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_16.py",
+        "target": "backend/parser/ast_parser_17.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_09.py",
+        "target": "backend/graph/graph_engine_10.py"
+    },
+    {
+        "source": "backend/security/scanner_05.py",
+        "target": "backend/security/scanner_14.py"
+    },
+    {
+        "source": "backend/rag/vector_service_01.py",
+        "target": "backend/rag/vector_service_02.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_44.py",
+        "target": "backend/parser/ast_parser_48.py"
+    },
+    {
+        "source": "backend/security/scanner_03.py",
+        "target": "backend/security/scanner_08.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_32.py",
+        "target": "backend/parser/ast_parser_17.py"
+    },
+    {
+        "source": "frontend/components/ui/component_32.tsx",
+        "target": "backend/database/model_38.py"
+    },
+    {
+        "source": "backend/database/model_20.py",
+        "target": "backend/database/model_21.py"
+    },
+    {
+        "source": "backend/database/model_29.py",
+        "target": "backend/database/model_09.py"
+    },
+    {
+        "source": "frontend/components/ui/component_19.tsx",
+        "target": "frontend/components/ui/component_03.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_50.py",
+        "target": "backend/parser/ast_parser_18.py"
+    },
+    {
+        "source": "backend/rag/vector_service_23.py",
+        "target": "backend/rag/vector_service_17.py"
+    },
+    {
+        "source": "backend/api/route_30.py",
+        "target": "frontend/components/ui/component_45.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_33.tsx",
+        "target": "frontend/components/ui/component_35.tsx"
+    },
+    {
+        "source": "backend/api/route_02.py",
+        "target": "backend/api/route_03.py"
+    },
+    {
+        "source": "backend/database/model_27.py",
+        "target": "frontend/components/ui/component_34.tsx"
+    },
+    {
+        "source": "backend/security/scanner_07.py",
+        "target": "backend/security/scanner_17.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_04.py",
+        "target": "backend/graph/graph_engine_05.py"
+    },
+    {
+        "source": "backend/security/scanner_09.py",
+        "target": "backend/database/model_31.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_10.py",
+        "target": "backend/parser/ast_parser_16.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_28.py",
+        "target": "frontend/components/ui/component_32.tsx"
+    },
+    {
+        "source": "backend/api/route_19.py",
+        "target": "backend/api/route_20.py"
+    },
+    {
+        "source": "backend/database/model_15.py",
+        "target": "backend/database/model_05.py"
+    },
+    {
+        "source": "backend/database/model_18.py",
+        "target": "backend/database/model_30.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_03.py",
+        "target": "backend/graph/graph_engine_04.py"
+    },
+    {
+        "source": "backend/api/route_35.py",
+        "target": "backend/api/route_16.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_31.py",
+        "target": "backend/graph/graph_engine_11.py"
+    },
+    {
+        "source": "backend/rag/vector_service_20.py",
+        "target": "backend/rag/vector_service_21.py"
+    },
+    {
+        "source": "backend/database/model_34.py",
+        "target": "backend/database/model_39.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_25.py",
+        "target": "backend/graph/graph_engine_38.py"
+    },
+    {
+        "source": "backend/rag/vector_service_28.py",
+        "target": "backend/rag/vector_service_29.py"
+    },
+    {
+        "source": "backend/rag/vector_service_37.py",
+        "target": "backend/rag/vector_service_38.py"
+    },
+    {
+        "source": "backend/rag/vector_service_16.py",
+        "target": "backend/rag/vector_service_09.py"
+    },
+    {
+        "source": "backend/database/model_45.py",
+        "target": "backend/parser/ast_parser_49.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_50.py",
+        "target": "backend/parser/ast_parser_09.py"
+    },
+    {
+        "source": "backend/database/model_42.py",
+        "target": "backend/database/model_07.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_01.py",
+        "target": "backend/graph/graph_engine_07.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_11.py",
+        "target": "backend/parser/ast_parser_12.py"
+    },
+    {
+        "source": "backend/database/model_08.py",
+        "target": "backend/rag/vector_service_23.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_05.py",
+        "target": "backend/parser/ast_parser_06.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_41.py",
+        "target": "backend/parser/ast_parser_17.py"
+    },
+    {
+        "source": "backend/rag/vector_service_05.py",
+        "target": "backend/database/model_29.py"
+    },
+    {
+        "source": "backend/api/route_30.py",
+        "target": "backend/api/route_31.py"
+    },
+    {
+        "source": "backend/rag/vector_service_18.py",
+        "target": "backend/rag/vector_service_36.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_33.py",
+        "target": "backend/rag/vector_service_18.py"
+    },
+    {
+        "source": "backend/rag/vector_service_20.py",
+        "target": "backend/rag/vector_service_17.py"
+    },
+    {
+        "source": "backend/rag/vector_service_36.py",
+        "target": "backend/rag/vector_service_22.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_44.py",
+        "target": "backend/parser/ast_parser_47.py"
+    },
+    {
+        "source": "backend/rag/vector_service_43.py",
+        "target": "backend/rag/vector_service_38.py"
+    },
+    {
+        "source": "backend/api/route_06.py",
+        "target": "backend/api/route_38.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_22.py",
+        "target": "backend/graph/graph_engine_43.py"
+    },
+    {
+        "source": "backend/api/route_22.py",
+        "target": "backend/api/route_18.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_34.py",
+        "target": "backend/graph/graph_engine_36.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_43.py",
+        "target": "backend/rag/vector_service_20.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_32.py",
+        "target": "backend/graph/graph_engine_26.py"
+    },
+    {
+        "source": "backend/security/scanner_11.py",
+        "target": "backend/security/scanner_17.py"
+    },
+    {
+        "source": "backend/api/route_36.py",
+        "target": "backend/api/route_15.py"
+    },
+    {
+        "source": "backend/rag/vector_service_34.py",
+        "target": "backend/rag/vector_service_42.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_15.py",
+        "target": "backend/rag/vector_service_42.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_25.py",
+        "target": "backend/parser/ast_parser_26.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_43.py",
+        "target": "backend/parser/ast_parser_25.py"
+    },
+    {
+        "source": "backend/api/route_08.py",
+        "target": "backend/api/route_24.py"
+    },
+    {
+        "source": "frontend/components/ui/component_35.tsx",
+        "target": "frontend/components/ui/component_36.tsx"
+    },
+    {
+        "source": "backend/database/model_04.py",
+        "target": "backend/database/model_16.py"
+    },
+    {
+        "source": "backend/rag/vector_service_25.py",
+        "target": "backend/rag/vector_service_26.py"
+    },
+    {
+        "source": "backend/database/model_21.py",
+        "target": "backend/database/model_22.py"
+    },
+    {
+        "source": "backend/api/route_36.py",
+        "target": "backend/api/route_37.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_15.py",
+        "target": "backend/graph/graph_engine_32.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_46.py",
+        "target": "backend/parser/ast_parser_28.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_02.py",
+        "target": "backend/graph/graph_engine_25.py"
+    },
+    {
+        "source": "backend/rag/vector_service_26.py",
+        "target": "backend/rag/vector_service_27.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_14.py",
+        "target": "backend/graph/graph_engine_33.py"
+    },
+    {
+        "source": "backend/rag/vector_service_01.py",
+        "target": "backend/rag/vector_service_34.py"
+    },
+    {
+        "source": "backend/api/route_22.py",
+        "target": "backend/api/route_08.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_15.py",
+        "target": "backend/parser/ast_parser_02.py"
+    },
+    {
+        "source": "backend/api/route_23.py",
+        "target": "backend/api/route_39.py"
+    },
+    {
+        "source": "frontend/components/ui/component_15.tsx",
+        "target": "backend/graph/graph_engine_07.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_01.py",
+        "target": "backend/graph/graph_engine_20.py"
+    },
+    {
+        "source": "backend/security/scanner_08.py",
+        "target": "backend/security/scanner_14.py"
+    },
+    {
+        "source": "backend/api/route_27.py",
+        "target": "backend/api/route_28.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_22.py",
+        "target": "backend/parser/ast_parser_27.py"
+    },
+    {
+        "source": "backend/api/route_13.py",
+        "target": "backend/api/route_05.py"
+    },
+    {
+        "source": "backend/api/route_32.py",
+        "target": "backend/api/route_33.py"
+    },
+    {
+        "source": "backend/database/model_38.py",
+        "target": "backend/database/model_37.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_23.py",
+        "target": "backend/graph/graph_engine_15.py"
+    },
+    {
+        "source": "backend/database/model_31.py",
+        "target": "backend/database/model_33.py"
+    },
+    {
+        "source": "frontend/components/ui/component_18.tsx",
+        "target": "frontend/components/ui/component_10.tsx"
+    },
+    {
+        "source": "backend/database/model_05.py",
+        "target": "backend/database/model_06.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_28.py",
+        "target": "backend/graph/graph_engine_29.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_21.py",
+        "target": "backend/parser/ast_parser_26.py"
+    },
+    {
+        "source": "backend/database/model_15.py",
+        "target": "backend/database/model_16.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_10.py",
+        "target": "backend/parser/ast_parser_18.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_27.py",
+        "target": "backend/graph/graph_engine_41.py"
+    },
+    {
+        "source": "backend/database/model_05.py",
+        "target": "backend/database/model_33.py"
+    },
+    {
+        "source": "backend/database/model_31.py",
+        "target": "backend/database/model_14.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_16.py",
+        "target": "backend/graph/graph_engine_41.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_20.py",
+        "target": "backend/rag/vector_service_41.py"
+    },
+    {
+        "source": "backend/rag/vector_service_43.py",
+        "target": "backend/api/route_34.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_07.py",
+        "target": "backend/security/scanner_11.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_48.py",
+        "target": "backend/parser/ast_parser_36.py"
+    },
+    {
+        "source": "backend/database/model_02.py",
+        "target": "backend/database/model_38.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_43.py",
+        "target": "backend/parser/ast_parser_08.py"
+    },
+    {
+        "source": "backend/api/route_02.py",
+        "target": "backend/api/route_06.py"
+    },
+    {
+        "source": "frontend/components/ui/component_41.tsx",
+        "target": "frontend/components/ui/component_39.tsx"
+    },
+    {
+        "source": "backend/graph/graph_engine_33.py",
+        "target": "backend/parser/ast_parser_38.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_43.py",
+        "target": "backend/parser/ast_parser_44.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_10.py",
+        "target": "backend/graph/graph_engine_11.py"
+    },
+    {
+        "source": "frontend/components/ui/component_31.tsx",
+        "target": "frontend/components/ui/component_29.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_35.py",
+        "target": "backend/parser/ast_parser_36.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_22.py",
+        "target": "backend/security/scanner_06.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_22.py",
+        "target": "backend/parser/ast_parser_02.py"
+    },
+    {
+        "source": "backend/security/scanner_15.py",
+        "target": "backend/security/scanner_11.py"
+    },
+    {
+        "source": "backend/api/route_13.py",
+        "target": "backend/api/route_14.py"
+    },
+    {
+        "source": "backend/api/route_32.py",
+        "target": "backend/api/route_02.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_40.py",
+        "target": "backend/graph/graph_engine_41.py"
+    },
+    {
+        "source": "backend/rag/vector_service_09.py",
+        "target": "backend/rag/vector_service_10.py"
+    },
+    {
+        "source": "frontend/components/ui/component_15.tsx",
+        "target": "frontend/components/ui/component_19.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_20.py",
+        "target": "backend/parser/ast_parser_21.py"
+    },
+    {
+        "source": "frontend/components/ui/component_10.tsx",
+        "target": "frontend/components/ui/component_11.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_04.py",
+        "target": "backend/parser/ast_parser_06.py"
+    },
+    {
+        "source": "backend/rag/vector_service_16.py",
+        "target": "backend/rag/vector_service_45.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_37.py",
+        "target": "backend/parser/ast_parser_20.py"
+    },
+    {
+        "source": "frontend/components/ui/component_17.tsx",
+        "target": "frontend/components/ui/component_21.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_24.py",
+        "target": "backend/rag/vector_service_08.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_16.py",
+        "target": "backend/graph/graph_engine_17.py"
+    },
+    {
+        "source": "backend/database/model_06.py",
+        "target": "backend/database/model_07.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_36.py",
+        "target": "backend/parser/ast_parser_20.py"
+    },
+    {
+        "source": "backend/api/route_35.py",
+        "target": "backend/api/route_17.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_26.py",
+        "target": "backend/graph/graph_engine_38.py"
+    },
+    {
+        "source": "backend/database/model_40.py",
+        "target": "backend/database/model_37.py"
+    },
+    {
+        "source": "frontend/components/ui/component_49.tsx",
+        "target": "frontend/components/ui/component_50.tsx"
+    },
+    {
+        "source": "backend/api/route_29.py",
+        "target": "backend/api/route_30.py"
+    },
+    {
+        "source": "backend/database/model_11.py",
+        "target": "backend/database/model_17.py"
+    },
+    {
+        "source": "frontend/components/ui/component_44.tsx",
+        "target": "frontend/components/ui/component_45.tsx"
+    },
+    {
+        "source": "backend/security/scanner_02.py",
+        "target": "backend/security/scanner_03.py"
+    },
+    {
+        "source": "frontend/components/ui/component_25.tsx",
+        "target": "backend/parser/ast_parser_39.py"
+    },
+    {
+        "source": "frontend/components/ui/component_19.tsx",
+        "target": "backend/graph/graph_engine_15.py"
+    },
+    {
+        "source": "backend/rag/vector_service_23.py",
+        "target": "backend/rag/vector_service_35.py"
+    },
+    {
+        "source": "frontend/components/ui/component_42.tsx",
+        "target": "frontend/components/ui/component_10.tsx"
+    },
+    {
+        "source": "backend/graph/graph_engine_31.py",
+        "target": "backend/graph/graph_engine_01.py"
+    },
+    {
+        "source": "backend/database/model_29.py",
+        "target": "backend/database/model_08.py"
+    },
+    {
+        "source": "backend/database/model_38.py",
+        "target": "backend/database/model_15.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_12.py",
+        "target": "backend/parser/ast_parser_38.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_31.py",
+        "target": "backend/graph/graph_engine_02.py"
+    },
+    {
+        "source": "backend/database/model_37.py",
+        "target": "backend/security/scanner_07.py"
+    },
+    {
+        "source": "backend/api/route_05.py",
+        "target": "frontend/components/ui/component_31.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_23.py",
+        "target": "backend/parser/ast_parser_14.py"
+    },
+    {
+        "source": "backend/rag/vector_service_32.py",
+        "target": "backend/rag/vector_service_14.py"
+    },
+    {
+        "source": "frontend/components/ui/component_32.tsx",
+        "target": "frontend/components/ui/component_19.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_35.py",
+        "target": "backend/parser/ast_parser_03.py"
+    },
+    {
+        "source": "backend/rag/vector_service_15.py",
+        "target": "backend/rag/vector_service_08.py"
+    },
+    {
+        "source": "frontend/components/ui/component_45.tsx",
+        "target": "frontend/components/ui/component_46.tsx"
+    },
+    {
+        "source": "backend/database/model_41.py",
+        "target": "backend/database/model_42.py"
+    },
+    {
+        "source": "backend/api/route_23.py",
+        "target": "backend/api/route_14.py"
+    },
+    {
+        "source": "frontend/components/ui/component_23.tsx",
+        "target": "frontend/components/ui/component_24.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_22.py",
+        "target": "backend/parser/ast_parser_23.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_39.py",
+        "target": "backend/parser/ast_parser_40.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_13.py",
+        "target": "backend/parser/ast_parser_24.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_26.py",
+        "target": "backend/graph/graph_engine_36.py"
+    },
+    {
+        "source": "frontend/components/ui/component_06.tsx",
+        "target": "frontend/components/ui/component_31.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_43.tsx",
+        "target": "frontend/components/ui/component_07.tsx"
+    },
+    {
+        "source": "backend/database/model_16.py",
+        "target": "backend/database/model_26.py"
+    },
+    {
+        "source": "backend/api/route_04.py",
+        "target": "backend/parser/ast_parser_19.py"
+    },
+    {
+        "source": "backend/rag/vector_service_38.py",
+        "target": "backend/rag/vector_service_45.py"
+    },
+    {
+        "source": "frontend/components/ui/component_14.tsx",
+        "target": "frontend/components/ui/component_17.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_23.py",
+        "target": "backend/parser/ast_parser_07.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_18.py",
+        "target": "backend/graph/graph_engine_27.py"
+    },
+    {
+        "source": "backend/rag/vector_service_28.py",
+        "target": "backend/rag/vector_service_43.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_23.py",
+        "target": "backend/parser/ast_parser_50.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_19.py",
+        "target": "backend/graph/graph_engine_14.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_04.py",
+        "target": "backend/parser/ast_parser_05.py"
+    },
+    {
+        "source": "backend/database/model_13.py",
+        "target": "backend/database/model_14.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_35.py",
+        "target": "backend/graph/graph_engine_36.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_25.py",
+        "target": "backend/rag/vector_service_41.py"
+    },
+    {
+        "source": "backend/database/model_28.py",
+        "target": "backend/database/model_27.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_37.py",
+        "target": "backend/graph/graph_engine_13.py"
+    },
+    {
+        "source": "backend/database/model_16.py",
+        "target": "backend/database/model_05.py"
+    },
+    {
+        "source": "frontend/components/ui/component_08.tsx",
+        "target": "frontend/components/ui/component_02.tsx"
+    },
+    {
+        "source": "backend/graph/graph_engine_39.py",
+        "target": "backend/graph/graph_engine_21.py"
+    },
+    {
+        "source": "backend/security/scanner_10.py",
+        "target": "backend/security/scanner_20.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_12.py",
+        "target": "backend/parser/ast_parser_40.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_28.py",
+        "target": "backend/graph/graph_engine_32.py"
+    },
+    {
+        "source": "backend/rag/vector_service_32.py",
+        "target": "backend/rag/vector_service_29.py"
+    },
+    {
+        "source": "frontend/components/ui/component_01.tsx",
+        "target": "frontend/components/ui/component_27.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_14.tsx",
+        "target": "backend/parser/ast_parser_29.py"
+    },
+    {
+        "source": "backend/rag/vector_service_26.py",
+        "target": "backend/rag/vector_service_45.py"
+    },
+    {
+        "source": "backend/rag/vector_service_39.py",
+        "target": "backend/rag/vector_service_19.py"
+    },
+    {
+        "source": "backend/database/model_16.py",
+        "target": "backend/database/model_38.py"
+    },
+    {
+        "source": "backend/rag/vector_service_21.py",
+        "target": "backend/rag/vector_service_16.py"
+    },
+    {
+        "source": "backend/rag/vector_service_05.py",
+        "target": "backend/rag/vector_service_06.py"
+    },
+    {
+        "source": "frontend/components/ui/component_05.tsx",
+        "target": "frontend/components/ui/component_04.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_06.py",
+        "target": "backend/rag/vector_service_07.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_05.py",
+        "target": "backend/graph/graph_engine_06.py"
+    },
+    {
+        "source": "frontend/components/ui/component_34.tsx",
+        "target": "frontend/components/ui/component_35.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_11.tsx",
+        "target": "frontend/components/ui/component_20.tsx"
+    },
+    {
+        "source": "backend/graph/graph_engine_15.py",
+        "target": "backend/graph/graph_engine_18.py"
+    },
+    {
+        "source": "backend/database/model_19.py",
+        "target": "backend/database/model_14.py"
+    },
+    {
+        "source": "frontend/components/ui/component_19.tsx",
+        "target": "frontend/components/ui/component_20.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_45.tsx",
+        "target": "frontend/components/ui/component_32.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_42.py",
+        "target": "backend/parser/ast_parser_43.py"
+    },
+    {
+        "source": "backend/api/route_30.py",
+        "target": "backend/api/route_35.py"
+    },
+    {
+        "source": "backend/api/route_11.py",
+        "target": "backend/api/route_12.py"
+    },
+    {
+        "source": "backend/database/model_32.py",
+        "target": "backend/database/model_33.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_35.py",
+        "target": "backend/parser/ast_parser_46.py"
+    },
+    {
+        "source": "backend/rag/vector_service_03.py",
+        "target": "backend/rag/vector_service_04.py"
+    },
+    {
+        "source": "backend/security/scanner_09.py",
+        "target": "backend/security/scanner_10.py"
+    },
+    {
+        "source": "backend/api/route_31.py",
+        "target": "backend/api/route_32.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_22.py",
+        "target": "backend/graph/graph_engine_25.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_10.py",
+        "target": "backend/graph/graph_engine_02.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_05.py",
+        "target": "backend/graph/graph_engine_30.py"
+    },
+    {
+        "source": "utils/helpers/standalone_util_03.py",
+        "target": "utils/helpers/standalone_util_04.py"
+    },
+    {
+        "source": "backend/api/route_10.py",
+        "target": "backend/api/route_14.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_03.py",
+        "target": "backend/rag/vector_service_40.py"
+    },
+    {
+        "source": "backend/database/model_23.py",
+        "target": "backend/database/model_24.py"
+    },
+    {
+        "source": "backend/database/model_12.py",
+        "target": "backend/database/model_13.py"
+    },
+    {
+        "source": "backend/api/route_11.py",
+        "target": "backend/api/route_28.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_33.py",
+        "target": "backend/parser/ast_parser_34.py"
+    },
+    {
+        "source": "backend/rag/vector_service_38.py",
+        "target": "backend/rag/vector_service_34.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_17.py",
+        "target": "backend/parser/ast_parser_03.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_48.py",
+        "target": "frontend/components/ui/component_44.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_07.py",
+        "target": "backend/rag/vector_service_38.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_19.py",
+        "target": "backend/graph/graph_engine_16.py"
+    },
+    {
+        "source": "frontend/components/ui/component_24.tsx",
+        "target": "frontend/components/ui/component_25.tsx"
+    },
+    {
+        "source": "backend/api/route_24.py",
+        "target": "backend/api/route_25.py"
+    },
+    {
+        "source": "backend/rag/vector_service_32.py",
+        "target": "backend/rag/vector_service_07.py"
+    },
+    {
+        "source": "frontend/components/ui/component_37.tsx",
+        "target": "frontend/components/ui/component_41.tsx"
+    },
+    {
+        "source": "backend/database/model_37.py",
+        "target": "backend/database/model_31.py"
+    },
+    {
+        "source": "frontend/components/ui/component_15.tsx",
+        "target": "frontend/components/ui/component_17.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_25.tsx",
+        "target": "frontend/components/ui/component_26.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_24.py",
+        "target": "backend/rag/vector_service_12.py"
+    },
+    {
+        "source": "backend/security/scanner_04.py",
+        "target": "backend/security/scanner_05.py"
+    },
+    {
+        "source": "backend/security/scanner_13.py",
+        "target": "frontend/components/ui/component_36.tsx"
+    },
+    {
+        "source": "backend/database/model_01.py",
+        "target": "backend/database/model_05.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_21.py",
+        "target": "backend/parser/ast_parser_22.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_16.py",
+        "target": "backend/graph/graph_engine_10.py"
+    },
+    {
+        "source": "frontend/components/ui/component_35.tsx",
+        "target": "frontend/components/ui/component_30.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_13.py",
+        "target": "backend/rag/vector_service_21.py"
+    },
+    {
+        "source": "backend/database/model_34.py",
+        "target": "backend/database/model_35.py"
+    },
+    {
+        "source": "backend/api/route_10.py",
+        "target": "backend/api/route_24.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_05.py",
+        "target": "backend/graph/graph_engine_27.py"
+    },
+    {
+        "source": "backend/security/scanner_12.py",
+        "target": "backend/security/scanner_13.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_24.py",
+        "target": "backend/parser/ast_parser_03.py"
+    },
+    {
+        "source": "backend/api/route_06.py",
+        "target": "backend/security/scanner_03.py"
+    },
+    {
+        "source": "frontend/components/ui/component_04.tsx",
+        "target": "frontend/components/ui/component_05.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_40.tsx",
+        "target": "frontend/components/ui/component_48.tsx"
+    },
+    {
+        "source": "backend/api/route_18.py",
+        "target": "backend/api/route_19.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_35.py",
+        "target": "backend/parser/ast_parser_14.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_18.py",
+        "target": "backend/graph/graph_engine_34.py"
+    },
+    {
+        "source": "backend/database/model_06.py",
+        "target": "backend/database/model_12.py"
+    },
+    {
+        "source": "frontend/components/ui/component_13.tsx",
+        "target": "frontend/components/ui/component_34.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_11.py",
+        "target": "backend/parser/ast_parser_48.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_25.py",
+        "target": "backend/graph/graph_engine_45.py"
+    },
+    {
+        "source": "frontend/components/ui/component_49.tsx",
+        "target": "frontend/components/ui/component_36.tsx"
+    },
+    {
+        "source": "backend/api/route_17.py",
+        "target": "backend/api/route_03.py"
+    },
+    {
+        "source": "backend/rag/vector_service_29.py",
+        "target": "backend/rag/vector_service_16.py"
+    },
+    {
+        "source": "backend/api/route_16.py",
+        "target": "backend/api/route_17.py"
+    },
+    {
+        "source": "backend/rag/vector_service_08.py",
+        "target": "backend/rag/vector_service_09.py"
+    },
+    {
+        "source": "backend/rag/vector_service_43.py",
+        "target": "backend/parser/ast_parser_08.py"
+    },
+    {
+        "source": "backend/rag/vector_service_24.py",
+        "target": "backend/rag/vector_service_05.py"
+    },
+    {
+        "source": "backend/rag/vector_service_13.py",
+        "target": "backend/rag/vector_service_14.py"
+    },
+    {
+        "source": "frontend/components/ui/component_23.tsx",
+        "target": "frontend/components/ui/component_27.tsx"
+    },
+    {
+        "source": "backend/graph/graph_engine_17.py",
+        "target": "backend/graph/graph_engine_18.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_38.py",
+        "target": "backend/parser/ast_parser_39.py"
+    },
+    {
+        "source": "backend/api/route_06.py",
+        "target": "frontend/components/ui/component_18.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_30.py",
+        "target": "backend/parser/ast_parser_31.py"
+    },
+    {
+        "source": "frontend/components/ui/component_12.tsx",
+        "target": "frontend/components/ui/component_13.tsx"
+    },
+    {
+        "source": "backend/database/model_22.py",
+        "target": "backend/security/scanner_05.py"
+    },
+    {
+        "source": "backend/rag/vector_service_24.py",
+        "target": "backend/rag/vector_service_31.py"
+    },
+    {
+        "source": "backend/api/route_25.py",
+        "target": "backend/api/route_26.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_40.py",
+        "target": "backend/parser/ast_parser_41.py"
+    },
+    {
+        "source": "backend/database/model_35.py",
+        "target": "backend/database/model_36.py"
+    },
+    {
+        "source": "frontend/components/ui/component_22.tsx",
+        "target": "frontend/components/ui/component_21.tsx"
+    },
+    {
+        "source": "backend/api/route_05.py",
+        "target": "backend/api/route_25.py"
+    },
+    {
+        "source": "backend/api/route_11.py",
+        "target": "backend/api/route_24.py"
+    },
+    {
+        "source": "frontend/components/ui/component_22.tsx",
+        "target": "frontend/components/ui/component_12.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_20.tsx",
+        "target": "frontend/components/ui/component_45.tsx"
+    },
+    {
+        "source": "backend/security/scanner_11.py",
+        "target": "backend/security/scanner_18.py"
+    },
+    {
+        "source": "frontend/components/ui/component_45.tsx",
+        "target": "frontend/components/ui/component_30.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_13.py",
+        "target": "backend/rag/vector_service_05.py"
+    },
+    {
+        "source": "frontend/components/ui/component_31.tsx",
+        "target": "frontend/components/ui/component_32.tsx"
+    },
+    {
+        "source": "backend/graph/graph_engine_30.py",
+        "target": "backend/graph/graph_engine_09.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_23.py",
+        "target": "backend/graph/graph_engine_20.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_06.py",
+        "target": "backend/parser/ast_parser_07.py"
+    },
+    {
+        "source": "backend/api/route_19.py",
+        "target": "backend/api/route_28.py"
+    },
+    {
+        "source": "backend/rag/vector_service_13.py",
+        "target": "backend/rag/vector_service_06.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_43.py",
+        "target": "backend/graph/graph_engine_06.py"
+    },
+    {
+        "source": "backend/rag/vector_service_27.py",
+        "target": "backend/graph/graph_engine_18.py"
+    },
+    {
+        "source": "frontend/components/ui/component_32.tsx",
+        "target": "frontend/components/ui/component_05.tsx"
+    },
+    {
+        "source": "backend/database/model_33.py",
+        "target": "backend/database/model_34.py"
+    },
+    {
+        "source": "frontend/components/ui/component_41.tsx",
+        "target": "frontend/components/ui/component_38.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_27.py",
+        "target": "backend/rag/vector_service_28.py"
+    },
+    {
+        "source": "backend/security/scanner_18.py",
+        "target": "frontend/components/ui/component_25.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_24.py",
+        "target": "backend/rag/vector_service_25.py"
+    },
+    {
+        "source": "backend/database/model_24.py",
+        "target": "backend/database/model_25.py"
+    },
+    {
+        "source": "frontend/components/ui/component_11.tsx",
+        "target": "frontend/components/ui/component_12.tsx"
+    },
+    {
+        "source": "backend/database/model_08.py",
+        "target": "backend/database/model_37.py"
+    },
+    {
+        "source": "backend/api/route_39.py",
+        "target": "backend/api/route_13.py"
+    },
+    {
+        "source": "backend/api/route_19.py",
+        "target": "backend/api/route_06.py"
+    },
+    {
+        "source": "backend/api/route_01.py",
+        "target": "backend/api/route_17.py"
+    },
+    {
+        "source": "frontend/components/ui/component_20.tsx",
+        "target": "frontend/components/ui/component_21.tsx"
+    },
+    {
+        "source": "backend/security/scanner_17.py",
+        "target": "backend/security/scanner_18.py"
+    },
+    {
+        "source": "backend/database/model_45.py",
+        "target": "backend/database/model_36.py"
+    },
+    {
+        "source": "backend/security/scanner_05.py",
+        "target": "frontend/components/ui/component_41.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_39.py",
+        "target": "backend/rag/vector_service_40.py"
+    },
+    {
+        "source": "backend/rag/vector_service_12.py",
+        "target": "backend/rag/vector_service_13.py"
+    },
+    {
+        "source": "backend/database/model_25.py",
+        "target": "backend/database/model_26.py"
+    },
+    {
+        "source": "backend/rag/vector_service_14.py",
+        "target": "backend/security/scanner_05.py"
+    },
+    {
+        "source": "frontend/components/ui/component_26.tsx",
+        "target": "frontend/components/ui/component_18.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_19.py",
+        "target": "backend/parser/ast_parser_20.py"
+    },
+    {
+        "source": "backend/security/scanner_16.py",
+        "target": "backend/security/scanner_05.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_49.py",
+        "target": "backend/parser/ast_parser_50.py"
+    },
+    {
+        "source": "backend/database/model_43.py",
+        "target": "backend/database/model_42.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_18.py",
+        "target": "backend/graph/graph_engine_22.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_43.py",
+        "target": "backend/parser/ast_parser_48.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_17.py",
+        "target": "backend/graph/graph_engine_25.py"
+    },
+    {
+        "source": "backend/api/route_08.py",
+        "target": "backend/api/route_09.py"
+    },
+    {
+        "source": "backend/api/route_06.py",
+        "target": "backend/api/route_36.py"
+    },
+    {
+        "source": "backend/api/route_17.py",
+        "target": "backend/api/route_09.py"
+    },
+    {
+        "source": "backend/database/model_38.py",
+        "target": "backend/database/model_39.py"
+    },
+    {
+        "source": "backend/database/model_30.py",
+        "target": "backend/api/route_06.py"
+    },
+    {
+        "source": "backend/database/model_28.py",
+        "target": "backend/database/model_14.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_07.py",
+        "target": "backend/parser/ast_parser_25.py"
+    },
+    {
+        "source": "frontend/components/ui/component_42.tsx",
+        "target": "frontend/components/ui/component_43.tsx"
+    },
+    {
+        "source": "backend/graph/graph_engine_18.py",
+        "target": "backend/graph/graph_engine_19.py"
+    },
+    {
+        "source": "frontend/components/ui/component_49.tsx",
+        "target": "frontend/components/ui/component_04.tsx"
+    },
+    {
+        "source": "backend/database/model_05.py",
+        "target": "backend/database/model_22.py"
+    },
+    {
+        "source": "frontend/components/ui/component_02.tsx",
+        "target": "frontend/components/ui/component_03.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_22.py",
+        "target": "backend/rag/vector_service_23.py"
+    },
+    {
+        "source": "frontend/components/ui/component_28.tsx",
+        "target": "frontend/components/ui/component_29.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_40.py",
+        "target": "backend/rag/vector_service_43.py"
+    },
+    {
+        "source": "frontend/components/ui/component_37.tsx",
+        "target": "frontend/components/ui/component_03.tsx"
+    },
+    {
+        "source": "backend/database/model_27.py",
+        "target": "backend/rag/vector_service_37.py"
+    },
+    {
+        "source": "backend/api/route_38.py",
+        "target": "backend/api/route_26.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_27.py",
+        "target": "backend/parser/ast_parser_28.py"
+    },
+    {
+        "source": "backend/database/model_31.py",
+        "target": "backend/database/model_36.py"
+    },
+    {
+        "source": "backend/rag/vector_service_23.py",
+        "target": "backend/rag/vector_service_24.py"
+    },
+    {
+        "source": "backend/api/route_39.py",
+        "target": "backend/api/route_11.py"
+    },
+    {
+        "source": "backend/database/model_43.py",
+        "target": "backend/database/model_21.py"
+    },
+    {
+        "source": "backend/api/route_18.py",
+        "target": "backend/api/route_05.py"
+    },
+    {
+        "source": "frontend/components/ui/component_03.tsx",
+        "target": "frontend/components/ui/component_28.tsx"
+    },
+    {
+        "source": "backend/database/model_34.py",
+        "target": "backend/database/model_11.py"
+    },
+    {
+        "source": "backend/security/scanner_18.py",
+        "target": "backend/security/scanner_13.py"
+    },
+    {
+        "source": "backend/database/model_16.py",
+        "target": "backend/database/model_13.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_30.py",
+        "target": "backend/graph/graph_engine_31.py"
+    },
+    {
+        "source": "frontend/components/ui/component_09.tsx",
+        "target": "frontend/components/ui/component_10.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_44.tsx",
+        "target": "frontend/components/ui/component_04.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_39.tsx",
+        "target": "frontend/components/ui/component_48.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_49.tsx",
+        "target": "frontend/components/ui/component_32.tsx"
+    },
+    {
+        "source": "backend/database/model_31.py",
+        "target": "backend/database/model_32.py"
+    },
+    {
+        "source": "backend/rag/vector_service_30.py",
+        "target": "backend/rag/vector_service_18.py"
+    },
+    {
+        "source": "backend/security/scanner_13.py",
+        "target": "backend/security/scanner_14.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_13.py",
+        "target": "backend/parser/ast_parser_17.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_08.py",
+        "target": "backend/parser/ast_parser_09.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_41.py",
+        "target": "backend/parser/ast_parser_42.py"
+    },
+    {
+        "source": "frontend/components/ui/component_29.tsx",
+        "target": "frontend/components/ui/component_30.tsx"
+    },
+    {
+        "source": "backend/database/model_43.py",
+        "target": "backend/database/model_32.py"
+    },
+    {
+        "source": "backend/database/model_44.py",
+        "target": "backend/database/model_42.py"
+    },
+    {
+        "source": "backend/rag/vector_service_39.py",
+        "target": "backend/rag/vector_service_08.py"
+    },
+    {
+        "source": "backend/database/model_28.py",
+        "target": "backend/database/model_12.py"
+    },
+    {
+        "source": "backend/rag/vector_service_02.py",
+        "target": "backend/rag/vector_service_20.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_37.py",
+        "target": "backend/parser/ast_parser_38.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_10.py",
+        "target": "backend/graph/graph_engine_14.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_07.py",
+        "target": "backend/parser/ast_parser_08.py"
+    },
+    {
+        "source": "backend/database/model_07.py",
+        "target": "backend/database/model_08.py"
+    },
+    {
+        "source": "backend/database/model_01.py",
+        "target": "backend/database/model_02.py"
+    },
+    {
+        "source": "frontend/components/ui/component_27.tsx",
+        "target": "frontend/components/ui/component_04.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_14.tsx",
+        "target": "frontend/components/ui/component_15.tsx"
+    },
+    {
+        "source": "backend/graph/graph_engine_30.py",
+        "target": "backend/graph/graph_engine_43.py"
+    },
+    {
+        "source": "backend/api/route_35.py",
+        "target": "backend/api/route_18.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_24.py",
+        "target": "backend/parser/ast_parser_19.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_07.py",
+        "target": "frontend/components/ui/component_32.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_19.tsx",
+        "target": "frontend/components/ui/component_29.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_26.tsx",
+        "target": "frontend/components/ui/component_33.tsx"
+    },
+    {
+        "source": "backend/database/model_16.py",
+        "target": "backend/database/model_17.py"
+    },
+    {
+        "source": "backend/api/route_21.py",
+        "target": "backend/api/route_04.py"
+    },
+    {
+        "source": "backend/rag/vector_service_42.py",
+        "target": "backend/rag/vector_service_03.py"
+    },
+    {
+        "source": "backend/security/scanner_15.py",
+        "target": "backend/security/scanner_16.py"
+    },
+    {
+        "source": "backend/api/route_27.py",
+        "target": "backend/api/route_15.py"
+    },
+    {
+        "source": "backend/api/route_28.py",
+        "target": "backend/api/route_39.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_42.py",
+        "target": "backend/graph/graph_engine_45.py"
+    },
+    {
+        "source": "frontend/components/ui/component_29.tsx",
+        "target": "frontend/components/ui/component_08.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_31.tsx",
+        "target": "frontend/components/ui/component_08.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_02.py",
+        "target": "backend/rag/vector_service_16.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_28.py",
+        "target": "backend/security/scanner_05.py"
+    },
+    {
+        "source": "backend/api/route_06.py",
+        "target": "backend/api/route_25.py"
+    },
+    {
+        "source": "backend/api/route_11.py",
+        "target": "backend/database/model_40.py"
+    },
+    {
+        "source": "backend/api/route_35.py",
+        "target": "backend/api/route_36.py"
+    },
+    {
+        "source": "backend/security/scanner_17.py",
+        "target": "backend/security/scanner_09.py"
+    },
+    {
+        "source": "backend/api/route_28.py",
+        "target": "backend/api/route_29.py"
+    },
+    {
+        "source": "frontend/components/ui/component_14.tsx",
+        "target": "backend/rag/vector_service_25.py"
+    },
+    {
+        "source": "backend/api/route_15.py",
+        "target": "backend/api/route_03.py"
+    },
+    {
+        "source": "backend/security/scanner_02.py",
+        "target": "backend/security/scanner_11.py"
+    },
+    {
+        "source": "backend/database/model_10.py",
+        "target": "backend/database/model_11.py"
+    },
+    {
+        "source": "backend/rag/vector_service_14.py",
+        "target": "backend/rag/vector_service_30.py"
+    },
+    {
+        "source": "frontend/components/ui/component_38.tsx",
+        "target": "frontend/components/ui/component_28.tsx"
+    },
+    {
+        "source": "backend/graph/graph_engine_24.py",
+        "target": "backend/api/route_09.py"
+    },
+    {
+        "source": "backend/database/model_01.py",
+        "target": "backend/database/model_25.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_01.py",
+        "target": "backend/parser/ast_parser_22.py"
+    },
+    {
+        "source": "backend/rag/vector_service_31.py",
+        "target": "backend/rag/vector_service_43.py"
+    },
+    {
+        "source": "backend/rag/vector_service_37.py",
+        "target": "backend/rag/vector_service_03.py"
+    },
+    {
+        "source": "frontend/components/ui/component_14.tsx",
+        "target": "frontend/components/ui/component_18.tsx"
+    },
+    {
+        "source": "backend/graph/graph_engine_21.py",
+        "target": "backend/graph/graph_engine_30.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_08.py",
+        "target": "backend/graph/graph_engine_09.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_42.py",
+        "target": "backend/graph/graph_engine_05.py"
+    },
+    {
+        "source": "backend/api/route_15.py",
+        "target": "backend/api/route_16.py"
+    },
+    {
+        "source": "backend/rag/vector_service_22.py",
+        "target": "backend/rag/vector_service_18.py"
+    },
+    {
+        "source": "backend/api/route_34.py",
+        "target": "backend/api/route_01.py"
+    },
+    {
+        "source": "backend/security/scanner_05.py",
+        "target": "backend/api/route_01.py"
+    },
+    {
+        "source": "frontend/components/ui/component_12.tsx",
+        "target": "frontend/components/ui/component_36.tsx"
+    },
+    {
+        "source": "backend/graph/graph_engine_45.py",
+        "target": "backend/graph/graph_engine_25.py"
+    },
+    {
+        "source": "backend/rag/vector_service_35.py",
+        "target": "backend/rag/vector_service_09.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_13.py",
+        "target": "backend/graph/graph_engine_14.py"
+    },
+    {
+        "source": "backend/security/scanner_10.py",
+        "target": "backend/security/scanner_11.py"
+    },
+    {
+        "source": "backend/rag/vector_service_07.py",
+        "target": "backend/rag/vector_service_45.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_47.py",
+        "target": "backend/security/scanner_11.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_44.py",
+        "target": "backend/graph/graph_engine_26.py"
+    },
+    {
+        "source": "frontend/components/ui/component_06.tsx",
+        "target": "frontend/components/ui/component_07.tsx"
+    },
+    {
+        "source": "backend/graph/graph_engine_31.py",
+        "target": "backend/graph/graph_engine_40.py"
+    },
+    {
+        "source": "backend/rag/vector_service_04.py",
+        "target": "backend/rag/vector_service_05.py"
+    },
+    {
+        "source": "backend/rag/vector_service_42.py",
+        "target": "backend/rag/vector_service_43.py"
+    },
+    {
+        "source": "backend/database/model_13.py",
+        "target": "backend/database/model_20.py"
+    },
+    {
+        "source": "backend/rag/vector_service_30.py",
+        "target": "backend/rag/vector_service_10.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_13.py",
+        "target": "backend/parser/ast_parser_14.py"
+    },
+    {
+        "source": "backend/security/scanner_15.py",
+        "target": "backend/security/scanner_01.py"
+    },
+    {
+        "source": "frontend/components/ui/component_30.tsx",
+        "target": "frontend/components/ui/component_31.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_37.py",
+        "target": "backend/rag/vector_service_44.py"
+    },
+    {
+        "source": "backend/rag/vector_service_41.py",
+        "target": "backend/rag/vector_service_16.py"
+    },
+    {
+        "source": "backend/api/route_32.py",
+        "target": "backend/api/route_06.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_38.py",
+        "target": "backend/graph/graph_engine_39.py"
+    },
+    {
+        "source": "utils/helpers/standalone_util_01.py",
+        "target": "utils/helpers/standalone_util_02.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_14.py",
+        "target": "backend/graph/graph_engine_27.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_42.py",
+        "target": "backend/graph/graph_engine_02.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_27.py",
+        "target": "frontend/components/ui/component_08.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_31.py",
+        "target": "backend/parser/ast_parser_32.py"
+    },
+    {
+        "source": "backend/api/route_03.py",
+        "target": "backend/api/route_15.py"
+    },
+    {
+        "source": "backend/database/model_20.py",
+        "target": "frontend/components/ui/component_02.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_42.py",
+        "target": "frontend/components/ui/component_36.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_03.py",
+        "target": "backend/parser/ast_parser_20.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_25.py",
+        "target": "backend/parser/ast_parser_37.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_25.py",
+        "target": "backend/graph/graph_engine_27.py"
+    },
+    {
+        "source": "backend/database/model_27.py",
+        "target": "backend/database/model_43.py"
+    },
+    {
+        "source": "backend/rag/vector_service_29.py",
+        "target": "backend/rag/vector_service_30.py"
+    },
+    {
+        "source": "frontend/components/ui/component_17.tsx",
+        "target": "frontend/components/ui/component_18.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_07.py",
+        "target": "backend/graph/graph_engine_45.py"
+    },
+    {
+        "source": "backend/database/model_19.py",
+        "target": "backend/database/model_20.py"
+    },
+    {
+        "source": "backend/security/scanner_09.py",
+        "target": "backend/security/scanner_14.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_07.py",
+        "target": "backend/parser/ast_parser_39.py"
+    },
+    {
+        "source": "frontend/components/ui/component_27.tsx",
+        "target": "frontend/components/ui/component_45.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_43.py",
+        "target": "backend/rag/vector_service_44.py"
+    },
+    {
+        "source": "backend/database/model_22.py",
+        "target": "backend/database/model_23.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_15.py",
+        "target": "backend/parser/ast_parser_16.py"
+    },
+    {
+        "source": "backend/database/model_05.py",
+        "target": "backend/database/model_39.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_47.py",
+        "target": "backend/parser/ast_parser_21.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_16.py",
+        "target": "backend/graph/graph_engine_08.py"
+    },
+    {
+        "source": "backend/database/model_09.py",
+        "target": "backend/database/model_43.py"
+    },
+    {
+        "source": "backend/rag/vector_service_16.py",
+        "target": "backend/rag/vector_service_17.py"
+    },
+    {
+        "source": "backend/rag/vector_service_19.py",
+        "target": "backend/rag/vector_service_20.py"
+    },
+    {
+        "source": "backend/api/route_13.py",
+        "target": "backend/api/route_35.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_09.py",
+        "target": "backend/parser/ast_parser_10.py"
+    },
+    {
+        "source": "backend/database/model_29.py",
+        "target": "backend/database/model_34.py"
+    },
+    {
+        "source": "backend/security/scanner_18.py",
+        "target": "backend/security/scanner_14.py"
+    },
+    {
+        "source": "backend/api/route_15.py",
+        "target": "backend/api/route_09.py"
+    },
+    {
+        "source": "frontend/components/ui/component_08.tsx",
+        "target": "frontend/components/ui/component_09.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_01.py",
+        "target": "backend/parser/ast_parser_02.py"
+    },
+    {
+        "source": "backend/database/model_26.py",
+        "target": "backend/database/model_04.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_27.py",
+        "target": "backend/parser/ast_parser_02.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_29.py",
+        "target": "backend/graph/graph_engine_44.py"
+    },
+    {
+        "source": "backend/database/model_06.py",
+        "target": "backend/database/model_32.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_33.py",
+        "target": "backend/graph/graph_engine_28.py"
+    },
+    {
+        "source": "frontend/components/ui/component_39.tsx",
+        "target": "frontend/components/ui/component_40.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_02.tsx",
+        "target": "frontend/components/ui/component_49.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_06.tsx",
+        "target": "frontend/components/ui/component_21.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_41.tsx",
+        "target": "frontend/components/ui/component_29.tsx"
+    },
+    {
+        "source": "backend/api/route_19.py",
+        "target": "backend/database/model_15.py"
+    },
+    {
+        "source": "backend/api/route_37.py",
+        "target": "backend/api/route_38.py"
+    },
+    {
+        "source": "backend/rag/vector_service_25.py",
+        "target": "backend/database/model_30.py"
+    },
+    {
+        "source": "frontend/components/ui/component_38.tsx",
+        "target": "frontend/components/ui/component_39.tsx"
+    },
+    {
+        "source": "backend/api/route_20.py",
+        "target": "backend/api/route_21.py"
+    },
+    {
+        "source": "backend/security/scanner_16.py",
+        "target": "backend/security/scanner_13.py"
+    },
+    {
+        "source": "backend/database/model_29.py",
+        "target": "backend/database/model_36.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_28.py",
+        "target": "backend/parser/ast_parser_23.py"
+    },
+    {
+        "source": "backend/api/route_14.py",
+        "target": "backend/api/route_37.py"
+    },
+    {
+        "source": "frontend/components/ui/component_44.tsx",
+        "target": "frontend/components/ui/component_18.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_40.py",
+        "target": "backend/rag/vector_service_41.py"
+    },
+    {
+        "source": "frontend/components/ui/component_11.tsx",
+        "target": "frontend/components/ui/component_22.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_48.py",
+        "target": "backend/security/scanner_14.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_09.py",
+        "target": "backend/parser/ast_parser_23.py"
+    },
+    {
+        "source": "backend/security/scanner_02.py",
+        "target": "backend/graph/graph_engine_38.py"
+    },
+    {
+        "source": "backend/database/model_17.py",
+        "target": "backend/database/model_18.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_41.py",
+        "target": "backend/graph/graph_engine_42.py"
+    },
+    {
+        "source": "backend/rag/vector_service_32.py",
+        "target": "backend/rag/vector_service_33.py"
+    },
+    {
+        "source": "backend/api/route_24.py",
+        "target": "backend/api/route_15.py"
+    },
+    {
+        "source": "frontend/components/ui/component_07.tsx",
+        "target": "frontend/components/ui/component_08.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_30.py",
+        "target": "backend/parser/ast_parser_23.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_43.py",
+        "target": "backend/parser/ast_parser_22.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_09.py",
+        "target": "backend/graph/graph_engine_40.py"
+    },
+    {
+        "source": "frontend/components/ui/component_24.tsx",
+        "target": "frontend/components/ui/component_40.tsx"
+    },
+    {
+        "source": "backend/parser/ast_parser_02.py",
+        "target": "backend/parser/ast_parser_03.py"
+    },
+    {
+        "source": "backend/api/route_25.py",
+        "target": "backend/rag/vector_service_40.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_07.py",
+        "target": "backend/api/route_16.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_10.py",
+        "target": "backend/api/route_15.py"
+    },
+    {
+        "source": "backend/api/route_24.py",
+        "target": "backend/api/route_37.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_03.py",
+        "target": "backend/graph/graph_engine_16.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_43.py",
+        "target": "backend/graph/graph_engine_44.py"
+    },
+    {
+        "source": "backend/rag/vector_service_14.py",
+        "target": "backend/rag/vector_service_15.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_28.py",
+        "target": "backend/parser/ast_parser_01.py"
+    },
+    {
+        "source": "backend/rag/vector_service_13.py",
+        "target": "backend/rag/vector_service_02.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_28.py",
+        "target": "backend/parser/ast_parser_29.py"
+    },
+    {
+        "source": "backend/api/route_04.py",
+        "target": "backend/api/route_08.py"
+    },
+    {
+        "source": "backend/api/route_21.py",
+        "target": "backend/api/route_26.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_37.py",
+        "target": "backend/graph/graph_engine_43.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_44.py",
+        "target": "backend/graph/graph_engine_20.py"
+    },
+    {
+        "source": "backend/security/scanner_01.py",
+        "target": "backend/security/scanner_02.py"
+    },
+    {
+        "source": "backend/security/scanner_16.py",
+        "target": "backend/security/scanner_09.py"
+    },
+    {
+        "source": "frontend/components/ui/component_37.tsx",
+        "target": "frontend/components/ui/component_38.tsx"
+    },
+    {
+        "source": "backend/api/route_06.py",
+        "target": "backend/api/route_07.py"
+    },
+    {
+        "source": "backend/api/route_04.py",
+        "target": "backend/rag/vector_service_39.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_11.py",
+        "target": "backend/parser/ast_parser_45.py"
+    },
+    {
+        "source": "backend/api/route_07.py",
+        "target": "backend/api/route_08.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_45.py",
+        "target": "backend/parser/ast_parser_19.py"
+    },
+    {
+        "source": "backend/api/route_22.py",
+        "target": "backend/api/route_23.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_20.py",
+        "target": "backend/parser/ast_parser_40.py"
+    },
+    {
+        "source": "frontend/components/ui/component_26.tsx",
+        "target": "frontend/components/ui/component_27.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_04.tsx",
+        "target": "frontend/components/ui/component_17.tsx"
+    },
+    {
+        "source": "backend/api/route_16.py",
+        "target": "backend/api/route_36.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_26.py",
+        "target": "backend/parser/ast_parser_22.py"
+    },
+    {
+        "source": "backend/api/route_30.py",
+        "target": "backend/api/route_24.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_12.py",
+        "target": "backend/graph/graph_engine_13.py"
+    },
+    {
+        "source": "backend/database/model_21.py",
+        "target": "backend/database/model_05.py"
+    },
+    {
+        "source": "backend/database/model_27.py",
+        "target": "backend/database/model_13.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_08.py",
+        "target": "backend/rag/vector_service_30.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_33.py",
+        "target": "backend/parser/ast_parser_08.py"
+    },
+    {
+        "source": "backend/database/model_37.py",
+        "target": "backend/security/scanner_13.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_42.py",
+        "target": "backend/graph/graph_engine_28.py"
+    },
+    {
+        "source": "backend/security/scanner_05.py",
+        "target": "backend/security/scanner_06.py"
+    },
+    {
+        "source": "frontend/components/ui/component_28.tsx",
+        "target": "backend/api/route_07.py"
+    },
+    {
+        "source": "backend/api/route_34.py",
+        "target": "backend/api/route_35.py"
+    },
+    {
+        "source": "backend/security/scanner_05.py",
+        "target": "backend/security/scanner_13.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_48.py",
+        "target": "frontend/components/ui/component_45.tsx"
+    },
+    {
+        "source": "backend/graph/graph_engine_42.py",
+        "target": "backend/graph/graph_engine_43.py"
+    },
+    {
+        "source": "backend/database/model_02.py",
+        "target": "backend/database/model_03.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_39.py",
+        "target": "backend/graph/graph_engine_42.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_26.py",
+        "target": "backend/graph/graph_engine_27.py"
+    },
+    {
+        "source": "backend/api/route_04.py",
+        "target": "backend/api/route_05.py"
+    },
+    {
+        "source": "backend/rag/vector_service_36.py",
+        "target": "backend/rag/vector_service_37.py"
+    },
+    {
+        "source": "frontend/components/ui/component_02.tsx",
+        "target": "frontend/components/ui/component_06.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_20.py",
+        "target": "backend/rag/vector_service_01.py"
+    },
+    {
+        "source": "frontend/components/ui/component_35.tsx",
+        "target": "frontend/components/ui/component_15.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_18.py",
+        "target": "backend/graph/graph_engine_03.py"
+    },
+    {
+        "source": "backend/database/model_14.py",
+        "target": "backend/database/model_15.py"
+    },
+    {
+        "source": "backend/api/route_26.py",
+        "target": "backend/api/route_27.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_32.py",
+        "target": "backend/parser/ast_parser_33.py"
+    },
+    {
+        "source": "backend/security/scanner_04.py",
+        "target": "backend/security/scanner_15.py"
+    },
+    {
+        "source": "backend/api/route_05.py",
+        "target": "backend/api/route_06.py"
+    },
+    {
+        "source": "backend/security/scanner_19.py",
+        "target": "backend/security/scanner_13.py"
+    },
+    {
+        "source": "backend/database/model_03.py",
+        "target": "backend/database/model_04.py"
+    },
+    {
+        "source": "backend/database/model_09.py",
+        "target": "backend/api/route_18.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_36.py",
+        "target": "backend/parser/ast_parser_37.py"
+    },
+    {
+        "source": "backend/rag/vector_service_07.py",
+        "target": "backend/rag/vector_service_13.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_06.py",
+        "target": "backend/graph/graph_engine_07.py"
+    },
+    {
+        "source": "frontend/components/ui/component_32.tsx",
+        "target": "frontend/components/ui/component_33.tsx"
+    },
+    {
+        "source": "frontend/components/ui/component_34.tsx",
+        "target": "frontend/components/ui/component_25.tsx"
+    },
+    {
+        "source": "backend/rag/vector_service_21.py",
+        "target": "backend/rag/vector_service_12.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_28.py",
+        "target": "backend/graph/graph_engine_15.py"
+    },
+    {
+        "source": "backend/api/route_01.py",
+        "target": "backend/api/route_08.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_24.py",
+        "target": "backend/graph/graph_engine_25.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_07.py",
+        "target": "backend/parser/ast_parser_05.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_12.py",
+        "target": "backend/parser/ast_parser_48.py"
+    },
+    {
+        "source": "backend/security/scanner_03.py",
+        "target": "backend/security/scanner_04.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_47.py",
+        "target": "backend/parser/ast_parser_20.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_07.py",
+        "target": "backend/graph/graph_engine_08.py"
+    },
+    {
+        "source": "backend/graph/graph_engine_11.py",
+        "target": "backend/graph/graph_engine_31.py"
+    },
+    {
+        "source": "frontend/components/ui/component_40.tsx",
+        "target": "frontend/components/ui/component_41.tsx"
+    },
+    {
+        "source": "backend/graph/graph_engine_29.py",
+        "target": "backend/graph/graph_engine_30.py"
+    },
+    {
+        "source": "backend/security/scanner_15.py",
+        "target": "backend/security/scanner_18.py"
+    },
+    {
+        "source": "backend/parser/ast_parser_26.py",
+        "target": "backend/api/route_18.py"
+    },
+    {
+        "source": "backend/rag/vector_service_24.py",
+        "target": "backend/rag/vector_service_41.py"
+    }
+],
 };
 
 const MOCK_NOTIFICATIONS: NotificationItem[] = [
