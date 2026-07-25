@@ -551,12 +551,12 @@ const MOCK_GRAPHIFY_STATS: GraphifyStats = {
 
 const MOCK_GRAPHIFY_GRAPH: GraphifyGraph = {
   community_labels: {
-    "0": "Core API & HTTP Routing",
-    "1": "Database Models & Relational Schema",
-    "2": "Ingestion, AST & Parser Engine",
-    "3": "Knowledge Graph & Network Topology",
-    "4": "Vector Search & LLM RAG Pipeline",
-    "5": "Frontend Web App & UI Components",
+    "0": "Core API",
+    "1": "Database ORM",
+    "2": "Ingestion Engine",
+    "3": "Graph Topology",
+    "4": "Vector RAG",
+    "5": "Frontend App",
   },
   nodes: [
     /* Community 0: Core API & Routing */
