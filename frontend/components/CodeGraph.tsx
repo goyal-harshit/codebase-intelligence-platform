@@ -392,7 +392,7 @@ export default function CodeGraph({
           nodeLabel="name"
           nodeAutoColorBy="type"
           nodeCanvasObject={nodeCanvasObject}
-          nodePointerAreaPaint={(node: any, color, ctx) => {
+          nodePointerAreaPaint={(node: any, color: string, ctx: CanvasRenderingContext2D) => {
             const r = nodeRadius(node.id) + 2;
             ctx.beginPath();
             ctx.arc(node.x, node.y, r, 0, 2 * Math.PI);
