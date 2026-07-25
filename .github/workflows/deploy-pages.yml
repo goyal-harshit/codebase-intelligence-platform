@@ -42,9 +42,7 @@ jobs:
         run: npm run build
 
       - name: Create .nojekyll file
-        run: |
-          touch frontend/out/.nojekyll
-          cp index.html frontend/out/index.html 2>/dev/null || true
+        run: touch frontend/out/.nojekyll
 
       - name: Upload artifact for GitHub Actions Pages deployment
         uses: actions/upload-pages-artifact@v3
