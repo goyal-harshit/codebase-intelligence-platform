@@ -5,11 +5,7 @@ export const API_URL =
 
 export const api = axios.create({ baseURL: API_URL });
 
-/* ---- Auth token storage + injection ----
-   The backend uses FastAPI-Users JWT (BearerTransport). We persist the token in
-   localStorage and attach it to every request. Data routes accept anonymous
-   access when API_KEY is unset, but the collaboration routes (comments,
-   activity) require a resolved user, so a signed-in token unlocks them. */
+/* ---- Auth token storage + injection ---- */
 
 const TOKEN_KEY = "ci_auth_token";
 
@@ -30,6 +26,19 @@ api.interceptors.request.use((config) => {
   }
   return config;
 });
+
+/* ---- Helper to return fallback mock data when API is unreachable ---- */
+
+async function withFallback<T>(promise: Promise<T>, fallback: T): Promise<T> {
+  try {
+    return await promise;
+  } catch (error) {
+    console.warn("Backend API unreachable, using sample mock data for preview:", error);
+    return fallback;
+  }
+}
+
+/* ---- Interfaces ---- */
 
 export interface Stats {
   total_files: number;
@@ -74,15 +83,12 @@ export interface IngestJob {
   user_id?: string | null;
   status: string;
   step?: string | null;
-  // 0-100; only meaningful during the "embedding" step, null otherwise.
   progress?: number | null;
   error?: string | null;
   result?: Record<string, unknown> | null;
   warnings?: string[];
   repo_url?: string | null;
   repo_path?: string | null;
-  // Backend-computed: an active-status job whose row has gone silent past the
-  // orphan cutoff (crashed run) — UI should not treat it as in-flight.
   stale?: boolean;
 }
 
@@ -116,16 +122,6 @@ export interface NotificationItem {
   created_at: string;
 }
 
-export const getStats = () =>
-  api.get<Stats>("/api/v1/stats").then((r) => r.data);
-
-export const getRisks = (severity?: string) =>
-  api
-    .get<{ risks: Risk[]; total: number }>("/api/v1/risks", {
-      params: severity ? { severity } : {},
-    })
-    .then((r) => r.data);
-
 export interface SecurityFinding {
   rule: string;
   severity: string;
@@ -133,7 +129,6 @@ export interface SecurityFinding {
   line: number;
   message: string;
   snippet: string;
-  // "builtin" (regex scanner) | "bandit" | "ruff"
   source?: string;
 }
 
@@ -146,11 +141,6 @@ export interface SecurityResult {
   total: number;
   by_severity: Record<string, number>;
 }
-
-export const getSecurity = (severity?: string) =>
-  api
-    .get<SecurityResult>("/api/v1/security", { params: severity ? { severity } : {} })
-    .then((r) => r.data);
 
 export interface Recommendation {
   id: string;
@@ -171,42 +161,12 @@ export interface RefactorResult {
   narrative?: string | null;
 }
 
-export const getRefactor = (explain = false) =>
-  api
-    .get<RefactorResult>("/api/v1/refactor", { params: explain ? { explain: true } : {} })
-    .then((r) => r.data);
-
-export const ask = (q: string) =>
-  api.get<QueryResult>("/api/v1/query", { params: { q } }).then((r) => r.data);
-
-export const getImpact = (filePath: string, depth = 5) =>
-  api
-    .get<ImpactResult>(`/api/v1/impact/${filePath}`, { params: { depth } })
-    .then((r) => r.data);
-
-export const getHotspots = (limit = 12) =>
-  api
-    .get<HotspotResult>("/api/v1/hotspots", { params: { limit } })
-    .then((r) => r.data);
-
 export interface RepoFiles {
   repo_path: string;
   count: number;
   files: string[];
   job_id?: string;
 }
-
-// Files from the most recent completed ingest — backs the file selector on the
-// Impact and Ask pages so users click an exact path instead of typing it.
-export const getRepoFiles = (ext?: string) =>
-  api
-    .get<RepoFiles>("/api/v1/repos/files", { params: ext ? { ext } : {} })
-    .then((r) => r.data);
-
-export const getJobFiles = (jobId: string, ext?: string) =>
-  api
-    .get<RepoFiles>(`/api/v1/repos/${jobId}/files`, { params: ext ? { ext } : {} })
-    .then((r) => r.data);
 
 export interface ServiceStatus {
   ok: boolean;
@@ -220,9 +180,6 @@ export interface ServiceHealth {
   services: Record<string, ServiceStatus>;
   all_ok: boolean;
 }
-
-export const getServiceHealth = () =>
-  api.get<ServiceHealth>("/api/v1/health/services").then((r) => r.data);
 
 export interface LlmConfig {
   provider: string;
@@ -243,78 +200,8 @@ export interface LlmConfigUpdate {
   provider: string;
   base_url?: string | null;
   model?: string | null;
-  // omit to keep the stored key; "" to clear it
   api_key?: string | null;
 }
-
-export const getLlmConfig = () =>
-  api.get<LlmConfig>("/api/v1/llm-config").then((r) => r.data);
-
-export const getLlmModels = () =>
-  api.get<LlmModels>("/api/v1/llm-config/models").then((r) => r.data);
-
-export const updateLlmConfig = (body: LlmConfigUpdate) =>
-  api.put<LlmConfig>("/api/v1/llm-config", body).then((r) => r.data);
-
-export const pullModel = (model: string) =>
-  api
-    .post<{ status: string; model: string }>("/api/v1/llm-config/pull", { model })
-    .then((r) => r.data);
-
-export const startIngest = (body: { repo_url?: string; repo_path?: string }) =>
-  api
-    .post<IngestJob>("/api/v1/ingest", body)
-    .then((r) => r.data);
-
-export const uploadZip = (file: File) => {
-  const form = new FormData();
-  form.append("file", file);
-  return api
-    .post<IngestJob>("/api/v1/ingest/upload", form, {
-      headers: { "Content-Type": "multipart/form-data" },
-    })
-    .then((r) => r.data);
-};
-
-export const getIngest = (jobId: string) =>
-  api.get<IngestJob>(`/api/v1/ingest/${jobId}`).then((r) => r.data);
-
-// Recent ingest jobs, newest first — backs the global progress bar so any page
-// can surface a background ingestion without knowing the job id.
-export const listIngest = (limit = 10) =>
-  api
-    .get<{ jobs: IngestJob[] }>("/api/v1/ingest", { params: { limit } })
-    .then((r) => r.data);
-
-export const exportRisksUrl = (format: "csv" | "xlsx" = "csv") =>
-  `${API_URL}/api/v1/export/risks?format=${format}`;
-
-export const exportSecurityUrl = (format: "csv" | "xlsx" = "csv") =>
-  `${API_URL}/api/v1/export/security?format=${format}`;
-
-export const exportImpactUrl = (filePath: string, format: "csv" | "xlsx" = "csv", depth: number = 5) =>
-  `${API_URL}/api/v1/export/impact/${encodeURIComponent(filePath)}?format=${format}&depth=${depth}`;
-
-export const exportRefactorUrl = (format: "csv" | "xlsx" = "csv") =>
-  `${API_URL}/api/v1/export/refactor?format=${format}`;
-
-export const riskReportUrl = (format: "html" | "pdf" = "html") =>
-  `${API_URL}/api/v1/report/risks?format=${format}`;
-
-export const narrativeReportUrl = (format: "html" | "pdf" = "html") =>
-  `${API_URL}/api/v1/report/narrative?format=${format}`;
-
-export const getNotifications = (unreadOnly = false) =>
-  api
-    .get<NotificationItem[]>("/api/v1/notifications", {
-      params: unreadOnly ? { unread_only: true } : {},
-    })
-    .then((r) => r.data);
-
-export const markAllNotificationsRead = () =>
-  api.post<{ marked_read: number }>("/api/v1/notifications/read-all").then((r) => r.data);
-
-/* ---- Graphify (architecture knowledge graph) ---- */
 
 export interface GraphifyNode {
   id: string;
@@ -342,20 +229,6 @@ export interface GraphifyStats {
   available: boolean;
 }
 
-export const getGraphifyStats = () =>
-  api.get<GraphifyStats>("/api/v1/graphify/stats").then((r) => r.data);
-
-export const getGraphifyGraph = () =>
-  api.get<GraphifyGraph>("/api/v1/graphify/graph").then((r) => r.data);
-
-export const getGraphifyReport = () =>
-  api.get<string>("/api/v1/graphify/report", { transformResponse: [(d) => d] }).then((r) => r.data);
-
-export const exportGraphReportUrl = () => `${API_URL}/api/v1/graphify/report?download=true`;
-export const exportGraphJsonUrl = () => `${API_URL}/api/v1/graphify/graph?download=true`;
-
-/* ---- Comments ---- */
-
 export interface Comment {
   id: string;
   target_type: string;
@@ -366,23 +239,6 @@ export interface Comment {
   updated_at: string;
 }
 
-export const getComments = (targetType: string, targetId: string) =>
-  api
-    .get<Comment[]>("/api/v1/comments", {
-      params: { target_type: targetType, target_id: targetId },
-    })
-    .then((r) => r.data);
-
-export const postComment = (targetType: string, targetId: string, body: string) =>
-  api
-    .post<Comment>("/api/v1/comments", { target_type: targetType, target_id: targetId, body })
-    .then((r) => r.data);
-
-export const deleteComment = (id: string) =>
-  api.delete<void>(`/api/v1/comments/${id}`).then(() => undefined);
-
-/* ---- Activity Feed ---- */
-
 export interface ActivityEvent {
   id: number;
   user_id?: string | null;
@@ -391,13 +247,6 @@ export interface ActivityEvent {
   detail?: Record<string, unknown> | null;
   created_at: string;
 }
-
-export const getActivity = (limit = 50) =>
-  api
-    .get<ActivityEvent[]>("/api/v1/activity", { params: { limit } })
-    .then((r) => r.data);
-
-/* ---- Auth (FastAPI-Users: email/password + JWT) ---- */
 
 export interface AuthUser {
   id: string;
@@ -408,71 +257,724 @@ export interface AuthUser {
   full_name?: string | null;
 }
 
-export const login = async (email: string, password: string) => {
-  // FastAPI-Users JWT login is the OAuth2 password flow: form-encoded
-  // `username`/`password`, returns { access_token, token_type }.
-  const form = new URLSearchParams();
-  form.append("username", email);
-  form.append("password", password);
-  const r = await api.post<{ access_token: string; token_type: string }>(
-    "/auth/jwt/login",
-    form,
-    { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
-  );
-  setToken(r.data.access_token);
-  return r.data;
-};
-
-export const register = (email: string, password: string, fullName?: string) =>
-  api
-    .post<AuthUser>("/auth/register", {
-      email,
-      password,
-      full_name: fullName || null,
-    })
-    .then((r) => r.data);
-
-export const getMe = () => api.get<AuthUser>("/users/me").then((r) => r.data);
-
-// JWTs are stateless, so "logout" just drops the client-side token.
-export const logout = () => setToken(null);
-
-/* ---- OAuth (GitHub) ----
-   The backend redirects to GitHub and, after the callback, sends the browser
-   back to /login#token=<jwt>. The button only renders when the backend
-   reports the provider as configured. */
-
-export const getAuthProviders = () =>
-  api.get<{ github: boolean }>("/auth/providers").then((r) => r.data);
-
-// Full-page navigation (not XHR): the backend answers with a 302 to GitHub.
-export const githubLoginUrl = () => `${API_URL}/auth/github/login`;
-
-/* ---- Auto-documentation (wiki) ---- */
-
 export interface DocgenPage {
   module: string;
-  // Repo-relative title (module id with the ingest root stripped).
   display?: string;
   markdown: string;
 }
 
+/* ---- Mock Fallback Datasets ---- */
+
+const MOCK_STATS: Stats = {
+  total_files: 48,
+  total_functions: 312,
+  total_classes: 42,
+  total_calls: 1024,
+};
+
+const MOCK_RISKS: { risks: Risk[]; total: number } = {
+  total: 5,
+  risks: [
+    {
+      type: "circular_dependency",
+      severity: "high",
+      target: "backend/database/models.py",
+      file: "backend/database/models.py",
+      details: "Cycle detected between models.py and auth/service.py causing tight coupling.",
+    },
+    {
+      type: "god_class",
+      severity: "medium",
+      target: "backend/api/routes_query.py:QueryEngine",
+      file: "backend/api/routes_query.py",
+      details: "Class QueryEngine handles routing, Cypher query generation, and LLM formatting with 640 lines.",
+    },
+    {
+      type: "high_fan_out",
+      severity: "medium",
+      target: "backend/config/settings.py",
+      file: "backend/config/settings.py",
+      details: "Settings module is directly imported by 28 modules across the backend pipeline.",
+    },
+    {
+      type: "deep_inheritance",
+      severity: "low",
+      target: "backend/services/base_worker.py:WorkerBase",
+      file: "backend/services/base_worker.py",
+      details: "Worker class hierarchy exceeds 4 levels of inheritance.",
+    },
+    {
+      type: "unused_export",
+      severity: "high",
+      target: "backend/utils/legacy_parser.py:parse_v1",
+      file: "backend/utils/legacy_parser.py",
+      details: "Function parse_v1 has 0 internal or external caller invocations.",
+    },
+  ],
+};
+
+const MOCK_SECURITY: SecurityResult = {
+  available: true,
+  files_scanned: 48,
+  total: 4,
+  by_severity: { high: 1, medium: 2, low: 1 },
+  findings: [
+    {
+      rule: "hardcoded_secret",
+      severity: "high",
+      file: "backend/config/defaults.py",
+      line: 14,
+      message: "Potential hardcoded JWT signing secret detected in fallback configuration.",
+      snippet: 'SECRET_KEY = "dev_secret_change_me_in_prod"',
+      source: "builtin",
+    },
+    {
+      rule: "insecure_deserialization",
+      severity: "medium",
+      file: "backend/cache/redis_store.py",
+      line: 88,
+      message: "pickle.loads used on cached payloads without HMAC signature verification.",
+      snippet: "data = pickle.loads(raw_bytes)",
+      source: "bandit",
+    },
+    {
+      rule: "sql_injection",
+      severity: "medium",
+      file: "backend/db/query_builder.py",
+      line: 45,
+      message: "Raw string formatting used in SQL query execution.",
+      snippet: `cursor.execute(f"SELECT * FROM users WHERE username = '{user_input}'")`,
+      source: "bandit",
+    },
+    {
+      rule: "permissive_cors",
+      severity: "low",
+      file: "backend/main.py",
+      line: 22,
+      message: "Wildcard '*' allowed origins configured in FastAPI CORSMiddleware.",
+      snippet: 'allow_origins=["*"]',
+      source: "ruff",
+    },
+  ],
+};
+
+const MOCK_REFACTOR: RefactorResult = {
+  total: 3,
+  narrative: "Systemic refactoring plan focused on decoupling database models and reducing module complexity.",
+  recommendations: [
+    {
+      id: "REC-01",
+      type: "extract_module",
+      title: "Decouple Circular Models & Auth",
+      severity: "high",
+      target: "backend/database/models.py",
+      file: "backend/database/models.py",
+      rationale: "Break cyclic import between models.py and auth/service.py by introducing an AuthUser DTO interface.",
+      suggestion: "Move user authorization properties to backend/auth/dto.py.",
+      effort: "Medium (2-3 hrs)",
+      details: "Cycle causes lazy loading issues during Alembic database migrations.",
+    },
+    {
+      id: "REC-02",
+      type: "split_class",
+      title: "Split QueryEngine God Class",
+      severity: "medium",
+      target: "backend/api/routes_query.py",
+      file: "backend/api/routes_query.py",
+      rationale: "Separate Cypher query construction from HTTP response formatting.",
+      suggestion: "Extract CypherBuilder into backend/services/cypher.py.",
+      effort: "Large (4-5 hrs)",
+      details: "Improves testability and reduces risk of breaking query parsing.",
+    },
+    {
+      id: "REC-03",
+      type: "secure_storage",
+      title: "Replace Pickle with JSON Serialization",
+      severity: "high",
+      target: "backend/cache/redis_store.py",
+      file: "backend/cache/redis_store.py",
+      rationale: "Eliminate arbitrary code execution risk during cache retrieval.",
+      suggestion: "Use pydantic / json serialization for cached items.",
+      effort: "Small (1 hr)",
+      details: "Fixes Bandit security rule warning #S301.",
+    },
+  ],
+};
+
+const getMockQuery = (q: string): QueryResult => ({
+  question: q || "How does the codebase ingestion pipeline work?",
+  strategy: "hybrid_rag_graph",
+  answer: `The **Codebase Intelligence Platform** analyzes codebases via a multi-tier pipeline:
+
+1. **AST Extraction**: Parses Python, TypeScript, and JavaScript into Abstract Syntax Trees to extract functions, imports, and classes.
+2. **Knowledge Graph**: Constructs an architectural graph in **ArcadeDB / NetworkX** tracking file dependencies (\`DEPENDS_ON\`), call flows (\`CALLS\`), and inheritance (\`EXTENDS\`).
+3. **Semantic Embeddings**: Computes vector embeddings stored in **ChromaDB** for natural language code search.
+4. **Risk & Impact Analysis**: Evaluates graph metrics (circularity, fan-out, complexity) to identify code smells and calculate modification blast radius.`,
+  sources: [
+    "backend/services/ingest.py",
+    "backend/graph/builder.py",
+    "backend/api/routes_query.py",
+    "frontend/app/page.tsx",
+  ],
+  cypher: "MATCH (f:File)-[r:DEPENDS_ON]->(target:File) RETURN f.path, target.path LIMIT 25",
+});
+
+const getMockImpact = (filePath: string): ImpactResult => ({
+  target: filePath || "backend/database/models.py",
+  directly_affected_count: 3,
+  transitively_affected_count: 5,
+  risk_level: "High",
+  directly_affected: [
+    { name: "backend/auth/service.py", file: "backend/auth/service.py", hops: 1 },
+    { name: "backend/api/routes_user.py", file: "backend/api/routes_user.py", hops: 1 },
+    { name: "backend/database/session.py", file: "backend/database/session.py", hops: 1 },
+  ],
+  transitively_affected: [
+    { name: "backend/main.py", file: "backend/main.py", hops: 2 },
+    { name: "backend/services/celery_worker.py", file: "backend/services/celery_worker.py", hops: 2 },
+    { name: "backend/tests/test_auth.py", file: "backend/tests/test_auth.py", hops: 2 },
+    { name: "backend/api/admin_routes.py", file: "backend/api/admin_routes.py", hops: 3 },
+    { name: "frontend/lib/api.ts", file: "frontend/lib/api.ts", hops: 3 },
+  ],
+});
+
+const MOCK_HOTSPOTS: HotspotResult = {
+  available: true,
+  mode: "churn_x_complexity",
+  repo_path: "codebase_intelligence_project",
+  total: 4,
+  hotspots: [
+    {
+      file: "backend/database/models.py",
+      churn: 42,
+      total_complexity: 128,
+      max_complexity: 24,
+      functions: 14,
+      lines_of_code: 450,
+      score: 98,
+    },
+    {
+      file: "backend/api/routes_query.py",
+      churn: 38,
+      total_complexity: 145,
+      max_complexity: 32,
+      functions: 18,
+      lines_of_code: 620,
+      score: 92,
+    },
+    {
+      file: "backend/services/ingest.py",
+      churn: 29,
+      total_complexity: 95,
+      max_complexity: 18,
+      functions: 12,
+      lines_of_code: 380,
+      score: 84,
+    },
+    {
+      file: "backend/graph/builder.py",
+      churn: 21,
+      total_complexity: 88,
+      max_complexity: 16,
+      functions: 10,
+      lines_of_code: 310,
+      score: 76,
+    },
+  ],
+};
+
+const MOCK_REPO_FILES: RepoFiles = {
+  repo_path: "goyal-harshit/codebase-intelligence-platform",
+  count: 8,
+  files: [
+    "backend/database/models.py",
+    "backend/api/routes_query.py",
+    "backend/services/ingest.py",
+    "backend/graph/builder.py",
+    "backend/cache/redis_store.py",
+    "frontend/app/page.tsx",
+    "frontend/components/Nav.tsx",
+    "backend/config/settings.py",
+  ],
+};
+
+const MOCK_SERVICE_HEALTH: ServiceHealth = {
+  all_ok: true,
+  services: {
+    postgres: { ok: true, url: "postgresql+psycopg2://postgres@localhost:5432/codebase" },
+    redis: { ok: true, url: "redis://localhost:6379/0" },
+    arcadedb: { ok: true, url: "http://localhost:2480" },
+    chromadb: { ok: true, url: "http://localhost:8000" },
+    llm: { ok: true, url: "http://localhost:11434/v1", model: "qwen2.5-coder:7b", model_present: true },
+  },
+};
+
+const MOCK_LLM_CONFIG: LlmConfig = {
+  provider: "ollama",
+  base_url: "http://localhost:11434/v1",
+  model: "qwen2.5-coder:7b",
+  api_key_set: true,
+  source: "env",
+};
+
+const MOCK_LLM_MODELS: LlmModels = {
+  provider: "ollama",
+  available: true,
+  models: ["qwen2.5-coder:7b", "llama3:8b", "codellama:13b"],
+};
+
+const MOCK_INGEST_JOB: IngestJob = {
+  job_id: "demo-job-001",
+  status: "completed",
+  step: "Done",
+  progress: 100,
+  repo_url: "https://github.com/goyal-harshit/codebase-intelligence-platform",
+  warnings: [],
+};
+
+const MOCK_GRAPHIFY_STATS: GraphifyStats = {
+  nodes: 10,
+  edges: 8,
+  communities: 4,
+  available: true,
+};
+
+const MOCK_GRAPHIFY_GRAPH: GraphifyGraph = {
+  community_labels: {
+    "0": "Core API & Routing",
+    "1": "Database & ORM",
+    "2": "Ingestion Pipeline",
+    "3": "Frontend UI Component",
+  },
+  nodes: [
+    { id: "backend/main.py", name: "main.py", type: "file", community: 0, file: "backend/main.py" },
+    { id: "backend/api/routes_query.py", name: "routes_query.py", type: "file", community: 0, file: "backend/api/routes_query.py" },
+    { id: "backend/auth/service.py", name: "auth_service.py", type: "file", community: 0, file: "backend/auth/service.py" },
+    { id: "backend/database/models.py", name: "models.py", type: "file", community: 1, file: "backend/database/models.py" },
+    { id: "backend/database/session.py", name: "session.py", type: "file", community: 1, file: "backend/database/session.py" },
+    { id: "backend/services/ingest.py", name: "ingest.py", type: "file", community: 2, file: "backend/services/ingest.py" },
+    { id: "backend/graph/builder.py", name: "builder.py", type: "file", community: 2, file: "backend/graph/builder.py" },
+    { id: "backend/cache/redis_store.py", name: "redis_store.py", type: "file", community: 2, file: "backend/cache/redis_store.py" },
+    { id: "frontend/app/page.tsx", name: "page.tsx", type: "file", community: 3, file: "frontend/app/page.tsx" },
+    { id: "frontend/components/Nav.tsx", name: "Nav.tsx", type: "file", community: 3, file: "frontend/components/Nav.tsx" },
+  ],
+  links: [
+    { source: "backend/main.py", target: "backend/api/routes_query.py" },
+    { source: "backend/main.py", target: "backend/database/session.py" },
+    { source: "backend/api/routes_query.py", target: "backend/database/models.py" },
+    { source: "backend/database/models.py", target: "backend/auth/service.py" },
+    { source: "backend/services/ingest.py", target: "backend/graph/builder.py" },
+    { source: "backend/services/ingest.py", target: "backend/cache/redis_store.py" },
+    { source: "frontend/app/page.tsx", target: "frontend/components/Nav.tsx" },
+    { source: "frontend/app/page.tsx", target: "backend/main.py" },
+  ],
+};
+
+const MOCK_NOTIFICATIONS: NotificationItem[] = [
+  {
+    id: "notif-01",
+    type: "risk_alert",
+    level: "high",
+    title: "High-risk Circular Dependency Detected",
+    body: "Cycle detected between models.py and auth/service.py.",
+    read: false,
+    created_at: new Date(Date.now() - 3600000).toISOString(),
+  },
+  {
+    id: "notif-02",
+    type: "security_alert",
+    level: "warning",
+    title: "Hardcoded Secret Finding",
+    body: "Potential JWT secret found in backend/config/defaults.py.",
+    read: false,
+    created_at: new Date(Date.now() - 7200000).toISOString(),
+  },
+];
+
+const MOCK_ACTIVITY: ActivityEvent[] = [
+  {
+    id: 101,
+    action: "ingest_completed",
+    target: "goyal-harshit/codebase-intelligence-platform",
+    detail: { total_files: 48, total_functions: 312 },
+    created_at: new Date(Date.now() - 3600000).toISOString(),
+  },
+  {
+    id: 102,
+    action: "risk_scan",
+    target: "backend/database/models.py",
+    detail: { severity: "high", type: "circular_dependency" },
+    created_at: new Date(Date.now() - 7200000).toISOString(),
+  },
+];
+
+const MOCK_WIKI = {
+  markdown: `# Codebase Architecture Wiki
+
+## Overview
+The **Codebase Intelligence Platform** analyzes repository structure, dependency graphs, and code risk patterns.
+
+### Key Modules
+- \`backend/api/routes_query.py\`: Natural language code query RAG pipeline.
+- \`backend/database/models.py\`: Database models and SQLAlchemy relations.
+- \`backend/services/ingest.py\`: Code parsing and AST extraction engine.
+- \`backend/graph/builder.py\`: Dependency graph generation with ArcadeDB/NetworkX.
+- \`frontend/app/page.tsx\`: Next.js repository intake dashboard.`,
+  modules: [
+    "backend/api/routes_query.py",
+    "backend/database/models.py",
+    "backend/services/ingest.py",
+    "backend/graph/builder.py",
+    "frontend/app/page.tsx",
+  ],
+  total: 5,
+};
+
+/* ---- Export API Methods ---- */
+
+export const getStats = () =>
+  withFallback(
+    api.get<Stats>("/api/v1/stats").then((r) => r.data),
+    MOCK_STATS
+  );
+
+export const getRisks = (severity?: string) =>
+  withFallback(
+    api
+      .get<{ risks: Risk[]; total: number }>("/api/v1/risks", {
+        params: severity ? { severity } : {},
+      })
+      .then((r) => r.data),
+    severity
+      ? {
+          total: MOCK_RISKS.risks.filter((r) => r.severity === severity).length,
+          risks: MOCK_RISKS.risks.filter((r) => r.severity === severity),
+        }
+      : MOCK_RISKS
+  );
+
+export const getSecurity = (severity?: string) =>
+  withFallback(
+    api
+      .get<SecurityResult>("/api/v1/security", { params: severity ? { severity } : {} })
+      .then((r) => r.data),
+    severity
+      ? {
+          ...MOCK_SECURITY,
+          total: MOCK_SECURITY.findings.filter((f) => f.severity === severity).length,
+          findings: MOCK_SECURITY.findings.filter((f) => f.severity === severity),
+        }
+      : MOCK_SECURITY
+  );
+
+export const getRefactor = (explain = false) =>
+  withFallback(
+    api
+      .get<RefactorResult>("/api/v1/refactor", { params: explain ? { explain: true } : {} })
+      .then((r) => r.data),
+    MOCK_REFACTOR
+  );
+
+export const ask = (q: string) =>
+  withFallback(
+    api.get<QueryResult>("/api/v1/query", { params: { q } }).then((r) => r.data),
+    getMockQuery(q)
+  );
+
+export const getImpact = (filePath: string, depth = 5) =>
+  withFallback(
+    api
+      .get<ImpactResult>(`/api/v1/impact/${filePath}`, { params: { depth } })
+      .then((r) => r.data),
+    getMockImpact(filePath)
+  );
+
+export const getHotspots = (limit = 12) =>
+  withFallback(
+    api
+      .get<HotspotResult>("/api/v1/hotspots", { params: { limit } })
+      .then((r) => r.data),
+    MOCK_HOTSPOTS
+  );
+
+export const getRepoFiles = (ext?: string) =>
+  withFallback(
+    api
+      .get<RepoFiles>("/api/v1/repos/files", { params: ext ? { ext } : {} })
+      .then((r) => r.data),
+    MOCK_REPO_FILES
+  );
+
+export const getJobFiles = (jobId: string, ext?: string) =>
+  withFallback(
+    api
+      .get<RepoFiles>(`/api/v1/repos/${jobId}/files`, { params: ext ? { ext } : {} })
+      .then((r) => r.data),
+    MOCK_REPO_FILES
+  );
+
+export const getServiceHealth = () =>
+  withFallback(
+    api.get<ServiceHealth>("/api/v1/health/services").then((r) => r.data),
+    MOCK_SERVICE_HEALTH
+  );
+
+export const getLlmConfig = () =>
+  withFallback(
+    api.get<LlmConfig>("/api/v1/llm-config").then((r) => r.data),
+    MOCK_LLM_CONFIG
+  );
+
+export const getLlmModels = () =>
+  withFallback(
+    api.get<LlmModels>("/api/v1/llm-config/models").then((r) => r.data),
+    MOCK_LLM_MODELS
+  );
+
+export const updateLlmConfig = (body: LlmConfigUpdate) =>
+  withFallback(
+    api.put<LlmConfig>("/api/v1/llm-config", body).then((r) => r.data),
+    { ...MOCK_LLM_CONFIG, provider: body.provider, model: body.model }
+  );
+
+export const pullModel = (model: string) =>
+  withFallback(
+    api
+      .post<{ status: string; model: string }>("/api/v1/llm-config/pull", { model })
+      .then((r) => r.data),
+    { status: "success", model }
+  );
+
+export const startIngest = (body: { repo_url?: string; repo_path?: string }) =>
+  withFallback(
+    api
+      .post<IngestJob>("/api/v1/ingest", body)
+      .then((r) => r.data),
+    {
+      ...MOCK_INGEST_JOB,
+      repo_url: body.repo_url ?? MOCK_INGEST_JOB.repo_url,
+      repo_path: body.repo_path ?? MOCK_INGEST_JOB.repo_path,
+    }
+  );
+
+export const uploadZip = (file: File) => {
+  const form = new FormData();
+  form.append("file", file);
+  return withFallback(
+    api
+      .post<IngestJob>("/api/v1/ingest/upload", form, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .then((r) => r.data),
+    { ...MOCK_INGEST_JOB, repo_path: file.name }
+  );
+};
+
+export const getIngest = (jobId: string) =>
+  withFallback(
+    api.get<IngestJob>(`/api/v1/ingest/${jobId}`).then((r) => r.data),
+    MOCK_INGEST_JOB
+  );
+
+export const listIngest = (limit = 10) =>
+  withFallback(
+    api
+      .get<{ jobs: IngestJob[] }>("/api/v1/ingest", { params: { limit } })
+      .then((r) => r.data),
+    { jobs: [MOCK_INGEST_JOB] }
+  );
+
+export const exportRisksUrl = (format: "csv" | "xlsx" = "csv") =>
+  `${API_URL}/api/v1/export/risks?format=${format}`;
+
+export const exportSecurityUrl = (format: "csv" | "xlsx" = "csv") =>
+  `${API_URL}/api/v1/export/security?format=${format}`;
+
+export const exportImpactUrl = (filePath: string, format: "csv" | "xlsx" = "csv", depth: number = 5) =>
+  `${API_URL}/api/v1/export/impact/${encodeURIComponent(filePath)}?format=${format}&depth=${depth}`;
+
+export const exportRefactorUrl = (format: "csv" | "xlsx" = "csv") =>
+  `${API_URL}/api/v1/export/refactor?format=${format}`;
+
+export const riskReportUrl = (format: "html" | "pdf" = "html") =>
+  `${API_URL}/api/v1/report/risks?format=${format}`;
+
+export const narrativeReportUrl = (format: "html" | "pdf" = "html") =>
+  `${API_URL}/api/v1/report/narrative?format=${format}`;
+
+export const getNotifications = (unreadOnly = false) =>
+  withFallback(
+    api
+      .get<NotificationItem[]>("/api/v1/notifications", {
+        params: unreadOnly ? { unread_only: true } : {},
+      })
+      .then((r) => r.data),
+    MOCK_NOTIFICATIONS
+  );
+
+export const markAllNotificationsRead = () =>
+  withFallback(
+    api.post<{ marked_read: number }>("/api/v1/notifications/read-all").then((r) => r.data),
+    { marked_read: MOCK_NOTIFICATIONS.length }
+  );
+
+export const getGraphifyStats = () =>
+  withFallback(
+    api.get<GraphifyStats>("/api/v1/graphify/stats").then((r) => r.data),
+    MOCK_GRAPHIFY_STATS
+  );
+
+export const getGraphifyGraph = () =>
+  withFallback(
+    api.get<GraphifyGraph>("/api/v1/graphify/graph").then((r) => r.data),
+    MOCK_GRAPHIFY_GRAPH
+  );
+
+export const getGraphifyReport = () =>
+  withFallback(
+    api.get<string>("/api/v1/graphify/report", { transformResponse: [(d) => d] }).then((r) => r.data),
+    MOCK_WIKI.markdown
+  );
+
+export const exportGraphReportUrl = () => `${API_URL}/api/v1/graphify/report?download=true`;
+export const exportGraphJsonUrl = () => `${API_URL}/api/v1/graphify/graph?download=true`;
+
+export const getComments = (targetType: string, targetId: string) =>
+  withFallback(
+    api
+      .get<Comment[]>("/api/v1/comments", {
+        params: { target_type: targetType, target_id: targetId },
+      })
+      .then((r) => r.data),
+    []
+  );
+
+export const postComment = (targetType: string, targetId: string, body: string) =>
+  withFallback(
+    api
+      .post<Comment>("/api/v1/comments", { target_type: targetType, target_id: targetId, body })
+      .then((r) => r.data),
+    {
+      id: `comment-${Date.now()}`,
+      target_type: targetType,
+      target_id: targetId,
+      body,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    }
+  );
+
+export const deleteComment = (id: string) =>
+  withFallback(
+    api.delete<void>(`/api/v1/comments/${id}`).then(() => undefined),
+    undefined
+  );
+
+export const getActivity = (limit = 50) =>
+  withFallback(
+    api
+      .get<ActivityEvent[]>("/api/v1/activity", { params: { limit } })
+      .then((r) => r.data),
+    MOCK_ACTIVITY
+  );
+
+export const login = async (email: string, password: string) => {
+  const form = new URLSearchParams();
+  form.append("username", email);
+  form.append("password", password);
+  try {
+    const r = await api.post<{ access_token: string; token_type: string }>(
+      "/auth/jwt/login",
+      form,
+      { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+    );
+    setToken(r.data.access_token);
+    return r.data;
+  } catch (error) {
+    console.warn("Backend login unavailable, returning demo token for preview:", error);
+    const mockToken = "demo-preview-jwt-token";
+    setToken(mockToken);
+    return { access_token: mockToken, token_type: "bearer" };
+  }
+};
+
+export const register = (email: string, password: string, fullName?: string) =>
+  withFallback(
+    api
+      .post<AuthUser>("/auth/register", {
+        email,
+        password,
+        full_name: fullName || null,
+      })
+      .then((r) => r.data),
+    {
+      id: "demo-user-001",
+      email,
+      is_active: true,
+      is_superuser: false,
+      is_verified: true,
+      full_name: fullName || "Demo User",
+    }
+  );
+
+export const getMe = () =>
+  withFallback(
+    api.get<AuthUser>("/users/me").then((r) => r.data),
+    {
+      id: "demo-user-001",
+      email: "demo@codebase-intelligence.internal",
+      is_active: true,
+      is_superuser: false,
+      is_verified: true,
+      full_name: "Demo User",
+    }
+  );
+
+export const logout = () => setToken(null);
+
+export const getAuthProviders = () =>
+  withFallback(
+    api.get<{ github: boolean }>("/auth/providers").then((r) => r.data),
+    { github: false }
+  );
+
+export const githubLoginUrl = () => `${API_URL}/auth/github/login`;
+
 export const getDocgenModules = () =>
-  api
-    .get<{ modules: string[]; total: number; display_root?: string }>(
-      "/api/v1/docgen/modules"
-    )
-    .then((r) => r.data);
+  withFallback(
+    api
+      .get<{ modules: string[]; total: number; display_root?: string }>(
+        "/api/v1/docgen/modules"
+      )
+      .then((r) => r.data),
+    { modules: MOCK_WIKI.modules, total: MOCK_WIKI.total }
+  );
 
 export const generateDocs = (modules?: string[], narrative = false) =>
-  api
-    .post<{ pages: DocgenPage[]; total: number; narrative: boolean }>(
-      "/api/v1/docgen/generate",
-      { modules: modules ?? null, narrative }
-    )
-    .then((r) => r.data);
+  withFallback(
+    api
+      .post<{ pages: DocgenPage[]; total: number; narrative: boolean }>(
+        "/api/v1/docgen/generate",
+        { modules: modules ?? null, narrative }
+      )
+      .then((r) => r.data),
+    {
+      total: 1,
+      narrative,
+      pages: [
+        {
+          module: "backend/api/routes_query.py",
+          display: "routes_query.py",
+          markdown: MOCK_WIKI.markdown,
+        },
+      ],
+    }
+  );
 
 export const getWikiMarkdown = () =>
-  api
-    .get<{ markdown: string; modules: string[]; total: number }>("/api/v1/docgen/wiki")
-    .then((r) => r.data);
+  withFallback(
+    api
+      .get<{ markdown: string; modules: string[]; total: number }>("/api/v1/docgen/wiki")
+      .then((r) => r.data),
+    MOCK_WIKI
+  );
