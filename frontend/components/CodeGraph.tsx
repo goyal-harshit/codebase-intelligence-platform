@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+// @ts-ignore
 import * as THREE from "three";
 import SpriteText from "three-spritetext";
 
