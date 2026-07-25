@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Activity,
   AlertTriangle,
@@ -23,7 +23,7 @@ import {
   UserCircle2,
   X,
 } from "lucide-react";
-import { useAuth } from "@/components/AuthProvider";
+import { checkBackendHealth } from "@/lib/api";
 
 const LINKS = [
   { href: "/", label: "Ingest", icon: UploadCloud },
@@ -44,23 +44,44 @@ export default function Nav() {
   const pathname = usePathname();
   const { user, loading, logout } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [backendOnline, setBackendOnline] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    checkBackendHealth().then((online) => setBackendOnline(online));
+  }, []);
 
   return (
     <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur">
-      {/* ── Demo Mode Notification Bar ── */}
-      <div className="bg-slate-900 text-slate-100 px-4 py-1.5 text-xs font-medium border-b border-slate-800">
-        <div className="mx-auto flex max-w-7xl items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="inline-block h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>
-              <strong className="text-emerald-300">Interactive Demo Mode:</strong> Displaying sample codebase architecture data.
+      {/* ── Dynamic Backend Connection Status Bar ── */}
+      {backendOnline === true ? (
+        <div className="bg-emerald-950 text-emerald-100 px-4 py-1.5 text-xs font-medium border-b border-emerald-800">
+          <div className="mx-auto flex max-w-7xl items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="inline-block h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>
+                <strong className="text-emerald-300">Live Backend Connected:</strong> Connected to FastAPI server & live graph database.
+              </span>
+            </div>
+            <span className="hidden text-emerald-300 sm:inline-block">
+              API Active
             </span>
           </div>
-          <span className="hidden text-slate-400 sm:inline-block">
-            Run <code className="rounded bg-slate-800 px-1 py-0.5 text-slate-200">docker compose up</code> for live backend ingestion.
-          </span>
         </div>
-      </div>
+      ) : (
+        <div className="bg-slate-900 text-slate-100 px-4 py-1.5 text-xs font-medium border-b border-slate-800">
+          <div className="mx-auto flex max-w-7xl items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="inline-block h-2 w-2 rounded-full bg-amber-400 animate-pulse"></span>
+              <span>
+                <strong className="text-amber-300">Backend Offline (Static Host):</strong> Displaying sample codebase data for preview.
+              </span>
+            </div>
+            <span className="hidden text-slate-400 sm:inline-block">
+              Run <code className="rounded bg-slate-800 px-1 py-0.5 text-slate-200">docker compose up</code> for live ingestion.
+            </span>
+          </div>
+        </div>
+      )}
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         {/* ── Top bar: brand + auth + mobile toggle ── */}

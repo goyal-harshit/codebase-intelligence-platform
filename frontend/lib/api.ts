@@ -27,6 +27,16 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+/* ---- Check live backend reachability ---- */
+export const checkBackendHealth = async (): Promise<boolean> => {
+  try {
+    const res = await api.get("/api/v1/stats", { timeout: 3000 });
+    return res.status === 200;
+  } catch {
+    return false;
+  }
+};
+
 /* ---- Helper to return fallback mock data when API is unreachable ---- */
 
 async function withFallback<T>(promise: Promise<T>, fallback: T): Promise<T> {
