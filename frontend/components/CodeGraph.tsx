@@ -112,12 +112,22 @@ export default function CodeGraph({
     [nodeDegree],
   );
 
-  // Apply forces to 2D graph
+  // Apply forces to 2D graph — including center gravity for disconnected clusters
   useEffect(() => {
     const fg = fg2dRef.current;
     if (!fg || mode !== "2d") return;
     fg.d3Force("charge")?.strength(dynamicCharge);
     fg.d3Force("link")?.distance(dynamicDistance);
+
+    // Gravity: pull ALL nodes toward center so disconnected clusters
+    // don't drift to corners. Strength 0.12 = gentle but effective.
+    try {
+      const d3 = require("d3-force");
+      fg.d3Force("gravityX", d3.forceX(0).strength(0.12));
+      fg.d3Force("gravityY", d3.forceY(0).strength(0.12));
+    } catch {
+      // d3-force not available — gravity won't apply but layout still works
+    }
   }, [data, mode, dynamicCharge, dynamicDistance]);
 
   // Apply forces to 3D graph
@@ -126,6 +136,16 @@ export default function CodeGraph({
     if (!fg) return;
     fg.d3Force("charge")?.strength(dynamicCharge * 1.5);
     fg.d3Force("link")?.distance(dynamicDistance * 1.8);
+
+    // 3D gravity toward origin
+    try {
+      const d3 = require("d3-force-3d");
+      fg.d3Force("gravityX", d3.forceX(0).strength(0.1));
+      fg.d3Force("gravityY", d3.forceY(0).strength(0.1));
+      fg.d3Force("gravityZ", d3.forceZ(0).strength(0.1));
+    } catch {
+      // fallback
+    }
   }, [dynamicCharge, dynamicDistance]);
 
   useEffect(() => {
