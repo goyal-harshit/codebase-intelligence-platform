@@ -120,13 +120,24 @@ export default function CodeGraph({
     fg.d3Force("link")?.distance(dynamicDistance);
 
     // Gravity: pull ALL nodes toward center so disconnected clusters
-    // don't drift to corners. Strength 0.12 = gentle but effective.
-    try {
-      const d3 = require("d3-force");
-      fg.d3Force("gravityX", d3.forceX(0).strength(0.12));
-      fg.d3Force("gravityY", d3.forceY(0).strength(0.12));
-    } catch {
-      // d3-force not available — gravity won't apply but layout still works
+    // don't drift to corners. Use the force graph's internal d3 module.
+    // forceX/forceY with strength 0.12 = gentle but effective centering.
+    const d3f = (fg as any).d3Force;
+    if (d3f) {
+      // The force graph instance exposes d3 forces.
+      // We create simple centering forces manually.
+      const gravityForce = (axis: "x" | "y") => {
+        const strength = 0.12;
+        return (alpha: number) => {
+          const nodes = fg.graphData().nodes;
+          nodes.forEach((node: any) => {
+            const v = axis === "x" ? "vx" : "vy";
+            node[v] = (node[v] || 0) + (0 - (node[axis] || 0)) * strength * alpha;
+          });
+        };
+      };
+      fg.d3Force("gravityX", gravityForce("x"));
+      fg.d3Force("gravityY", gravityForce("y"));
     }
   }, [data, mode, dynamicCharge, dynamicDistance]);
 
@@ -138,14 +149,19 @@ export default function CodeGraph({
     fg.d3Force("link")?.distance(dynamicDistance * 1.8);
 
     // 3D gravity toward origin
-    try {
-      const d3 = require("d3-force-3d");
-      fg.d3Force("gravityX", d3.forceX(0).strength(0.1));
-      fg.d3Force("gravityY", d3.forceY(0).strength(0.1));
-      fg.d3Force("gravityZ", d3.forceZ(0).strength(0.1));
-    } catch {
-      // fallback
-    }
+    const gravity3D = (axis: "x" | "y" | "z") => {
+      const strength = 0.1;
+      return (alpha: number) => {
+        const nodes = fg.graphData().nodes;
+        nodes.forEach((node: any) => {
+          const v = `v${axis}`;
+          node[v] = (node[v] || 0) + (0 - (node[axis] || 0)) * strength * alpha;
+        });
+      };
+    };
+    fg.d3Force("gravityX", gravity3D("x"));
+    fg.d3Force("gravityY", gravity3D("y"));
+    fg.d3Force("gravityZ", gravity3D("z"));
   }, [dynamicCharge, dynamicDistance]);
 
   useEffect(() => {
