@@ -128,14 +128,11 @@ export default function CodeGraph({
     fg.d3Force("link")?.distance(dynamicDistance);
 
     // Gravity: pull ALL nodes toward center so disconnected clusters
-    // don't drift to corners. Use the force graph's internal d3 module.
-    // forceX/forceY with strength 0.12 = gentle but effective centering.
+    // sit neatly around the perimeter of the main graph.
     const d3f = (fg as any).d3Force;
     if (d3f) {
-      // The force graph instance exposes d3 forces.
-      // We create simple centering forces manually.
       const gravityForce = (axis: "x" | "y") => {
-        const strength = 0.12;
+        const strength = 0.25;
         return (alpha: number) => {
           const nodes = fg.graphData().nodes;
           nodes.forEach((node: any) => {
@@ -158,7 +155,7 @@ export default function CodeGraph({
 
     // 3D gravity toward origin
     const gravity3D = (axis: "x" | "y" | "z") => {
-      const strength = 0.1;
+      const strength = 0.25;
       return (alpha: number) => {
         const nodes = fg.graphData().nodes;
         nodes.forEach((node: any) => {
@@ -336,13 +333,6 @@ export default function CodeGraph({
         </div>
       </div>
 
-      {/* Hint */}
-      <div className="pointer-events-none absolute bottom-3 left-3 z-10 rounded-md bg-slate-900/85 px-3 py-1.5 text-[11px] text-slate-300 backdrop-blur border border-slate-800">
-        {mode === "3d"
-          ? "3D · Drag rotate · Scroll zoom · Labels always face camera"
-          : "2D · Scroll zoom · Drag pan · Click node to inspect · Arrows = dependency flow"}
-      </div>
-
       {mode === "3d" ? (
         <ForceGraph3D
           fgRef={fg3dRef}
@@ -379,7 +369,9 @@ export default function CodeGraph({
           onEngineStop={() => {
             if (!didInitialFit.current) {
               didInitialFit.current = true;
-              fitView(600);
+              setTimeout(() => {
+                fitView(900);
+              }, 300);
             }
           }}
           enableNodeDrag={false}
@@ -420,8 +412,9 @@ export default function CodeGraph({
           enableZoomInteraction={true}
           onNodeClick={onNodeClick}
           onEngineStop={() => {
-            // Auto-fit the 2D view once the layout settles
-            fg2dRef.current?.zoomToFit(400, 50);
+            setTimeout(() => {
+              fg2dRef.current?.zoomToFit(800, 45);
+            }, 300);
           }}
         />
       )}
