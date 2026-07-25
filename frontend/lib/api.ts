@@ -332,6 +332,7 @@ export interface GraphifyLink {
 export interface GraphifyGraph {
   nodes: GraphifyNode[];
   links: GraphifyLink[];
+  community_labels: Record<string, string>;
 }
 
 export interface GraphifyStats {

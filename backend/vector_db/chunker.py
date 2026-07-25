@@ -17,7 +17,10 @@ class CodeChunker:
     # the tokenizer scan characters it will immediately drop, so cap the text at a
     # generous char budget first. The signal — header, signature, docstring, body
     # head — is all at the front, so tail truncation is cheap on quality.
-    MAX_CHARS = 4000
+    # The embedder's default 192-token window is roughly 750–1,000 code
+    # characters.  Sending several times that amount only makes tokenisation
+    # slower before the model truncates it, so keep a small safety margin.
+    MAX_CHARS = 2400
 
     def chunk_entity(self, entity: "CodeEntity") -> dict:
         text = (

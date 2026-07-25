@@ -51,7 +51,7 @@ class VectorStoreBuilder:
     def embed_and_store(
         self,
         entities: Iterable[CodeEntity],
-        batch_size: int = 128,
+        batch_size: int | None = None,
         on_progress: Optional[Callable[[int, int], None]] = None,
     ) -> int:
         """Embed chunks and upsert them; returns the number actually embedded.
@@ -63,6 +63,9 @@ class VectorStoreBuilder:
         ``on_progress(done, total)`` counts skipped chunks as done so the
         percentage stays truthful either way.
         """
+        # Keep the storage batch aligned with the model batch by default.  A
+        # caller can still lower it for a constrained Chroma deployment.
+        batch_size = batch_size or max(1, int(os.getenv("EMBED_BATCH_SIZE", "192")))
         chunks = [self.chunker.chunk_entity(e) for e in entities]
         total = len(chunks)
         done = 0

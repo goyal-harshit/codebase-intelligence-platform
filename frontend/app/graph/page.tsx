@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Download, FileText, Loader2, Search, Share2, X } from "lucide-react";
+import { Download, FileText, Search, Share2, X } from "lucide-react";
 import {
   getGraphifyGraph,
   getGraphifyStats,
@@ -21,6 +21,7 @@ export default function GraphPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedNode, setSelectedNode] = useState<any | null>(null);
+  const [view, setView] = useState<"overview" | "code">("overview");
 
   /* Filters */
   const [search, setSearch] = useState("");
@@ -62,6 +63,47 @@ export default function GraphPage() {
     return Array.from(set).sort((a, b) => a - b);
   }, [graph]);
 
+  const communityInfo = useMemo(() => {
+    if (!graph) return [];
+    const counts = new Map<number, number>();
+    graph.nodes.forEach((node) => counts.set(node.community, (counts.get(node.community) ?? 0) + 1));
+    return Array.from(counts, ([id, size]) => ({
+      id,
+      size,
+      label: graph.community_labels?.[String(id)] ?? `Community ${id}`,
+    })).sort((a, b) => b.size - a.size);
+  }, [graph]);
+
+  // A code graph can contain thousands of nodes.  The default view intentionally
+  // folds it into its largest modules, which gives a useful architectural map
+  // instead of an unreadable ball of lines.
+  const overviewGraph: GraphData = useMemo(() => {
+    if (!graph) return { nodes: [], links: [] };
+    const visible = new Set(communityInfo.slice(0, 32).map((item) => item.id));
+    const hasOther = communityInfo.length > visible.size;
+    const idFor = (community: number) => visible.has(community) ? `community-${community}` : "community-other";
+    const links = new Map<string, { source: string; target: string; weight: number }>();
+    graph.links.forEach((link) => {
+      const source = graph.nodes.find((node) => node.id === link.source);
+      const target = graph.nodes.find((node) => node.id === link.target);
+      if (!source || !target || source.community === target.community) return;
+      const sourceId = idFor(source.community);
+      const targetId = idFor(target.community);
+      const key = [sourceId, targetId].sort().join("|");
+      const current = links.get(key);
+      links.set(key, current ? { ...current, weight: current.weight + 1 } : { source: sourceId, target: targetId, weight: 1 });
+    });
+    const nodes = communityInfo.slice(0, 32).map((item) => ({
+      id: `community-${item.id}`,
+      name: item.label,
+      type: `${item.size} code nodes`,
+      community: item.id,
+      size: Math.max(2, Math.sqrt(item.size) * 2),
+    }));
+    if (hasOther) nodes.push({ id: "community-other", name: "Other modules", type: "Smaller modules", community: -1, size: 3 });
+    return { nodes, links: Array.from(links.values()) };
+  }, [graph, communityInfo]);
+
   /* Apply search + community filters */
   const filteredGraph: GraphData = useMemo(() => {
     if (!graph) return { nodes: [], links: [] };
@@ -100,6 +142,13 @@ export default function GraphPage() {
       else next.add(c);
       return next;
     });
+  }, []);
+
+  const focusCommunity = useCallback((community: number) => {
+    setSelectedCommunities(new Set([community]));
+    setSearch("");
+    setSelectedNode(null);
+    setView("code");
   }, []);
 
   const clearFilters = useCallback(() => {
@@ -205,31 +254,31 @@ export default function GraphPage() {
               )}
             </div>
 
-            {communities.length > 0 && (
+            {communityInfo.length > 0 && (
               <div className="mt-3">
                 <p className="mb-2 text-xs font-medium uppercase tracking-wide text-slate-500">
-                  Filter by community
+                  Modules
                 </p>
                 <div className="flex flex-wrap gap-1.5">
-                  {communities.slice(0, 30).map((c) => {
-                    const active = selectedCommunities.has(c);
+                  {communityInfo.slice(0, 30).map((item) => {
+                    const active = selectedCommunities.has(item.id);
                     return (
                       <button
-                        key={c}
-                        onClick={() => toggleCommunity(c)}
+                        key={item.id}
+                        onClick={() => { toggleCommunity(item.id); setView("code"); }}
                         className={`rounded-md px-2.5 py-1 text-xs font-medium transition ${
                           active
                             ? "bg-slate-950 text-white"
                             : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                         }`}
                       >
-                        C{c}
+                        {item.label} ({item.size})
                       </button>
                     );
                   })}
-                  {communities.length > 30 && (
+                  {communityInfo.length > 30 && (
                     <span className="self-center text-xs text-slate-400">
-                      +{communities.length - 30} more
+                      +{communityInfo.length - 30} more
                     </span>
                   )}
                 </div>
@@ -237,12 +286,28 @@ export default function GraphPage() {
             )}
           </section>
 
-          {/* Graph */}
-          {filteredGraph.nodes.length === 0 ? (
+          <section className="flex items-center justify-between rounded-lg border border-slate-200 bg-white px-4 py-3">
+            <div>
+              <p className="text-sm font-semibold text-slate-900">{view === "overview" ? "Architecture overview" : "Code explorer"}</p>
+              <p className="text-xs text-slate-500">{view === "overview" ? "Largest modules and the dependencies between them." : "Search or choose a module to inspect its code-level connections."}</p>
+            </div>
+            <div className="flex rounded-lg border border-slate-200 p-0.5 text-sm">
+              {(["overview", "code"] as const).map((mode) => <button key={mode} onClick={() => setView(mode)} className={`rounded-md px-3 py-1.5 capitalize ${view === mode ? "bg-slate-950 text-white" : "text-slate-600 hover:bg-slate-100"}`}>{mode}</button>)}
+            </div>
+          </section>
+
+          {view === "overview" ? (
+            <div className="h-[640px]">
+              <CodeGraph data={overviewGraph} height={640} cooldownTicks={100} onNodeClick={(node) => {
+                const match = node.id.match(/^community-(\d+)$/);
+                if (match) focusCommunity(Number(match[1]));
+              }} />
+            </div>
+          ) : filteredGraph.nodes.length === 0 ? (
             <StateBlock
               state="empty"
-              title="No nodes match your filters"
-              detail="Adjust search or community filters to see graph nodes."
+              title="Choose a module or search for a symbol"
+              detail="The full graph is intentionally not drawn at once, so the explorer stays readable and responsive."
             />
           ) : (
             <div className="flex gap-4 h-[640px]">

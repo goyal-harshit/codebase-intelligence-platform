@@ -20,8 +20,8 @@ const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), {
 });
 
 export interface GraphData {
-  nodes: { id: string; name: string; type?: string; community?: number }[];
-  links: { source: string | any; target: string | any }[];
+  nodes: { id: string; name: string; type?: string; community?: number; size?: number }[];
+  links: { source: string | any; target: string | any; weight?: number }[];
 }
 
 /* Deterministic palette for community colors */
@@ -56,7 +56,9 @@ export default function CodeGraph({
   const didInitialFit = useRef(false);
   const didTuneForces = useRef(false);
   const [width, setWidth] = useState(760);
-  const [mode, setMode] = useState<"3d" | "2d">("3d");
+  // 2D is much easier to read and substantially lighter for a large codebase.
+  // The 3D renderer remains available for deliberate exploration.
+  const [mode, setMode] = useState<"3d" | "2d">("2d");
 
   useEffect(() => {
     if (!ref.current) return;
@@ -241,7 +243,7 @@ export default function CodeGraph({
             `${n.name || n.id}${n.type ? ` · ${n.type}` : ""} · C${n.community ?? "?"}`
           }
           nodeColor={(n: any) => communityColor(n.community)}
-          nodeVal={(n: any) => Math.max(1, (nodeDegree.get(n.id) || 1) * 0.8)}
+          nodeVal={(n: any) => Math.max(1, n.size || (nodeDegree.get(n.id) || 1) * 0.8)}
           nodeOpacity={0.92}
           nodeResolution={8}
           nodeThreeObject={nodeThreeObject}

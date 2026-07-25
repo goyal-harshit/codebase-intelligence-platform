@@ -44,7 +44,10 @@ def _load_model(model_name: str, max_tokens: int):
 
 class SentenceTransformerEmbedder:
     DEFAULT_MODEL = "BAAI/bge-small-en-v1.5"
-    DEFAULT_MAX_TOKENS = 256
+    # Repository search benefits much more from names, signatures and nearby
+    # code than from the tail of a long method.  192 tokens cuts CPU work while
+    # retaining enough context for semantic retrieval.
+    DEFAULT_MAX_TOKENS = 192
 
     def __init__(self, model_name: str = DEFAULT_MODEL, max_tokens: int | None = None) -> None:
         import os
@@ -53,6 +56,7 @@ class SentenceTransformerEmbedder:
         if max_tokens is None:
             max_tokens = int(os.getenv("EMBED_MAX_TOKENS", self.DEFAULT_MAX_TOKENS))
         self.max_tokens = max_tokens
+        self.batch_size = max(1, int(os.getenv("EMBED_BATCH_SIZE", "192")))
 
     def _load(self):
         # Shared across instances/ingests via the module-level cache.
@@ -65,5 +69,5 @@ class SentenceTransformerEmbedder:
         # reports progress per chunk-batch, so a second nested tqdm is just
         # per-call overhead repeated hundreds of times during a large ingest.
         return model.encode(
-            list(texts), normalize_embeddings=True, batch_size=128, show_progress_bar=False,
+            list(texts), normalize_embeddings=True, batch_size=self.batch_size, show_progress_bar=False,
         ).tolist()

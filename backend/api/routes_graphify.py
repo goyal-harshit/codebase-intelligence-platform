@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import os
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -39,6 +40,38 @@ def _read_json_cached(path: Path) -> Any:
 
     _cache[key] = (mtime, data)
     return data
+
+
+def _community_labels(nodes: list[dict[str, Any]]) -> dict[str, str]:
+    """Return useful, stable labels even when Graphify labels are unavailable.
+
+    Community numbers are implementation details.  The graph page needs names a
+    person can recognise at a glance, so fall back to the most common two-level
+    source path (for example, ``backend / api``).
+    """
+    labels_path = _GRAPHIFY_DIR / ".graphify_labels.json"
+    saved: dict[str, str] = {}
+    if labels_path.exists():
+        try:
+            saved = _read_json_cached(labels_path)
+        except HTTPException:
+            pass
+
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for node in nodes:
+        community = str(node.get("community", "unassigned"))
+        grouped.setdefault(community, []).append(node)
+
+    labels: dict[str, str] = {}
+    for community, members in grouped.items():
+        paths = [str(member.get("file", "")).replace("\\", "/") for member in members]
+        prefixes = [" / ".join(path.split("/")[:2]) for path in paths if path]
+        fallback = Counter(prefixes).most_common(1)[0][0] if prefixes else "Unassigned code"
+        saved_label = str(saved.get(community, "")).strip()
+        # Generic Graphify labels ("api", "tests", "system component") lose
+        # context when repeated, while a source-path label remains unambiguous.
+        labels[community] = fallback if saved_label in {"", "system component"} else f"{fallback} · {saved_label}"
+    return labels
 
 
 # ---------------------------------------------------------------------------
@@ -93,7 +126,7 @@ def graphify_graph(download: bool = Query(default=False)):
         if lnk.get("source") in node_ids and lnk.get("target") in node_ids
     ]
     
-    result = {"nodes": nodes, "links": links}
+    result = {"nodes": nodes, "links": links, "community_labels": _community_labels(nodes)}
     if download:
         return Response(
             content=json.dumps(result),
