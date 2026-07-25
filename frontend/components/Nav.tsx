@@ -47,6 +47,21 @@ export default function Nav() {
 
   return (
     <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur">
+      {/* ── Demo Mode Notification Bar ── */}
+      <div className="bg-slate-900 text-slate-100 px-4 py-1.5 text-xs font-medium border-b border-slate-800">
+        <div className="mx-auto flex max-w-7xl items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="inline-block h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>
+              <strong className="text-emerald-300">Interactive Demo Mode:</strong> Displaying sample codebase architecture data.
+            </span>
+          </div>
+          <span className="hidden text-slate-400 sm:inline-block">
+            Run <code className="rounded bg-slate-800 px-1 py-0.5 text-slate-200">docker compose up</code> for live backend ingestion.
+          </span>
+        </div>
+      </div>
+
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         {/* ── Top bar: brand + auth + mobile toggle ── */}
         <div className="flex h-14 items-center justify-between">
