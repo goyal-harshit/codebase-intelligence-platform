@@ -11,6 +11,7 @@ import {
   GraphifyStats,
 } from "@/lib/api";
 import CodeGraph, { GraphData } from "@/components/CodeGraph";
+import ClusterOverview from "@/components/ClusterOverview";
 import PageHeader from "@/components/PageHeader";
 import StateBlock from "@/components/StateBlock";
 import CommentsPanel from "@/components/CommentsPanel";
@@ -74,35 +75,21 @@ export default function GraphPage() {
     })).sort((a, b) => b.size - a.size);
   }, [graph]);
 
-  // A code graph can contain thousands of nodes.  The default view intentionally
-  // folds it into its largest modules, which gives a useful architectural map
-  // instead of an unreadable ball of lines.
-  const overviewGraph: GraphData = useMemo(() => {
-    if (!graph) return { nodes: [], links: [] };
-    const visible = new Set(communityInfo.slice(0, 32).map((item) => item.id));
-    const hasOther = communityInfo.length > visible.size;
-    const idFor = (community: number) => visible.has(community) ? `community-${community}` : "community-other";
-    const links = new Map<string, { source: string; target: string; weight: number }>();
+  // Inter-community links for the ClusterOverview SVG
+  const interCommunityLinks = useMemo(() => {
+    if (!graph) return [];
+    const linkMap = new Map<string, { source: number; target: number; weight: number }>();
     graph.links.forEach((link) => {
-      const source = graph.nodes.find((node) => node.id === link.source);
-      const target = graph.nodes.find((node) => node.id === link.target);
-      if (!source || !target || source.community === target.community) return;
-      const sourceId = idFor(source.community);
-      const targetId = idFor(target.community);
-      const key = [sourceId, targetId].sort().join("|");
-      const current = links.get(key);
-      links.set(key, current ? { ...current, weight: current.weight + 1 } : { source: sourceId, target: targetId, weight: 1 });
+      const sourceNode = graph.nodes.find((n) => n.id === link.source);
+      const targetNode = graph.nodes.find((n) => n.id === link.target);
+      if (!sourceNode || !targetNode || sourceNode.community === targetNode.community) return;
+      const key = `${sourceNode.community}|${targetNode.community}`;
+      const existing = linkMap.get(key);
+      if (existing) existing.weight++;
+      else linkMap.set(key, { source: sourceNode.community, target: targetNode.community, weight: 1 });
     });
-    const nodes = communityInfo.slice(0, 32).map((item) => ({
-      id: `community-${item.id}`,
-      name: item.label,
-      type: `${item.size} code nodes`,
-      community: item.id,
-      size: Math.max(2, Math.sqrt(item.size) * 2),
-    }));
-    if (hasOther) nodes.push({ id: "community-other", name: "Other modules", type: "Smaller modules", community: -1, size: 3 });
-    return { nodes, links: Array.from(links.values()) };
-  }, [graph, communityInfo]);
+    return Array.from(linkMap.values());
+  }, [graph]);
 
   /* Apply search + community filters */
   const filteredGraph: GraphData = useMemo(() => {
@@ -298,10 +285,12 @@ export default function GraphPage() {
 
           {view === "overview" ? (
             <div className="h-[640px]">
-              <CodeGraph data={overviewGraph} height={640} cooldownTicks={100} onNodeClick={(node) => {
-                const match = node.id.match(/^community-(\d+)$/);
-                if (match) focusCommunity(Number(match[1]));
-              }} />
+              <ClusterOverview
+                communities={communityInfo}
+                links={interCommunityLinks}
+                onCommunityClick={focusCommunity}
+                height={640}
+              />
             </div>
           ) : filteredGraph.nodes.length === 0 ? (
             <StateBlock
