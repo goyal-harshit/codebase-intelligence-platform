@@ -47,11 +47,12 @@ interface CodeGraphProps {
 export default function CodeGraph({
   data,
   height = 520,
-  cooldownTicks = 140,
+  cooldownTicks = 180,
   onNodeClick,
 }: CodeGraphProps) {
   const ref = useRef<HTMLDivElement | null>(null);
   const fg3dRef = useRef<any>(null);
+  const fg2dRef = useRef<any>(null);
   const didInitialFit = useRef(false);
   const didTuneForces = useRef(false);
   const [width, setWidth] = useState(760);
@@ -67,22 +68,31 @@ export default function CodeGraph({
     return () => observer.disconnect();
   }, []);
 
+  /* Tune 2D forces for wide, un-cluttered cluster spacing */
+  useEffect(() => {
+    const fg2d = fg2dRef.current;
+    if (fg2d && mode === "2d") {
+      fg2d.d3Force("charge")?.strength(-480);
+      fg2d.d3Force("link")?.distance(130);
+    }
+  }, [data, mode]);
+
   // New data -> re-tune forces and re-frame the view once it settles.
   useEffect(() => {
     didInitialFit.current = false;
     didTuneForces.current = false;
   }, [data]);
 
-  /* Tune 3D forces for clarity & spacing */
+  /* Tune 3D forces for spacious layout distribution across the viewport */
   const tuneForces = useCallback(() => {
     const fg = fg3dRef.current;
     if (!fg) return;
-    fg.d3Force("charge")?.strength(-120);
-    fg.d3Force("link")?.distance(55);
+    fg.d3Force("charge")?.strength(-420);
+    fg.d3Force("link")?.distance(130);
   }, []);
 
   const fitView = useCallback((ms = 800) => {
-    fg3dRef.current?.zoomToFit(ms, 60);
+    fg3dRef.current?.zoomToFit(ms, 40);
   }, []);
 
   // Compute node degree to size nodes based on their importance
@@ -312,6 +322,7 @@ export default function CodeGraph({
         />
       ) : (
         <ForceGraph2D
+          ref={fg2dRef}
           graphData={data}
           nodeLabel="name"
           nodeAutoColorBy="type"
@@ -338,8 +349,8 @@ export default function CodeGraph({
           width={width}
           cooldownTicks={cooldownTicks}
           warmupTicks={30}
-          d3AlphaDecay={0.03}
-          d3VelocityDecay={0.4}
+          d3AlphaDecay={0.015}
+          d3VelocityDecay={0.3}
           enableNodeDrag={true}
           enableZoomInteraction={true}
           onNodeClick={onNodeClick}
