@@ -5,6 +5,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 // @ts-ignore
 import * as THREE from "three";
 import SpriteText from "three-spritetext";
+// Import Web Worker for physics simulation
+const graphWorker = new Worker(new URL('../public/workers/graphWorker.js', import.meta.url));
 
 const ForceGraph3D = dynamic(
   async () => {
@@ -49,6 +51,9 @@ interface CodeGraphProps {
   onNodeClick?: (node: any) => void;
 }
 
+
+
+
 export default function CodeGraph({
   data,
   height = 580,
@@ -62,16 +67,54 @@ export default function CodeGraph({
   const didTuneForces = useRef(false);
   const [width, setWidth] = useState(760);
   const [mode, setMode] = useState<"3d" | "2d">("2d");
+  // Internal state to trigger re‑render when the worker sends updated positions
+  const [, setForceRender] = useState(0);
+  // Local copy of graph data that will be mutated by the worker
+  const [graphData, setGraphData] = useState<GraphData>(data);
 
   useEffect(() => {
-    if (!ref.current) return;
-    const resize = () =>
-      setWidth(Math.max(320, ref.current?.clientWidth ?? 760));
-    resize();
-    const observer = new ResizeObserver(resize);
-    observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
+  if (!ref.current) return;
+  const resize = () =>
+    setWidth(Math.max(320, ref.current?.clientWidth ?? 760));
+  resize();
+  const observer = new ResizeObserver(resize);
+  observer.observe(ref.current);
+  return () => observer.disconnect();
+}, []);
+
+// ---------------------------------------------------------------------
+// Initialise Web Worker and handle position updates
+// ---------------------------------------------------------------------
+useEffect(() => {
+  if (!graphWorker) return;
+  // Send initial graph data to the worker
+  const payload = { nodes: data.nodes, links: data.links };
+  graphWorker.postMessage({ type: 'init', payload });
+
+  const handleMessage = (e: MessageEvent) => {
+    const { type, payload } = e.data;
+    if (type === 'tick') {
+      // Update positions in local graphData state
+      setGraphData(prev => {
+        const updatedNodes = prev.nodes.map(node => {
+          const upd = payload.find((p: any) => p.id === node.id);
+          if (upd) {
+            return { ...node, x: upd.x, y: upd.y, z: upd.z };
+          }
+          return node;
+        });
+        return { ...prev, nodes: updatedNodes };
+      });
+      // Force re‑render of ForceGraph component
+      setForceRender(c => c + 1);
+    }
+  };
+  graphWorker.addEventListener('message', handleMessage);
+  return () => {
+    graphWorker.removeEventListener('message', handleMessage);
+    graphWorker.postMessage({ type: 'stop' });
+  };
+}, [data]);
 
   const nodeDegree = useMemo(() => {
     const degree = new Map<string, number>();
@@ -84,7 +127,7 @@ export default function CodeGraph({
     return degree;
   }, [data]);
 
-  const nodeCount = Math.max(1, data.nodes.length);
+  const nodeCount = Math.max(1, graphData.nodes.length);
 
   /*
    * GENTLE force tuning — keep the graph compact and readable.
@@ -355,7 +398,7 @@ export default function CodeGraph({
       {mode === "3d" ? (
         <ForceGraph3D
           fgRef={fg3dRef}
-          graphData={data}
+          graphData={graphData}
           width={width}
           height={height}
           backgroundColor="#090d16"
@@ -400,7 +443,7 @@ export default function CodeGraph({
       ) : (
         <ForceGraph2D
           fgRef={fg2dRef}
-          graphData={data}
+          graphData={graphData}
           nodeLabel="name"
           nodeAutoColorBy="type"
           nodeCanvasObject={nodeCanvasObject}
