@@ -247,6 +247,24 @@ export default function CodeGraph({
     return centers;
   }, [data.nodes, aspectRatio]);
 
+  // Pre-seed node (x, y, z) coordinates near community centroids on initial load
+  // Prevents initial 3D view from collapsing into a mixed blob
+  useEffect(() => {
+    if (!data.nodes || data.nodes.length === 0) return;
+
+    data.nodes.forEach((node: any) => {
+      if (node.x == null || node.y == null || !Number.isFinite(node.x) || (node.x === 0 && node.y === 0)) {
+        const c = node.community ?? 0;
+        const center = communityCenters.get(c);
+        if (center) {
+          node.x = center.x + (Math.random() - 0.5) * 50;
+          node.y = center.y + (Math.random() - 0.5) * 50;
+          node.z = center.z + (Math.random() - 0.5) * 50;
+        }
+      }
+    });
+  }, [data.nodes, communityCenters]);
+
   // Apply forces to 3D graph — widescreen ellipsoid scaling + organic community clustering
   const tuneForces = useCallback(() => {
     const fg = fg3dRef.current;
@@ -360,12 +378,15 @@ export default function CodeGraph({
 
   // Smooth fast zoom-out transition when switching between 2D and 3D
   useEffect(() => {
+    if (mode === "3d") {
+      tuneForces();
+    }
     const timer = setTimeout(() => {
       fitView(600);
       setup3DControls();
     }, 250);
     return () => clearTimeout(timer);
-  }, [mode, data, fitView, setup3DControls]);
+  }, [mode, data, fitView, setup3DControls, tuneForces]);
 
   // Smooth 3D/2D camera fly-to on node click
   const handleNodeClick = useCallback(
