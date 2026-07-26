@@ -131,7 +131,7 @@ export default function CodeGraph({
 
     // 1. Collision Force: Hard physical boundary around every node & label to prevent overlap
     const collideForce = (alpha: number) => {
-      const gData = fg.graphData();
+      const gData = typeof fg?.graphData === "function" ? fg.graphData() : null;
       if (!gData || !gData.nodes) return;
       const nodes = gData.nodes;
       const n = nodes.length;
@@ -243,6 +243,15 @@ export default function CodeGraph({
   useEffect(() => {
     const timer = setTimeout(() => {
       fitView(600);
+      // Patch 3D OrbitControls: zoom towards mouse cursor like 2D does
+      if (mode === "3d") {
+        try {
+          const controls = fg3dRef.current?.controls?.();
+          if (controls) {
+            controls.zoomToCursor = true;
+          }
+        } catch (_) { /* controls may not be ready yet */ }
+      }
     }, 250);
     return () => clearTimeout(timer);
   }, [mode, data, fitView]);
@@ -423,9 +432,9 @@ export default function CodeGraph({
           linkColor={() => "rgba(129, 140, 248, 0.55)"}
           linkOpacity={0.6}
           linkWidth={1.0}
-          cooldownTicks={60}
-          warmupTicks={30}
-          d3AlphaDecay={0.06}
+          cooldownTicks={40}
+          warmupTicks={20}
+          d3AlphaDecay={0.08}
           onEngineTick={() => {
             if (!didTuneForces.current) {
               didTuneForces.current = true;
@@ -435,8 +444,16 @@ export default function CodeGraph({
           onEngineStop={() => {
             if (!didInitialFit.current) {
               didInitialFit.current = true;
-              fitView(600);
+              fitView(400);
             }
+            // Enable cursor-based zoom: override OrbitControls to zoom towards mouse
+            try {
+              const controls = fg3dRef.current?.controls?.();
+              if (controls && !controls.__cursorZoomPatched) {
+                controls.__cursorZoomPatched = true;
+                controls.zoomToCursor = true;
+              }
+            } catch (_) { /* controls may not be ready */ }
           }}
           enableNodeDrag={true}
           onNodeDrag={(node: any) => {
