@@ -175,8 +175,20 @@ export default function CodeGraph({
   }, [data]);
 
   const fitView = useCallback((ms = 800) => {
-    fg3dRef.current?.zoomToFit(ms, 50);
-  }, []);
+    if (mode === "3d") {
+      fg3dRef.current?.zoomToFit(ms, 10);
+    } else {
+      fg2dRef.current?.zoomToFit(ms, 40);
+    }
+  }, [mode]);
+
+  // Smooth zoom-out transition every time user switches between 2D and 3D
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fitView(800);
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [mode, data, fitView]);
 
   /* ──────────────────────────────────────────────
      3D: Custom THREE.Group — sphere + billboard text ABOVE
@@ -305,13 +317,7 @@ export default function CodeGraph({
       {/* Controls */}
       <div className="absolute right-3 top-3 z-10 flex items-center gap-2">
         <button
-          onClick={() => {
-            if (mode === "3d") {
-              fitView();
-            } else {
-              fg2dRef.current?.zoomToFit(400, 40);
-            }
-          }}
+          onClick={() => fitView(600)}
           className="rounded-lg border border-slate-600/40 bg-slate-900/80 px-3 py-1.5 text-xs font-medium text-slate-300 backdrop-blur transition hover:bg-slate-700/60"
         >
           Reset view
