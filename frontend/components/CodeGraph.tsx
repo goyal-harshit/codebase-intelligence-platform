@@ -196,33 +196,48 @@ export default function CodeGraph({
     };
     fg.d3Force("collide", collideForce);
 
-    // 2. Aspect-Ratio-Aware Gravity: expand X-axis to fill widescreen laptop displays
+    // 2. Aspect-Ratio-Aware Gravity & Max Boundary Clamping (prevents isolated nodes from drifting far away)
     const d3f = (fg as any).d3Force;
     if (d3f) {
       const gravityForce = (axis: "x" | "y") => {
-        // Weaker X gravity allows graph to stretch sideways into a wide ellipse
-        const strength = axis === "x" ? 0.015 / aspectRatio : 0.02;
         return (alpha: number) => {
           const nodes =
             (typeof fg?.graphData === "function" ? fg.graphData()?.nodes : null) || data.nodes;
           if (!nodes) return;
+          const maxRadius = 340;
+
           nodes.forEach((node: any) => {
             if (node.fx != null || node.fy != null) return;
             const pos = node[axis];
             if (pos == null || !Number.isFinite(pos)) return;
+
+            // Higher gravity pull for disconnected/low-degree nodes to keep them close
+            const degree = nodeDegree.get(node.id) || 0;
+            const isIsolated = degree <= 1;
+            const baseStrength = axis === "x" ? 0.02 / aspectRatio : 0.025;
+            const strength = isIsolated ? 0.08 : baseStrength;
+
             const v = axis === "x" ? "vx" : "vy";
             const currentV = node[v];
             const safeV = currentV != null && Number.isFinite(currentV) ? currentV : 0;
             node[v] = safeV + (0 - pos) * strength * alpha;
+
+            // Clamp max distance from center so no node can drift far out
+            const dist = Math.hypot(node.x || 0, node.y || 0) || 1;
+            if (dist > maxRadius) {
+              const scale = maxRadius / dist;
+              node.x *= scale;
+              node.y *= scale;
+            }
           });
         };
       };
       fg.d3Force("gravityX", gravityForce("x"));
       fg.d3Force("gravityY", gravityForce("y"));
     }
-  }, [data, mode, dynamicCharge, dynamicDistance, nodeRadius, aspectRatio]);
+  }, [data, mode, dynamicCharge, dynamicDistance, nodeRadius, aspectRatio, nodeDegree]);
 
-  // Apply forces to 3D graph — widescreen ellipsoid scaling
+  // Apply forces to 3D graph — widescreen ellipsoid scaling + boundary clamping
   const tuneForces = useCallback(() => {
     const fg = fg3dRef.current;
     if (!fg) return;
@@ -230,39 +245,68 @@ export default function CodeGraph({
     fg.d3Force("link")?.distance(dynamicDistance * 1.8 * Math.sqrt(aspectRatio));
 
     const gravity3D = (axis: "x" | "y" | "z") => {
-      const strength = axis === "x" ? 0.015 / aspectRatio : 0.02;
       return (alpha: number) => {
         const nodes =
           (typeof fg?.graphData === "function" ? fg.graphData()?.nodes : null) || data.nodes;
         if (!nodes) return;
+        const maxRadius = 340;
+
         nodes.forEach((node: any) => {
           if (node.fx != null || node.fy != null || node.fz != null) return;
           const pos = node[axis];
           if (pos == null || !Number.isFinite(pos)) return;
+
+          const degree = nodeDegree.get(node.id) || 0;
+          const isIsolated = degree <= 1;
+          const baseStrength = axis === "x" ? 0.02 / aspectRatio : 0.025;
+          const strength = isIsolated ? 0.08 : baseStrength;
+
           const v = `v${axis}`;
           const currentV = node[v];
           const safeV = currentV != null && Number.isFinite(currentV) ? currentV : 0;
           node[v] = safeV + (0 - pos) * strength * alpha;
+
+          // Clamp max radius in 3D
+          const dist = Math.hypot(node.x || 0, node.y || 0, node.z || 0) || 1;
+          if (dist > maxRadius) {
+            const scale = maxRadius / dist;
+            node.x *= scale;
+            node.y *= scale;
+            node.z *= scale;
+          }
         });
       };
     };
     fg.d3Force("gravityX", gravity3D("x"));
     fg.d3Force("gravityY", gravity3D("y"));
     fg.d3Force("gravityZ", gravity3D("z"));
-  }, [dynamicCharge, dynamicDistance, data.nodes, aspectRatio]);
+  }, [dynamicCharge, dynamicDistance, data.nodes, aspectRatio, nodeDegree]);
 
   useEffect(() => {
     didInitialFit.current = false;
     didTuneForces.current = false;
   }, [data]);
 
+  // Clean Front View camera positioning for Reset View
   const fitView = useCallback((ms = 600) => {
     if (mode === "3d") {
-      fg3dRef.current?.zoomToFit(ms, 6);
+      const fg = fg3dRef.current;
+      if (fg) {
+        const camDist = Math.min(540, Math.max(280, nodeCount * 0.55));
+        fg.cameraPosition(
+          { x: 0, y: 0, z: camDist }, // Straight Front View looking down Z-axis
+          { x: 0, y: 0, z: 0 },       // Center target (0,0,0)
+          ms
+        );
+      }
     } else {
-      fg2dRef.current?.zoomToFit(ms, 30);
+      const fg = fg2dRef.current;
+      if (fg) {
+        fg.centerAt(0, 0, ms);
+        fg.zoomToFit(ms, 45);
+      }
     }
-  }, [mode]);
+  }, [mode, nodeCount]);
 
   // Smooth fast zoom-out transition when switching between 2D and 3D
   useEffect(() => {
