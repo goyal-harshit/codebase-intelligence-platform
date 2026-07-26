@@ -174,19 +174,19 @@ export default function CodeGraph({
     didTuneForces.current = false;
   }, [data]);
 
-  const fitView = useCallback((ms = 800) => {
+  const fitView = useCallback((ms = 600) => {
     if (mode === "3d") {
-      fg3dRef.current?.zoomToFit(ms, 10);
+      fg3dRef.current?.zoomToFit(ms, 6);
     } else {
-      fg2dRef.current?.zoomToFit(ms, 40);
+      fg2dRef.current?.zoomToFit(ms, 30);
     }
   }, [mode]);
 
-  // Smooth zoom-out transition every time user switches between 2D and 3D
+  // Smooth fast zoom-out transition when switching between 2D and 3D
   useEffect(() => {
     const timer = setTimeout(() => {
-      fitView(800);
-    }, 350);
+      fitView(600);
+    }, 250);
     return () => clearTimeout(timer);
   }, [mode, data, fitView]);
 
@@ -364,8 +364,9 @@ export default function CodeGraph({
           linkColor={() => "rgba(148, 163, 184, 0.3)"}
           linkOpacity={0.35}
           linkWidth={0.6}
-          cooldownTicks={cooldownTicks}
-          warmupTicks={60}
+          cooldownTicks={50}
+          warmupTicks={15}
+          d3AlphaDecay={0.06}
           onEngineTick={() => {
             if (!didTuneForces.current) {
               didTuneForces.current = true;
@@ -375,9 +376,7 @@ export default function CodeGraph({
           onEngineStop={() => {
             if (!didInitialFit.current) {
               didInitialFit.current = true;
-              setTimeout(() => {
-                fitView(900);
-              }, 300);
+              fitView(600);
             }
           }}
           enableNodeDrag={false}
@@ -410,17 +409,15 @@ export default function CodeGraph({
           linkWidth={1}
           height={height}
           width={width}
-          cooldownTicks={cooldownTicks}
-          warmupTicks={40}
-          d3AlphaDecay={0.02}
+          cooldownTicks={50}
+          warmupTicks={15}
+          d3AlphaDecay={0.04}
           d3VelocityDecay={0.35}
           enableNodeDrag={true}
           enableZoomInteraction={true}
           onNodeClick={onNodeClick}
           onEngineStop={() => {
-            setTimeout(() => {
-              fg2dRef.current?.zoomToFit(800, 45);
-            }, 300);
+            fitView(600);
           }}
         />
       )}
