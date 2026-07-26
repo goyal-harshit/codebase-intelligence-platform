@@ -64,7 +64,7 @@ export default function CodeGraph({
   const didInitialFit = useRef(false);
   const didTuneForces = useRef(false);
   const [width, setWidth] = useState(760);
-  const [mode, setMode] = useState<"3d" | "2d">("2d");
+  const [mode, setMode] = useState<"3d" | "2d">("3d");
   useEffect(() => {
     if (!ref.current) return;
     const resize = () =>
