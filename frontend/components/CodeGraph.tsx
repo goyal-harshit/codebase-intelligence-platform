@@ -318,10 +318,13 @@ export default function CodeGraph({
           }
         } catch (_) {}
 
-        const camDist = Math.min(540, Math.max(280, nodeCount * 0.55));
-        if (typeof fg.cameraPosition === "function") {
+        // Use native 3D zoomToFit with comfortable padding, or position camera at wide front view (1150px)
+        if (typeof fg.zoomToFit === "function") {
+          fg.zoomToFit(ms, 120);
+        } else if (typeof fg.cameraPosition === "function") {
+          const camDist = Math.min(1350, Math.max(750, nodeCount * 1.4));
           fg.cameraPosition(
-            { x: 0, y: 0, z: camDist }, // Straight Front View looking down Z-axis
+            { x: 0, y: 0, z: camDist }, // Panoramic Front View looking down Z-axis
             { x: 0, y: 0, z: 0 },       // Center target (0,0,0)
             ms
           );
