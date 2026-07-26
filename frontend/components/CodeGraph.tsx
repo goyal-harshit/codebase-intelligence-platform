@@ -204,31 +204,21 @@ export default function CodeGraph({
           const nodes =
             (typeof fg?.graphData === "function" ? fg.graphData()?.nodes : null) || data.nodes;
           if (!nodes) return;
-          const maxRadius = 340;
 
           nodes.forEach((node: any) => {
             if (node.fx != null || node.fy != null) return;
             const pos = node[axis];
             if (pos == null || !Number.isFinite(pos)) return;
 
-            // Higher gravity pull for disconnected/low-degree nodes to keep them close
             const degree = nodeDegree.get(node.id) || 0;
             const isIsolated = degree <= 1;
             const baseStrength = axis === "x" ? 0.02 / aspectRatio : 0.025;
-            const strength = isIsolated ? 0.08 : baseStrength;
+            const strength = isIsolated ? 0.06 : baseStrength;
 
             const v = axis === "x" ? "vx" : "vy";
             const currentV = node[v];
             const safeV = currentV != null && Number.isFinite(currentV) ? currentV : 0;
             node[v] = safeV + (0 - pos) * strength * alpha;
-
-            // Clamp max distance from center so no node can drift far out
-            const dist = Math.hypot(node.x || 0, node.y || 0) || 1;
-            if (dist > maxRadius) {
-              const scale = maxRadius / dist;
-              node.x *= scale;
-              node.y *= scale;
-            }
           });
         };
       };
@@ -245,9 +235,9 @@ export default function CodeGraph({
 
     commSet.forEach((c, idx) => {
       const angle = (2 * Math.PI * idx) / total;
-      const radiusX = 220 * aspectRatio;
-      const radiusY = 160;
-      const radiusZ = 120;
+      const radiusX = 180 * aspectRatio;
+      const radiusY = 130;
+      const radiusZ = 100;
       centers.set(c, {
         x: radiusX * Math.cos(angle),
         y: radiusY * Math.sin(angle),
@@ -257,12 +247,12 @@ export default function CodeGraph({
     return centers;
   }, [data.nodes, aspectRatio]);
 
-  // Apply forces to 3D graph — widescreen ellipsoid scaling + community spatial separation
+  // Apply forces to 3D graph — widescreen ellipsoid scaling + organic community clustering
   const tuneForces = useCallback(() => {
     const fg = fg3dRef.current;
     if (!fg) return;
-    fg.d3Force("charge")?.strength(dynamicCharge * 1.4);
-    fg.d3Force("link")?.distance(dynamicDistance * 1.6 * Math.sqrt(aspectRatio));
+    fg.d3Force("charge")?.strength(dynamicCharge * 0.9);
+    fg.d3Force("link")?.distance(dynamicDistance * 1.3 * Math.sqrt(aspectRatio));
 
     // 3D Community Cluster Pull Force — pulls nodes in the same community to their distinct spatial center
     const clusterForce3D = (alpha: number) => {
@@ -275,8 +265,7 @@ export default function CodeGraph({
         const center = communityCenters.get(c);
         if (!center) return;
 
-        // Soft attraction force toward community center
-        const str = 0.07 * alpha;
+        const str = 0.05 * alpha;
         node.vx = (node.vx || 0) + (center.x - node.x) * str;
         node.vy = (node.vy || 0) + (center.y - node.y) * str;
         node.vz = (node.vz || 0) + (center.z - node.z) * str;
@@ -289,7 +278,6 @@ export default function CodeGraph({
         const nodes =
           (typeof fg?.graphData === "function" ? fg.graphData()?.nodes : null) || data.nodes;
         if (!nodes) return;
-        const maxRadius = 380;
 
         nodes.forEach((node: any) => {
           if (node.fx != null || node.fy != null || node.fz != null) return;
@@ -299,21 +287,12 @@ export default function CodeGraph({
           const degree = nodeDegree.get(node.id) || 0;
           const isIsolated = degree <= 1;
           const baseStrength = axis === "x" ? 0.018 / aspectRatio : 0.022;
-          const strength = isIsolated ? 0.07 : baseStrength;
+          const strength = isIsolated ? 0.05 : baseStrength;
 
           const v = `v${axis}`;
           const currentV = node[v];
           const safeV = currentV != null && Number.isFinite(currentV) ? currentV : 0;
           node[v] = safeV + (0 - pos) * strength * alpha;
-
-          // Clamp max radius in 3D
-          const dist = Math.hypot(node.x || 0, node.y || 0, node.z || 0) || 1;
-          if (dist > maxRadius) {
-            const scale = maxRadius / dist;
-            node.x *= scale;
-            node.y *= scale;
-            node.z *= scale;
-          }
         });
       };
     };
@@ -444,12 +423,12 @@ export default function CodeGraph({
       });
       group.add(new THREE.Mesh(geometry, material));
 
-      // Level of detail: Build SpriteText textures for hubs / highlighted nodes
+      // Level of detail: Build SpriteText textures ONLY for selected node, 1-hop connected neighbors, or top major hubs (degree >= 8)
       const degree = nodeDegree.get(node.id) || 1;
-      const isHub =
-        node.id.startsWith("hub") || node.id.startsWith("subhub") || degree >= 4;
+      const isMajorHub = degree >= 8;
+      const showLabel3D = isSelected || (selectedNode ? isHighlighted : isMajorHub);
 
-      if (isHighlighted && (nodeCount <= 200 || isHub || isSelected)) {
+      if (showLabel3D) {
         const sprite = new SpriteText(node.name || node.id);
         sprite.color = isSelected ? "#fde047" : "#ffffff";
         sprite.backgroundColor = isSelected ? "rgba(79, 70, 229, 0.95)" : "rgba(15, 23, 42, 0.88)";
