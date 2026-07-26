@@ -457,32 +457,32 @@ export default function CodeGraph({
           nodeThreeObject={nodeThreeObject}
           nodeThreeObjectExtend={false}
           nodeVal={() => 0.01}
-          linkDirectionalArrowLength={5}
+          linkDirectionalArrowLength={4.5}
           linkDirectionalArrowRelPos={0.88}
-          linkDirectionalArrowColor={() => "#818cf8"}
+          linkDirectionalArrowColor={() => "#a5b4fc"}
           linkDirectionalParticles={(link: any) => {
-            if (!selectedNode) return 0; // Disable heavy particle loops when no node selected
+            if (!selectedNode) return 0;
             const s = typeof link.source === "object" ? link.source.id : link.source;
             const t = typeof link.target === "object" ? link.target.id : link.target;
             return highlightLinks.has(`${s}->${t}`) || highlightLinks.has(`${t}->${s}`) ? 4 : 0;
           }}
           linkDirectionalParticleSpeed={0.008}
-          linkDirectionalParticleWidth={2.0}
+          linkDirectionalParticleWidth={2.2}
           linkDirectionalParticleColor={() => "#c084fc"}
           linkColor={(link: any) => {
-            if (!selectedNode) return nodeCount > 400 ? "rgba(99, 102, 241, 0.2)" : "rgba(129, 140, 248, 0.35)";
+            if (!selectedNode) return "rgba(129, 140, 248, 0.6)";
             const s = typeof link.source === "object" ? link.source.id : link.source;
             const t = typeof link.target === "object" ? link.target.id : link.target;
             return highlightLinks.has(`${s}->${t}`) || highlightLinks.has(`${t}->${s}`)
               ? "rgba(192, 132, 252, 0.95)"
-              : "rgba(15, 23, 42, 0.04)";
+              : "rgba(15, 23, 42, 0.08)";
           }}
-          linkOpacity={0.4}
+          linkOpacity={0.75}
           linkWidth={(link: any) => {
-            if (!selectedNode) return nodeCount > 400 ? 0.4 : 0.6;
+            if (!selectedNode) return 1.2;
             const s = typeof link.source === "object" ? link.source.id : link.source;
             const t = typeof link.target === "object" ? link.target.id : link.target;
-            return highlightLinks.has(`${s}->${t}`) || highlightLinks.has(`${t}->${s}`) ? 2.5 : 0.2;
+            return highlightLinks.has(`${s}->${t}`) || highlightLinks.has(`${t}->${s}`) ? 2.8 : 0.4;
           }}
           cooldownTicks={40}
           warmupTicks={20}
@@ -535,31 +535,31 @@ export default function CodeGraph({
             ctx.fillStyle = color;
             ctx.fill();
           }}
-          linkDirectionalArrowLength={nodeCount > 400 ? 0 : 4}
+          linkDirectionalArrowLength={4.5}
           linkDirectionalArrowRelPos={0.88}
-          linkDirectionalArrowColor={() => "#6366f1"}
+          linkDirectionalArrowColor={() => "#818cf8"}
           linkDirectionalParticles={(link: any) => {
-            if (!selectedNode) return 0; // Disable heavy particle loops when unselected
+            if (!selectedNode) return 0;
             const s = typeof link.source === "object" ? link.source.id : link.source;
             const t = typeof link.target === "object" ? link.target.id : link.target;
             return highlightLinks.has(`${s}->${t}`) || highlightLinks.has(`${t}->${s}`) ? 4 : 0;
           }}
           linkDirectionalParticleSpeed={0.008}
-          linkDirectionalParticleWidth={2.2}
+          linkDirectionalParticleWidth={2.4}
           linkDirectionalParticleColor={() => "#818cf8"}
           linkColor={(link: any) => {
-            if (!selectedNode) return nodeCount > 400 ? "rgba(99, 102, 241, 0.18)" : "rgba(129, 140, 248, 0.3)";
+            if (!selectedNode) return "rgba(129, 140, 248, 0.5)";
             const s = typeof link.source === "object" ? link.source.id : link.source;
             const t = typeof link.target === "object" ? link.target.id : link.target;
             return highlightLinks.has(`${s}->${t}`) || highlightLinks.has(`${t}->${s}`)
               ? "rgba(129, 140, 248, 0.95)"
-              : "rgba(30, 41, 59, 0.05)";
+              : "rgba(30, 41, 59, 0.08)";
           }}
           linkWidth={(link: any) => {
-            if (!selectedNode) return nodeCount > 400 ? 0.4 : 0.6;
+            if (!selectedNode) return 1.2;
             const s = typeof link.source === "object" ? link.source.id : link.source;
             const t = typeof link.target === "object" ? link.target.id : link.target;
-            return highlightLinks.has(`${s}->${t}`) || highlightLinks.has(`${t}->${s}`) ? 2.5 : 0.2;
+            return highlightLinks.has(`${s}->${t}`) || highlightLinks.has(`${t}->${s}`) ? 2.8 : 0.4;
           }}
           height={height}
           width={width}
