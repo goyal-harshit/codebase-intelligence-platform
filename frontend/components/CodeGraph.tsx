@@ -117,12 +117,17 @@ export default function CodeGraph({
     [nodeDegree],
   );
 
-  // Apply forces to 2D graph — including collision force (NO OVERLAP) & gentle gravity
+  const aspectRatio = useMemo(
+    () => Math.max(1, Math.min(2.5, (width || 760) / (height || 580))),
+    [width, height],
+  );
+
+  // Apply forces to 2D graph — including collision force & aspect-ratio-aware widescreen gravity
   useEffect(() => {
     const fg = fg2dRef.current;
     if (!fg || mode !== "2d") return;
     fg.d3Force("charge")?.strength(dynamicCharge);
-    fg.d3Force("link")?.distance(dynamicDistance);
+    fg.d3Force("link")?.distance(dynamicDistance * Math.sqrt(aspectRatio));
 
     // 1. Collision Force: Hard physical boundary around every node & label to prevent overlap
     const collideForce = (alpha: number) => {
@@ -138,23 +143,23 @@ export default function CodeGraph({
           const b = nodes[j];
           if (!Number.isFinite(b.x) || !Number.isFinite(b.y)) continue;
           const rb = nodeRadius(b.id) + 14;
-          const dx = b.x - a.x;
+          const dx = (b.x - a.x) / aspectRatio; // Scale X for widescreen aspect ratio
           const dy = b.y - a.y;
           const dist = Math.hypot(dx, dy) || 0.1;
           const minDist = ra + rb;
           if (dist < minDist) {
             const overlap = ((minDist - dist) / dist) * 0.4 * alpha;
             if (a.fx == null) {
-              a.x -= dx * overlap;
-              a.vx = (a.vx || 0) - dx * overlap;
+              a.x -= dx * aspectRatio * overlap;
+              a.vx = (a.vx || 0) - dx * aspectRatio * overlap;
             }
             if (a.fy == null) {
               a.y -= dy * overlap;
               a.vy = (a.vy || 0) - dy * overlap;
             }
             if (b.fx == null) {
-              b.x += dx * overlap;
-              b.vx = (b.vx || 0) + dx * overlap;
+              b.x += dx * aspectRatio * overlap;
+              b.vx = (b.vx || 0) + dx * aspectRatio * overlap;
             }
             if (b.fy == null) {
               b.y += dy * overlap;
@@ -166,13 +171,15 @@ export default function CodeGraph({
     };
     fg.d3Force("collide", collideForce);
 
-    // 2. Gentle Gravity: keep disconnected nodes in view without squishing
+    // 2. Aspect-Ratio-Aware Gravity: expand X-axis to fill widescreen laptop displays
     const d3f = (fg as any).d3Force;
     if (d3f) {
       const gravityForce = (axis: "x" | "y") => {
-        const strength = 0.02; // Gentle center pull
+        // Weaker X gravity allows graph to stretch sideways into a wide ellipse
+        const strength = axis === "x" ? 0.015 / aspectRatio : 0.02;
         return (alpha: number) => {
-          const nodes = (typeof fg?.graphData === "function" ? fg.graphData()?.nodes : null) || data.nodes;
+          const nodes =
+            (typeof fg?.graphData === "function" ? fg.graphData()?.nodes : null) || data.nodes;
           if (!nodes) return;
           nodes.forEach((node: any) => {
             if (node.fx != null || node.fy != null) return;
@@ -188,19 +195,20 @@ export default function CodeGraph({
       fg.d3Force("gravityX", gravityForce("x"));
       fg.d3Force("gravityY", gravityForce("y"));
     }
-  }, [data, mode, dynamicCharge, dynamicDistance, nodeRadius]);
+  }, [data, mode, dynamicCharge, dynamicDistance, nodeRadius, aspectRatio]);
 
-  // Apply forces to 3D graph
+  // Apply forces to 3D graph — widescreen ellipsoid scaling
   const tuneForces = useCallback(() => {
     const fg = fg3dRef.current;
     if (!fg) return;
     fg.d3Force("charge")?.strength(dynamicCharge * 1.5);
-    fg.d3Force("link")?.distance(dynamicDistance * 1.8);
+    fg.d3Force("link")?.distance(dynamicDistance * 1.8 * Math.sqrt(aspectRatio));
 
     const gravity3D = (axis: "x" | "y" | "z") => {
-      const strength = 0.02;
+      const strength = axis === "x" ? 0.015 / aspectRatio : 0.02;
       return (alpha: number) => {
-        const nodes = (typeof fg?.graphData === "function" ? fg.graphData()?.nodes : null) || data.nodes;
+        const nodes =
+          (typeof fg?.graphData === "function" ? fg.graphData()?.nodes : null) || data.nodes;
         if (!nodes) return;
         nodes.forEach((node: any) => {
           if (node.fx != null || node.fy != null || node.fz != null) return;
@@ -216,7 +224,7 @@ export default function CodeGraph({
     fg.d3Force("gravityX", gravity3D("x"));
     fg.d3Force("gravityY", gravity3D("y"));
     fg.d3Force("gravityZ", gravity3D("z"));
-  }, [dynamicCharge, dynamicDistance, data.nodes]);
+  }, [dynamicCharge, dynamicDistance, data.nodes, aspectRatio]);
 
   useEffect(() => {
     didInitialFit.current = false;
