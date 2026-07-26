@@ -46,16 +46,15 @@ interface CodeGraphProps {
   data: GraphData;
   height?: number;
   cooldownTicks?: number;
+  selectedNode?: any | null;
   onNodeClick?: (node: any) => void;
 }
-
-
-
 
 export default function CodeGraph({
   data,
   height = 580,
   cooldownTicks = 200,
+  selectedNode,
   onNodeClick,
 }: CodeGraphProps) {
   const ref = useRef<HTMLDivElement | null>(null);
@@ -65,6 +64,32 @@ export default function CodeGraph({
   const didTuneForces = useRef(false);
   const [width, setWidth] = useState(760);
   const [mode, setMode] = useState<"3d" | "2d">("3d");
+
+  // Calculate 1-Hop Connected Subgraph (Neighborhood Focus)
+  const { highlightNodes, highlightLinks } = useMemo(() => {
+    const nodesSet = new Set<string>();
+    const linksSet = new Set<string>();
+
+    if (selectedNode) {
+      const selectedId = selectedNode.id || selectedNode.file;
+      nodesSet.add(selectedId);
+
+      data.links.forEach((link) => {
+        const s = typeof link.source === "object" ? link.source.id : link.source;
+        const t = typeof link.target === "object" ? link.target.id : link.target;
+
+        if (s === selectedId) {
+          nodesSet.add(t);
+          linksSet.add(`${s}->${t}`);
+        } else if (t === selectedId) {
+          nodesSet.add(s);
+          linksSet.add(`${s}->${t}`);
+        }
+      });
+    }
+
+    return { highlightNodes: nodesSet, highlightLinks: linksSet };
+  }, [selectedNode, data.links]);
   useEffect(() => {
     if (!ref.current) return;
     const resize = () =>
@@ -256,39 +281,39 @@ export default function CodeGraph({
     return () => clearTimeout(timer);
   }, [mode, data, fitView]);
 
-  /* ─────────────  /* ──────────────────────────────────────────────
-     3D: Custom THREE.Group — sphere + billboard text ABOVE (selective LOD)
-     ────────────────────────────────────────────── */
+  /* 3D: Custom THREE.Group — sphere + billboard text ABOVE (selective LOD + focus dimming) */
   const nodeThreeObject = useCallback(
     (node: any) => {
       const group = new THREE.Group();
       const r = nodeRadius(node.id);
+      const isSelected = selectedNode && (node.id === selectedNode.id || node.id === selectedNode.file);
+      const isHighlighted = !selectedNode || highlightNodes.has(node.id);
 
       // Sphere geometry & material
-      const geometry = new THREE.SphereGeometry(r, 12, 12);
+      const geometry = new THREE.SphereGeometry(r * (isSelected ? 1.3 : 1.0), 12, 12);
       const material = new THREE.MeshLambertMaterial({
-        color: communityColor(node.community),
+        color: isSelected ? "#f59e0b" : communityColor(node.community),
         transparent: true,
-        opacity: 0.92,
+        opacity: isHighlighted ? 0.95 : 0.08,
       });
       group.add(new THREE.Mesh(geometry, material));
 
-      // Level of detail: Only build heavy SpriteText textures for hubs / high-degree nodes or smaller graphs
+      // Level of detail: Build SpriteText textures for hubs / highlighted nodes
       const degree = nodeDegree.get(node.id) || 1;
       const isHub =
         node.id.startsWith("hub") || node.id.startsWith("subhub") || degree >= 4;
 
-      if (nodeCount <= 200 || isHub) {
+      if (isHighlighted && (nodeCount <= 200 || isHub || isSelected)) {
         const sprite = new SpriteText(node.name || node.id);
-        sprite.color = "#ffffff";
-        sprite.backgroundColor = "rgba(15, 23, 42, 0.88)";
+        sprite.color = isSelected ? "#fde047" : "#ffffff";
+        sprite.backgroundColor = isSelected ? "rgba(79, 70, 229, 0.95)" : "rgba(15, 23, 42, 0.88)";
         sprite.padding = [1.5, 4];
         sprite.borderRadius = 3;
-        sprite.borderWidth = 0.4;
-        sprite.borderColor = "rgba(255, 255, 255, 0.25)";
-        sprite.fontWeight = "600";
+        sprite.borderWidth = isSelected ? 0.8 : 0.4;
+        sprite.borderColor = isSelected ? "#f59e0b" : "rgba(255, 255, 255, 0.25)";
+        sprite.fontWeight = isSelected ? "700" : "600";
         sprite.fontFace = "Inter, sans-serif";
-        sprite.textHeight = 3.5;
+        sprite.textHeight = isSelected ? 4.5 : 3.5;
         (sprite as any).position.y = r + 5;
 
         const mat = (sprite as any).material;
@@ -301,46 +326,56 @@ export default function CodeGraph({
       }
       return group;
     },
-    [nodeRadius, nodeDegree, nodeCount],
+    [nodeRadius, nodeDegree, nodeCount, selectedNode, highlightNodes],
   );
 
-  /* ──────────────────────────────────────────────
-     2D: Canvas rendering — visible nodes + always-on labels
-     ────────────────────────────────────────────── */
+  /* 2D: Canvas rendering — visible nodes + always-on labels + focus dimming */
   const nodeCanvasObject = useCallback(
     (node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
       if (!Number.isFinite(node.x) || !Number.isFinite(node.y)) return;
+      const isSelected = selectedNode && (node.id === selectedNode.id || node.id === selectedNode.file);
+      const isHighlighted = !selectedNode || highlightNodes.has(node.id);
+
+      if (!isHighlighted) {
+        // Dimmed node in 2D
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, 2, 0, 2 * Math.PI);
+        ctx.fillStyle = "rgba(51, 65, 85, 0.15)";
+        ctx.fill();
+        return;
+      }
+
       const label = node.name || node.id;
       const degree = nodeDegree.get(node.id) || 1;
-      const r = nodeRadius(node.id);
+      const r = nodeRadius(node.id) * (isSelected ? 1.4 : 1.0);
 
-      // 1. Subtle glow halo
+      // 1. Glow halo
       ctx.beginPath();
-      ctx.arc(node.x, node.y, r + 2, 0, 2 * Math.PI);
-      ctx.fillStyle = communityColor(node.community);
-      ctx.globalAlpha = 0.2;
+      ctx.arc(node.x, node.y, r + (isSelected ? 5 : 2), 0, 2 * Math.PI);
+      ctx.fillStyle = isSelected ? "#f59e0b" : communityColor(node.community);
+      ctx.globalAlpha = isSelected ? 0.45 : 0.2;
       ctx.fill();
       ctx.globalAlpha = 1.0;
 
       // 2. Solid node circle
       ctx.beginPath();
       ctx.arc(node.x, node.y, r, 0, 2 * Math.PI);
-      ctx.fillStyle = communityColor(node.community);
+      ctx.fillStyle = isSelected ? "#fbbf24" : communityColor(node.community);
       ctx.fill();
-      ctx.lineWidth = 0.8 / globalScale;
-      ctx.strokeStyle = "rgba(255,255,255,0.5)";
+      ctx.lineWidth = (isSelected ? 2.0 : 0.8) / globalScale;
+      ctx.strokeStyle = isSelected ? "#ffffff" : "rgba(255,255,255,0.5)";
       ctx.stroke();
 
-      // 3. Label — ALWAYS visible for small/medium graphs.
-      //    For massive graphs (500+), hide low-degree labels when zoomed out.
+      // 3. Label
       const showLabel =
+        isSelected ||
         nodeCount <= 400 ||
         globalScale >= 0.5 ||
         (degree >= 3 && globalScale >= 0.25);
 
       if (showLabel) {
-        const fontSize = Math.min(4.5, 8 / globalScale);
-        ctx.font = `600 ${fontSize}px Inter, sans-serif`;
+        const fontSize = Math.min(isSelected ? 6 : 4.5, 9 / globalScale);
+        ctx.font = `${isSelected ? "700" : "600"} ${fontSize}px Inter, sans-serif`;
         ctx.textAlign = "center";
         ctx.textBaseline = "top";
 
@@ -354,9 +389,9 @@ export default function CodeGraph({
         const pillH = fontSize + py * 2;
         const pillX = node.x - pillW / 2;
 
-        ctx.fillStyle = "rgba(15, 23, 42, 0.88)";
-        ctx.strokeStyle = "rgba(255,255,255,0.2)";
-        ctx.lineWidth = 0.4 / globalScale;
+        ctx.fillStyle = isSelected ? "rgba(67, 56, 202, 0.95)" : "rgba(15, 23, 42, 0.88)";
+        ctx.strokeStyle = isSelected ? "#f59e0b" : "rgba(255,255,255,0.2)";
+        ctx.lineWidth = (isSelected ? 1.0 : 0.4) / globalScale;
         ctx.beginPath();
         if (typeof (ctx as any).roundRect === "function") {
           (ctx as any).roundRect(pillX, pillY, pillW, pillH, 2.5 / globalScale);
@@ -370,7 +405,7 @@ export default function CodeGraph({
         ctx.fillText(label, node.x, pillY + py);
       }
     },
-    [nodeDegree, nodeRadius, nodeCount],
+    [nodeDegree, nodeRadius, nodeCount, selectedNode, highlightNodes],
   );
 
   if (data.nodes.length === 0)
@@ -425,13 +460,30 @@ export default function CodeGraph({
           linkDirectionalArrowLength={5}
           linkDirectionalArrowRelPos={0.88}
           linkDirectionalArrowColor={() => "#818cf8"}
-          linkDirectionalParticles={nodeCount > 400 ? 0 : 2}
-          linkDirectionalParticleSpeed={0.006}
-          linkDirectionalParticleWidth={1.8}
+          linkDirectionalParticles={(link: any) => {
+            if (!selectedNode) return nodeCount > 400 ? 0 : 2;
+            const s = typeof link.source === "object" ? link.source.id : link.source;
+            const t = typeof link.target === "object" ? link.target.id : link.target;
+            return highlightLinks.has(`${s}->${t}`) || highlightLinks.has(`${t}->${s}`) ? 4 : 0;
+          }}
+          linkDirectionalParticleSpeed={0.008}
+          linkDirectionalParticleWidth={2.2}
           linkDirectionalParticleColor={() => "#c084fc"}
-          linkColor={() => "rgba(129, 140, 248, 0.55)"}
+          linkColor={(link: any) => {
+            if (!selectedNode) return "rgba(129, 140, 248, 0.55)";
+            const s = typeof link.source === "object" ? link.source.id : link.source;
+            const t = typeof link.target === "object" ? link.target.id : link.target;
+            return highlightLinks.has(`${s}->${t}`) || highlightLinks.has(`${t}->${s}`)
+              ? "rgba(192, 132, 252, 0.95)"
+              : "rgba(15, 23, 42, 0.05)";
+          }}
           linkOpacity={0.6}
-          linkWidth={1.0}
+          linkWidth={(link: any) => {
+            if (!selectedNode) return 1.0;
+            const s = typeof link.source === "object" ? link.source.id : link.source;
+            const t = typeof link.target === "object" ? link.target.id : link.target;
+            return highlightLinks.has(`${s}->${t}`) || highlightLinks.has(`${t}->${s}`) ? 2.5 : 0.3;
+          }}
           cooldownTicks={40}
           warmupTicks={20}
           d3AlphaDecay={0.08}
@@ -446,14 +498,13 @@ export default function CodeGraph({
               didInitialFit.current = true;
               fitView(400);
             }
-            // Enable cursor-based zoom: override OrbitControls to zoom towards mouse
             try {
               const controls = fg3dRef.current?.controls?.();
               if (controls && !controls.__cursorZoomPatched) {
                 controls.__cursorZoomPatched = true;
                 controls.zoomToCursor = true;
               }
-            } catch (_) { /* controls may not be ready */ }
+            } catch (_) {}
           }}
           enableNodeDrag={true}
           onNodeDrag={(node: any) => {
@@ -487,12 +538,29 @@ export default function CodeGraph({
           linkDirectionalArrowLength={5}
           linkDirectionalArrowRelPos={0.88}
           linkDirectionalArrowColor={() => "#6366f1"}
-          linkDirectionalParticles={nodeCount > 400 ? 0 : 2}
-          linkDirectionalParticleSpeed={0.006}
-          linkDirectionalParticleWidth={2.0}
+          linkDirectionalParticles={(link: any) => {
+            if (!selectedNode) return nodeCount > 400 ? 0 : 2;
+            const s = typeof link.source === "object" ? link.source.id : link.source;
+            const t = typeof link.target === "object" ? link.target.id : link.target;
+            return highlightLinks.has(`${s}->${t}`) || highlightLinks.has(`${t}->${s}`) ? 4 : 0;
+          }}
+          linkDirectionalParticleSpeed={0.008}
+          linkDirectionalParticleWidth={2.5}
           linkDirectionalParticleColor={() => "#818cf8"}
-          linkColor={() => "rgba(129, 140, 248, 0.6)"}
-          linkWidth={1.4}
+          linkColor={(link: any) => {
+            if (!selectedNode) return "rgba(129, 140, 248, 0.6)";
+            const s = typeof link.source === "object" ? link.source.id : link.source;
+            const t = typeof link.target === "object" ? link.target.id : link.target;
+            return highlightLinks.has(`${s}->${t}`) || highlightLinks.has(`${t}->${s}`)
+              ? "rgba(129, 140, 248, 0.95)"
+              : "rgba(30, 41, 59, 0.08)";
+          }}
+          linkWidth={(link: any) => {
+            if (!selectedNode) return 1.4;
+            const s = typeof link.source === "object" ? link.source.id : link.source;
+            const t = typeof link.target === "object" ? link.target.id : link.target;
+            return highlightLinks.has(`${s}->${t}`) || highlightLinks.has(`${t}->${s}`) ? 2.5 : 0.4;
+          }}
           height={height}
           width={width}
           cooldownTicks={60}

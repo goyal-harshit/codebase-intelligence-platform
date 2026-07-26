@@ -12,10 +12,11 @@ import {
 } from "@/lib/api";
 import { largeGraphData } from "@/lib/largeGraphData";
 import CodeGraph, { GraphData } from "@/components/CodeGraph";
+import FileTreeExplorer from "@/components/FileTreeExplorer";
+import CodeInspector from "@/components/CodeInspector";
 import ClusterOverview from "@/components/ClusterOverview";
 import PageHeader from "@/components/PageHeader";
 import StateBlock from "@/components/StateBlock";
-import CommentsPanel from "@/components/CommentsPanel";
 
 export default function GraphPage() {
   const [stats, setStats] = useState<GraphifyStats | null>(null);
@@ -24,6 +25,7 @@ export default function GraphPage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedNode, setSelectedNode] = useState<any | null>(null);
   const [view, setView] = useState<"overview" | "code">("code");
+  const [showExplorer, setShowExplorer] = useState(true);
 
   /* Filters */
   const [search, setSearch] = useState("");
@@ -77,33 +79,73 @@ export default function GraphPage() {
     return () => ctrl.abort();
   }, []);
 
-  /* Derive unique communities for the filter */
-  const communities = useMemo(() => {
+  /* Extract file list for FileTreeExplorer */
+  const repoFiles = useMemo(() => {
     if (!graph) return [];
-    const set = new Set(graph.nodes.map((n) => n.community));
-    return Array.from(set).sort((a, b) => a - b);
+    const set = new Set<string>();
+    graph.nodes.forEach((n) => {
+      if (n.file) set.add(n.file);
+      else if (n.id) set.add(n.id);
+    });
+    return Array.from(set);
   }, [graph]);
 
+  /* Derive connected nodes for CodeInspector */
+  const connectedNodes = useMemo(() => {
+    if (!selectedNode || !graph) return [];
+    const selId = selectedNode.id || selectedNode.file;
+    const ids = new Set<string>();
+
+    graph.links.forEach((l) => {
+      const s = typeof l.source === "object" ? (l.source as any).id : l.source;
+      const t = typeof l.target === "object" ? (l.target as any).id : l.target;
+      if (s === selId) ids.add(t);
+      if (t === selId) ids.add(s);
+    });
+
+    return graph.nodes.filter((n) => ids.has(n.id));
+  }, [selectedNode, graph]);
+
+  /* Select file from Tree */
+  const handleSelectFile = useCallback((path: string) => {
+    if (!graph) return;
+    const match = graph.nodes.find((n) => n.id === path || n.file === path || n.id.endsWith(path));
+    if (match) {
+      setSelectedNode(match);
+    } else {
+      setSelectedNode({ id: path, name: path.split("/").pop() || path, file: path, type: "file" });
+    }
+  }, [graph]);
+
+  /* Community metadata overview */
   const communityInfo = useMemo(() => {
     if (!graph) return [];
-    const counts = new Map<number, number>();
-    graph.nodes.forEach((node) => counts.set(node.community, (counts.get(node.community) ?? 0) + 1));
-    return Array.from(counts, ([id, size]) => ({
-      id,
-      size,
-      label: graph.community_labels?.[String(id)] ?? `Community ${id}`,
-    })).sort((a, b) => b.size - a.size);
+    const counts: Record<number, number> = {};
+    graph.nodes.forEach((n) => {
+      const c = n.community ?? -1;
+      counts[c] = (counts[c] || 0) + 1;
+    });
+
+    const labels = graph.community_labels || {};
+    return Object.entries(counts).map(([cStr, count]) => {
+      const c = parseInt(cStr, 10);
+      return {
+        id: c,
+        label: labels[cStr] || (c >= 0 ? `Community ${c}` : "Unclustered"),
+        count,
+      };
+    }).sort((a, b) => b.count - a.count);
   }, [graph]);
 
-  // Inter-community links for the ClusterOverview SVG
+  /* Inter-community links for cluster overview */
   const interCommunityLinks = useMemo(() => {
     if (!graph) return [];
     const linkMap = new Map<string, { source: number; target: number; weight: number }>();
     graph.links.forEach((link) => {
       const sourceNode = graph.nodes.find((n) => n.id === link.source);
       const targetNode = graph.nodes.find((n) => n.id === link.target);
-      if (!sourceNode || !targetNode || sourceNode.community === targetNode.community) return;
-      const key = `${sourceNode.community}|${targetNode.community}`;
+      if (!sourceNode || !targetNode || sourceNode.community === undefined || targetNode.community === undefined || sourceNode.community === targetNode.community) return;
+      const key = `${sourceNode.community}:${targetNode.community}`;
       const existing = linkMap.get(key);
       if (existing) existing.weight++;
       else linkMap.set(key, { source: sourceNode.community, target: targetNode.community, weight: 1 });
@@ -286,7 +328,7 @@ export default function GraphPage() {
                             : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                         }`}
                       >
-                        {item.label} ({item.size})
+                        {item.label} ({item.count})
                       </button>
                     );
                   })}
@@ -311,43 +353,50 @@ export default function GraphPage() {
           </section>
 
           {view === "overview" ? (
-            <div className="h-[640px]">
+            <div className="h-[680px]">
               <ClusterOverview
-                communities={communityInfo}
+                communities={communityInfo.map(c => ({ id: c.id, label: c.label, size: c.count }))}
                 links={interCommunityLinks}
                 onCommunityClick={focusCommunity}
-                height={640}
+                height={680}
               />
             </div>
           ) : (
-            <div className="flex gap-4 h-[640px]">
+            <div className="flex gap-3 h-[680px] overflow-hidden">
+              {/* Pane 1: File Tree Explorer */}
+              {showExplorer && (
+                <div className="w-64 flex-shrink-0 h-full">
+                  <FileTreeExplorer
+                    files={repoFiles}
+                    selectedPath={selectedNode?.file || selectedNode?.id}
+                    onSelect={handleSelectFile}
+                  />
+                </div>
+              )}
+
+              {/* Pane 2: Interactive Code Canvas */}
               <div className="flex-1 min-w-0 h-full">
                 <CodeGraph
                   data={filteredGraph}
-                  height={640}
+                  height={680}
                   cooldownTicks={filteredGraph.nodes.length > 500 ? 200 : 120}
+                  selectedNode={selectedNode}
                   onNodeClick={(node) => setSelectedNode(node)}
                 />
               </div>
+
+              {/* Pane 3: Code Inspector Drawer */}
               {selectedNode && (
-                <div className="w-80 flex-shrink-0 flex flex-col border border-slate-700 rounded-lg overflow-hidden bg-slate-900 shadow-xl relative">
-                  <button 
-                    onClick={() => setSelectedNode(null)}
-                    className="absolute top-4 right-4 z-10 text-slate-400 hover:text-white"
-                  >
-                    <X size={16} />
-                  </button>
-                  <div className="p-4 border-b border-slate-700 bg-slate-800 pr-10">
-                    <h3 className="font-semibold text-slate-100 truncate" title={selectedNode.name || selectedNode.id}>
-                      {selectedNode.name || selectedNode.id}
-                    </h3>
-                    <p className="text-xs text-slate-400 mt-1 capitalize">
-                      {selectedNode.type || "Node"} • Community {selectedNode.community}
-                    </p>
-                  </div>
-                  <div className="flex-1 min-h-0">
-                    <CommentsPanel targetType="node" targetId={selectedNode.id} />
-                  </div>
+                <div className="w-96 flex-shrink-0 h-full">
+                  <CodeInspector
+                    node={selectedNode}
+                    connectedNodes={connectedNodes}
+                    onClose={() => setSelectedNode(null)}
+                    onFocusNode={(id) => {
+                      const target = graph?.nodes.find((n) => n.id === id);
+                      if (target) setSelectedNode(target);
+                    }}
+                  />
                 </div>
               )}
             </div>
