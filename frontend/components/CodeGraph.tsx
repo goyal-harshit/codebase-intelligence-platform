@@ -354,16 +354,16 @@ export default function CodeGraph({
           nodeThreeObject={nodeThreeObject}
           nodeThreeObjectExtend={false}
           nodeVal={() => 0.01}
-          linkDirectionalArrowLength={4}
+          linkDirectionalArrowLength={5}
           linkDirectionalArrowRelPos={0.88}
           linkDirectionalArrowColor={() => "#818cf8"}
           linkDirectionalParticles={2}
-          linkDirectionalParticleSpeed={0.005}
-          linkDirectionalParticleWidth={1.2}
+          linkDirectionalParticleSpeed={0.006}
+          linkDirectionalParticleWidth={1.8}
           linkDirectionalParticleColor={() => "#c084fc"}
-          linkColor={() => "rgba(148, 163, 184, 0.3)"}
-          linkOpacity={0.35}
-          linkWidth={0.6}
+          linkColor={() => "rgba(129, 140, 248, 0.55)"}
+          linkOpacity={0.6}
+          linkWidth={1.0}
           cooldownTicks={50}
           warmupTicks={15}
           d3AlphaDecay={0.06}
@@ -398,15 +398,15 @@ export default function CodeGraph({
             ctx.fillStyle = color;
             ctx.fill();
           }}
-          linkDirectionalArrowLength={4.5}
+          linkDirectionalArrowLength={5}
           linkDirectionalArrowRelPos={0.88}
           linkDirectionalArrowColor={() => "#6366f1"}
           linkDirectionalParticles={2}
-          linkDirectionalParticleSpeed={0.005}
-          linkDirectionalParticleWidth={1.5}
+          linkDirectionalParticleSpeed={0.006}
+          linkDirectionalParticleWidth={2.0}
           linkDirectionalParticleColor={() => "#818cf8"}
-          linkColor={() => "rgba(148, 163, 184, 0.4)"}
-          linkWidth={1}
+          linkColor={() => "rgba(129, 140, 248, 0.6)"}
+          linkWidth={1.4}
           height={height}
           width={width}
           cooldownTicks={50}

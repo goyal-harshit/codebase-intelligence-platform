@@ -107,9 +107,16 @@ export default function GraphPage() {
     });
 
     const nodeIds = new Set(nodes.map((n) => n.id));
-    const links = graph.links.filter(
-      (l) => nodeIds.has(l.source) && nodeIds.has(l.target),
-    );
+    const links = graph.links
+      .filter((l) => {
+        const s = typeof l.source === "object" ? (l.source as any).id : l.source;
+        const t = typeof l.target === "object" ? (l.target as any).id : l.target;
+        return nodeIds.has(s) && nodeIds.has(t);
+      })
+      .map((l) => ({
+        source: typeof l.source === "object" ? (l.source as any).id : l.source,
+        target: typeof l.target === "object" ? (l.target as any).id : l.target,
+      }));
 
     return {
       nodes: nodes.map((n) => ({
