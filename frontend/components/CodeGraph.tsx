@@ -287,17 +287,45 @@ export default function CodeGraph({
     didTuneForces.current = false;
   }, [data]);
 
+  // Configure smooth 3D OrbitControls with inertia & cursor zoom
+  const setup3DControls = useCallback(() => {
+    if (mode !== "3d") return;
+    try {
+      const fg = fg3dRef.current;
+      const controls = fg?.controls?.();
+      if (controls && !controls.__customPatched) {
+        controls.__customPatched = true;
+        controls.enableDamping = true;   // Smooth physics inertia when orbiting/panning
+        controls.dampingFactor = 0.08;  // Buttery smooth deceleration
+        controls.zoomToCursor = true;   // Zoom towards mouse cursor
+        controls.rotateSpeed = 0.8;     // Precision rotation
+        controls.zoomSpeed = 1.2;       // Responsive zoom
+        controls.panSpeed = 0.8;        // Smooth pan
+      }
+    } catch (_) {}
+  }, [mode]);
+
   // Clean Front View camera positioning for Reset View
   const fitView = useCallback((ms = 600) => {
     if (mode === "3d") {
       const fg = fg3dRef.current;
       if (fg) {
+        try {
+          const controls = fg.controls?.();
+          if (controls) {
+            controls.target.set(0, 0, 0); // Reset orbit center to (0,0,0)
+            controls.update();
+          }
+        } catch (_) {}
+
         const camDist = Math.min(540, Math.max(280, nodeCount * 0.55));
-        fg.cameraPosition(
-          { x: 0, y: 0, z: camDist }, // Straight Front View looking down Z-axis
-          { x: 0, y: 0, z: 0 },       // Center target (0,0,0)
-          ms
-        );
+        if (typeof fg.cameraPosition === "function") {
+          fg.cameraPosition(
+            { x: 0, y: 0, z: camDist }, // Straight Front View looking down Z-axis
+            { x: 0, y: 0, z: 0 },       // Center target (0,0,0)
+            ms
+          );
+        }
       }
     } else {
       const fg = fg2dRef.current;
@@ -312,18 +340,49 @@ export default function CodeGraph({
   useEffect(() => {
     const timer = setTimeout(() => {
       fitView(600);
-      // Patch 3D OrbitControls: zoom towards mouse cursor like 2D does
-      if (mode === "3d") {
-        try {
-          const controls = fg3dRef.current?.controls?.();
-          if (controls) {
-            controls.zoomToCursor = true;
-          }
-        } catch (_) { /* controls may not be ready yet */ }
-      }
+      setup3DControls();
     }, 250);
     return () => clearTimeout(timer);
-  }, [mode, data, fitView]);
+  }, [mode, data, fitView, setup3DControls]);
+
+  // Smooth 3D/2D camera fly-to on node click
+  const handleNodeClick = useCallback(
+    (node: any) => {
+      if (mode === "3d" && fg3dRef.current && node) {
+        const dist = 120;
+        const nx = node.x || 0;
+        const ny = node.y || 0;
+        const nz = node.z || 0;
+        const hypot = Math.hypot(nx, ny, nz) || 1;
+
+        const camX = nx + (nx / hypot) * dist;
+        const camY = ny + (ny / hypot) * dist;
+        const camZ = nz + (nz / hypot) * dist;
+
+        try {
+          const controls = fg3dRef.current.controls?.();
+          if (controls) {
+            controls.target.set(nx, ny, nz);
+          }
+        } catch (_) {}
+
+        if (typeof fg3dRef.current.cameraPosition === "function") {
+          fg3dRef.current.cameraPosition(
+            { x: camX, y: camY, z: camZ },
+            { x: nx, y: ny, z: nz },
+            800
+          );
+        }
+      } else if (mode === "2d" && fg2dRef.current && node) {
+        if (typeof fg2dRef.current.centerAt === "function") {
+          fg2dRef.current.centerAt(node.x, node.y, 600);
+          fg2dRef.current.zoom(2.5, 600);
+        }
+      }
+      onNodeClick?.(node);
+    },
+    [mode, onNodeClick],
+  );
 
   /* 3D: Custom THREE.Group — sphere + billboard text ABOVE (selective LOD + focus dimming) */
   const nodeThreeObject = useCallback(
@@ -563,7 +622,7 @@ export default function CodeGraph({
           }}
           enableNavigationControls={true}
           showNavInfo={false}
-          onNodeClick={onNodeClick}
+          onNodeClick={handleNodeClick}
         />
       ) : (
         <ForceGraph2D
@@ -621,7 +680,7 @@ export default function CodeGraph({
             node.fy = node.y;
           }}
           enableZoomInteraction={true}
-          onNodeClick={onNodeClick}
+          onNodeClick={handleNodeClick}
           onEngineStop={() => {
             if (!didInitialFit.current) {
               didInitialFit.current = true;
