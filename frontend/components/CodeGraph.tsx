@@ -251,16 +251,16 @@ useEffect(() => {
     return () => clearTimeout(timer);
   }, [mode, data, fitView]);
 
-  /* ──────────────────────────────────────────────
-     3D: Custom THREE.Group — sphere + billboard text ABOVE
+  /* ─────────────  /* ──────────────────────────────────────────────
+     3D: Custom THREE.Group — sphere + billboard text ABOVE (selective LOD)
      ────────────────────────────────────────────── */
   const nodeThreeObject = useCallback(
     (node: any) => {
       const group = new THREE.Group();
       const r = nodeRadius(node.id);
 
-      // Sphere
-      const geometry = new THREE.SphereGeometry(r, 16, 16);
+      // Sphere geometry & material
+      const geometry = new THREE.SphereGeometry(r, 12, 12);
       const material = new THREE.MeshLambertMaterial({
         color: communityColor(node.community),
         transparent: true,
@@ -268,29 +268,35 @@ useEffect(() => {
       });
       group.add(new THREE.Mesh(geometry, material));
 
-      // Billboard text ABOVE sphere
-      const sprite = new SpriteText(node.name || node.id);
-      sprite.color = "#ffffff";
-      sprite.backgroundColor = "rgba(15, 23, 42, 0.88)";
-      sprite.padding = [1.5, 4];
-      sprite.borderRadius = 3;
-      sprite.borderWidth = 0.4;
-      sprite.borderColor = "rgba(255, 255, 255, 0.25)";
-      sprite.fontWeight = "600";
-      sprite.fontFace = "Inter, sans-serif";
-      sprite.textHeight = 3.5;
-      (sprite as any).position.y = r + 5;
+      // Level of detail: Only build heavy SpriteText textures for hubs / high-degree nodes or smaller graphs
+      const degree = nodeDegree.get(node.id) || 1;
+      const isHub =
+        node.id.startsWith("hub") || node.id.startsWith("subhub") || degree >= 4;
 
-      const mat = (sprite as any).material;
-      if (mat) {
-        mat.depthTest = false;
-        mat.depthWrite = false;
-        (sprite as any).renderOrder = 999;
+      if (nodeCount <= 200 || isHub) {
+        const sprite = new SpriteText(node.name || node.id);
+        sprite.color = "#ffffff";
+        sprite.backgroundColor = "rgba(15, 23, 42, 0.88)";
+        sprite.padding = [1.5, 4];
+        sprite.borderRadius = 3;
+        sprite.borderWidth = 0.4;
+        sprite.borderColor = "rgba(255, 255, 255, 0.25)";
+        sprite.fontWeight = "600";
+        sprite.fontFace = "Inter, sans-serif";
+        sprite.textHeight = 3.5;
+        (sprite as any).position.y = r + 5;
+
+        const mat = (sprite as any).material;
+        if (mat) {
+          mat.depthTest = false;
+          mat.depthWrite = false;
+          (sprite as any).renderOrder = 999;
+        }
+        group.add(sprite);
       }
-      group.add(sprite);
       return group;
     },
-    [nodeRadius],
+    [nodeRadius, nodeDegree, nodeCount],
   );
 
   /* ──────────────────────────────────────────────
@@ -328,8 +334,6 @@ useEffect(() => {
         (degree >= 3 && globalScale >= 0.25);
 
       if (showLabel) {
-        // Font targets ~8px on screen. screenPx = worldUnits * globalScale.
-        // worldUnits = 8 / globalScale. Cap at 4.5 world units when zoomed in.
         const fontSize = Math.min(4.5, 8 / globalScale);
         ctx.font = `600 ${fontSize}px Inter, sans-serif`;
         ctx.textAlign = "center";
@@ -340,13 +344,11 @@ useEffect(() => {
         const py = 1.5 / globalScale;
         const gap = 2.5 / globalScale;
 
-        // Pill positioned BELOW node circle
         const pillY = node.y + r + gap;
         const pillW = textWidth + px * 2;
         const pillH = fontSize + py * 2;
         const pillX = node.x - pillW / 2;
 
-        // Dark pill background
         ctx.fillStyle = "rgba(15, 23, 42, 0.88)";
         ctx.strokeStyle = "rgba(255,255,255,0.2)";
         ctx.lineWidth = 0.4 / globalScale;
@@ -359,7 +361,6 @@ useEffect(() => {
         ctx.fill();
         ctx.stroke();
 
-        // White text
         ctx.fillStyle = "#ffffff";
         ctx.fillText(label, node.x, pillY + py);
       }
@@ -419,15 +420,15 @@ useEffect(() => {
           linkDirectionalArrowLength={5}
           linkDirectionalArrowRelPos={0.88}
           linkDirectionalArrowColor={() => "#818cf8"}
-          linkDirectionalParticles={2}
+          linkDirectionalParticles={nodeCount > 400 ? 0 : 2}
           linkDirectionalParticleSpeed={0.006}
           linkDirectionalParticleWidth={1.8}
           linkDirectionalParticleColor={() => "#c084fc"}
           linkColor={() => "rgba(129, 140, 248, 0.55)"}
           linkOpacity={0.6}
           linkWidth={1.0}
-          cooldownTicks={50}
-          warmupTicks={15}
+          cooldownTicks={60}
+          warmupTicks={30}
           d3AlphaDecay={0.06}
           onEngineTick={() => {
             if (!didTuneForces.current) {

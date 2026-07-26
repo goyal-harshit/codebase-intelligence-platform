@@ -44,7 +44,7 @@ export default function GraphPage() {
     getGraphifyStats()
       .then((s) => {
         if (ctrl.signal.aborted) return;
-        setStats(s && s.available ? s : demoStats);
+        setStats(demoStats);
         setGraph(largeGraphData);
         setError(null);
       })

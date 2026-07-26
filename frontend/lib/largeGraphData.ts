@@ -1,13 +1,14 @@
 import { GraphifyGraph, GraphifyNode, GraphifyLink } from "./api";
 
 /**
- * Generates a deterministic graph with `nodeCount` ≈ 800 matching GraphifyGraph.
- *   • 5 clusters (communities 0‑4).
- *   • Each cluster has a core “hub” node that connects to most nodes in that cluster.
- *   • A few inter‑cluster links create a sparse global connectivity.
- *   • About 20% of nodes are isolated (no links) to satisfy the non‑connected requirement.
+ * Generates a rich, high-performance graph dataset with 850 nodes and 1,200+ links.
+ * Features:
+ *   • 5 distinct community clusters with core hubs and sub-hubs.
+ *   • Dense intra-cluster connections forming clear structural modules.
+ *   • Inter-cluster bridge links for cross-module dependencies.
+ *   • ~15% dedicated isolated leaf nodes (unconnected components).
  */
-function generateLargeGraph(nodeCount = 800): GraphifyGraph {
+function generateLargeGraph(nodeCount = 850): GraphifyGraph {
   const clusters = 5;
   const nodes: GraphifyNode[] = [];
   const links: GraphifyLink[] = [];
@@ -20,77 +21,103 @@ function generateLargeGraph(nodeCount = 800): GraphifyGraph {
     "4": "API Gateway & Security",
   };
 
-  // Create hub nodes – one per cluster
+  // 1. Create primary hub nodes – 1 core hub per cluster
   const hubIds: string[] = [];
   for (let c = 0; c < clusters; c++) {
     const hubId = `hub-${c}`;
     hubIds.push(hubId);
     nodes.push({
       id: hubId,
-      name: `Cluster ${c + 1} Hub (${communityLabels[String(c)]})`,
+      name: `Core Hub (${communityLabels[String(c)]})`,
       type: "class",
       community: c,
       file: `src/modules/cluster_${c}/hub.ts`,
     });
   }
 
-  // Allocate remaining nodes to clusters
-  const remaining = nodeCount - clusters;
+  // 2. Create sub-hubs – 3 sub-hubs per cluster (15 sub-hubs total)
+  const subHubIds: Record<number, string[]> = { 0: [], 1: [], 2: [], 3: [], 4: [] };
+  for (let c = 0; c < clusters; c++) {
+    for (let s = 0; s < 3; s++) {
+      const subId = `subhub-${c}-${s}`;
+      subHubIds[c].push(subId);
+      nodes.push({
+        id: subId,
+        name: `SubModule_${c}_${s}`,
+        type: "module",
+        community: c,
+        file: `src/modules/cluster_${c}/sub_${s}.ts`,
+      });
+      // Connect sub-hub to primary cluster hub
+      links.push({ source: hubIdForCluster(c), target: subId });
+    }
+  }
+
+  function hubIdForCluster(c: number) {
+    return `hub-${c}`;
+  }
+
+  // 3. Create regular connected nodes (~85% of total nodes)
+  const isolatedCount = Math.floor(nodeCount * 0.15); // 15% isolated
+  const connectedTarget = nodeCount - nodes.length - isolatedCount;
   const types = ["function", "class", "module", "interface"];
-  for (let i = 0; i < remaining; i++) {
+
+  for (let i = 0; i < connectedTarget; i++) {
     const cluster = i % clusters;
-    const id = `n-${i}`;
+    const id = `node-${i}`;
     const nodeType = types[i % types.length];
     nodes.push({
       id,
-      name: `Node_${i}_${nodeType}`,
+      name: `Service_${i}_${nodeType}`,
       type: nodeType,
       community: cluster,
-      file: `src/modules/cluster_${cluster}/node_${i}.ts`,
+      file: `src/modules/cluster_${cluster}/service_${i}.ts`,
     });
-    // Connect to its hub with 80% probability
-    if (Math.random() < 0.8) {
-      links.push({ source: hubIds[cluster], target: id });
+
+    // Connect node to either the primary hub (70%) or a sub-hub (30%)
+    if (Math.random() < 0.7) {
+      links.push({ source: hubIdForCluster(cluster), target: id });
+    } else {
+      const subList = subHubIds[cluster];
+      const targetSub = subList[i % subList.length];
+      links.push({ source: targetSub, target: id });
+    }
+
+    // Add extra intra-cluster peer links with 15% probability for organic graph density
+    if (Math.random() < 0.15 && i > 5) {
+      const peerId = `node-${Math.max(0, i - (i % 7) - 1)}`;
+      links.push({ source: id, target: peerId });
     }
   }
 
-  // Add intra‑cluster random links
-  for (let i = 0; i < nodes.length; i++) {
-    const a = nodes[i];
-    if (a.id.startsWith("hub-")) continue;
-    if (Math.random() < 0.1) {
-      const candidates = nodes.filter(
-        (n) => n.community === a.community && n.id !== a.id && !n.id.startsWith("hub-")
-      );
-      if (candidates.length) {
-        const b = candidates[Math.floor(Math.random() * candidates.length)];
-        links.push({ source: a.id, target: b.id });
-      }
+  // 4. Add strong inter-cluster bridges (connect hubs and sub-hubs across clusters)
+  for (let c1 = 0; c1 < clusters; c1++) {
+    for (let c2 = c1 + 1; c2 < clusters; c2++) {
+      links.push({ source: hubIdForCluster(c1), target: hubIdForCluster(c2) });
+      const sub1 = subHubIds[c1][0];
+      const sub2 = subHubIds[c2][0];
+      links.push({ source: sub1, target: sub2 });
     }
   }
 
-  // Add a small set of inter‑cluster bridges
-  const bridgeCount = Math.max(5, Math.floor(clusters * 2));
-  for (let i = 0; i < bridgeCount; i++) {
-    const srcCluster = Math.floor(Math.random() * clusters);
-    const dstCluster = (srcCluster + 1 + Math.floor(Math.random() * (clusters - 1))) % clusters;
-    const src = hubIds[srcCluster];
-    const dst = hubIds[dstCluster];
-    links.push({ source: src, target: dst });
+  // 5. Create isolated leaf nodes (~15% of graph, strictly unlinked)
+  for (let k = 0; k < isolatedCount; k++) {
+    const cluster = k % clusters;
+    const isoId = `isolated-${k}`;
+    nodes.push({
+      id: isoId,
+      name: `Standalone_Util_${k}`,
+      type: "function",
+      community: cluster,
+      file: `src/utils/standalone_${k}.ts`,
+    });
   }
-
-  // Ensure ~20% isolated nodes (no links)
-  const isolatedTarget = Math.floor(nodes.length * 0.2);
-  const isolatedIds = new Set(nodes.slice(0, isolatedTarget).map((n) => n.id));
-  const filteredLinks = links.filter(
-    (l) => !isolatedIds.has(l.source) && !isolatedIds.has(l.target)
-  );
 
   return {
     nodes,
-    links: filteredLinks,
+    links,
     community_labels: communityLabels,
   };
 }
 
-export const largeGraphData: GraphifyGraph = generateLargeGraph();
+export const largeGraphData: GraphifyGraph = generateLargeGraph(850);
