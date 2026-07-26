@@ -237,19 +237,59 @@ export default function CodeGraph({
     }
   }, [data, mode, dynamicCharge, dynamicDistance, nodeRadius, aspectRatio, nodeDegree]);
 
-  // Apply forces to 3D graph — widescreen ellipsoid scaling + boundary clamping
+  // Pre-calculate 3D & 2D Community Centroids for Spatial Cluster Separation
+  const communityCenters = useMemo(() => {
+    const centers = new Map<number, { x: number; y: number; z: number }>();
+    const commSet = Array.from(new Set(data.nodes.map((n) => n.community ?? 0))).sort((a, b) => a - b);
+    const total = commSet.length || 1;
+
+    commSet.forEach((c, idx) => {
+      const angle = (2 * Math.PI * idx) / total;
+      const radiusX = 220 * aspectRatio;
+      const radiusY = 160;
+      const radiusZ = 120;
+      centers.set(c, {
+        x: radiusX * Math.cos(angle),
+        y: radiusY * Math.sin(angle),
+        z: radiusZ * Math.sin(angle * 2),
+      });
+    });
+    return centers;
+  }, [data.nodes, aspectRatio]);
+
+  // Apply forces to 3D graph — widescreen ellipsoid scaling + community spatial separation
   const tuneForces = useCallback(() => {
     const fg = fg3dRef.current;
     if (!fg) return;
-    fg.d3Force("charge")?.strength(dynamicCharge * 1.5);
-    fg.d3Force("link")?.distance(dynamicDistance * 1.8 * Math.sqrt(aspectRatio));
+    fg.d3Force("charge")?.strength(dynamicCharge * 1.4);
+    fg.d3Force("link")?.distance(dynamicDistance * 1.6 * Math.sqrt(aspectRatio));
+
+    // 3D Community Cluster Pull Force — pulls nodes in the same community to their distinct spatial center
+    const clusterForce3D = (alpha: number) => {
+      const nodes = (typeof fg?.graphData === "function" ? fg.graphData()?.nodes : null) || data.nodes;
+      if (!nodes) return;
+
+      nodes.forEach((node: any) => {
+        if (node.fx != null || node.fy != null || node.fz != null) return;
+        const c = node.community ?? 0;
+        const center = communityCenters.get(c);
+        if (!center) return;
+
+        // Soft attraction force toward community center
+        const str = 0.07 * alpha;
+        node.vx = (node.vx || 0) + (center.x - node.x) * str;
+        node.vy = (node.vy || 0) + (center.y - node.y) * str;
+        node.vz = (node.vz || 0) + (center.z - node.z) * str;
+      });
+    };
+    fg.d3Force("cluster3D", clusterForce3D);
 
     const gravity3D = (axis: "x" | "y" | "z") => {
       return (alpha: number) => {
         const nodes =
           (typeof fg?.graphData === "function" ? fg.graphData()?.nodes : null) || data.nodes;
         if (!nodes) return;
-        const maxRadius = 340;
+        const maxRadius = 380;
 
         nodes.forEach((node: any) => {
           if (node.fx != null || node.fy != null || node.fz != null) return;
@@ -258,8 +298,8 @@ export default function CodeGraph({
 
           const degree = nodeDegree.get(node.id) || 0;
           const isIsolated = degree <= 1;
-          const baseStrength = axis === "x" ? 0.02 / aspectRatio : 0.025;
-          const strength = isIsolated ? 0.08 : baseStrength;
+          const baseStrength = axis === "x" ? 0.018 / aspectRatio : 0.022;
+          const strength = isIsolated ? 0.07 : baseStrength;
 
           const v = `v${axis}`;
           const currentV = node[v];
@@ -280,7 +320,7 @@ export default function CodeGraph({
     fg.d3Force("gravityX", gravity3D("x"));
     fg.d3Force("gravityY", gravity3D("y"));
     fg.d3Force("gravityZ", gravity3D("z"));
-  }, [dynamicCharge, dynamicDistance, data.nodes, aspectRatio, nodeDegree]);
+  }, [dynamicCharge, dynamicDistance, data.nodes, aspectRatio, nodeDegree, communityCenters]);
 
   useEffect(() => {
     didInitialFit.current = false;
