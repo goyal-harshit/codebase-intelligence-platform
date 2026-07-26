@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Download, FileText, Search, Share2, X } from "lucide-react";
 import {
   getGraphifyStats,
+  getGraphifyGraph,
   exportGraphReportUrl,
   exportGraphJsonUrl,
   GraphifyStats,
@@ -41,11 +42,26 @@ export default function GraphPage() {
       available: true,
     };
 
-    getGraphifyStats()
-      .then((s) => {
+    Promise.all([
+      getGraphifyStats(),
+      getGraphifyGraph(),
+    ])
+      .then(([s, g]) => {
         if (ctrl.signal.aborted) return;
-        setStats(demoStats);
-        setGraph(largeGraphData);
+        // Prioritize actual real repository graph data from backend API
+        if (g && g.nodes && g.nodes.length > 0) {
+          setStats(s && s.available ? s : {
+            nodes: g.nodes.length,
+            edges: g.links.length,
+            communities: Object.keys(g.community_labels || {}).length,
+            available: true,
+          });
+          setGraph(g);
+        } else {
+          // Fall back to 850 node demo graph preview if no repository ingested
+          setStats(demoStats);
+          setGraph(largeGraphData);
+        }
         setError(null);
       })
       .catch(() => {
