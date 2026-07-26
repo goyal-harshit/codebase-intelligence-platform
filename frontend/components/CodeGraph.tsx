@@ -65,61 +65,15 @@ export default function CodeGraph({
   const didTuneForces = useRef(false);
   const [width, setWidth] = useState(760);
   const [mode, setMode] = useState<"3d" | "2d">("2d");
-  // Internal state to trigger re‑render when the worker sends updated positions
-  const [, setForceRender] = useState(0);
-  // Local copy of graph data that will be mutated by the worker
-  const [graphData, setGraphData] = useState<GraphData>(data);
-  const workerRef = useRef<Worker | null>(null);
-
-
   useEffect(() => {
-  if (!ref.current) return;
-  const resize = () =>
-    setWidth(Math.max(320, ref.current?.clientWidth ?? 760));
-  resize();
-  const observer = new ResizeObserver(resize);
-  observer.observe(ref.current);
-  return () => observer.disconnect();
-}, []);
-
-// ---------------------------------------------------------------------
-// Initialise Web Worker and handle position updates
-// ---------------------------------------------------------------------
-useEffect(() => {
-  if (typeof window === "undefined") return;
-  if (!workerRef.current) {
-    workerRef.current = new Worker(new URL('../public/workers/graphWorker.js', import.meta.url));
-  }
-  const worker = workerRef.current;
-
-  // Send initial graph data to the worker
-  const payload = { nodes: data.nodes, links: data.links };
-  worker.postMessage({ type: 'init', payload });
-
-  const handleMessage = (e: MessageEvent) => {
-    const { type, payload } = e.data;
-    if (type === 'tick') {
-      // Update positions in local graphData state
-      setGraphData(prev => {
-        const updatedNodes = prev.nodes.map(node => {
-          const upd = payload.find((p: any) => p.id === node.id);
-          if (upd) {
-            return { ...node, x: upd.x, y: upd.y, z: upd.z };
-          }
-          return node;
-        });
-        return { ...prev, nodes: updatedNodes };
-      });
-      // Force re‑render of ForceGraph component
-      setForceRender(c => c + 1);
-    }
-  };
-  worker.addEventListener('message', handleMessage);
-  return () => {
-    worker.removeEventListener('message', handleMessage);
-    worker.postMessage({ type: 'stop' });
-  };
-}, [data]);
+    if (!ref.current) return;
+    const resize = () =>
+      setWidth(Math.max(320, ref.current?.clientWidth ?? 760));
+    resize();
+    const observer = new ResizeObserver(resize);
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
 
 
   const nodeDegree = useMemo(() => {
@@ -133,34 +87,28 @@ useEffect(() => {
     return degree;
   }, [data]);
 
-  const nodeCount = Math.max(1, graphData.nodes.length);
+  const nodeCount = Math.max(1, data.nodes.length);
 
   /*
-   * GENTLE force tuning — keep the graph compact and readable.
-   * The key insight: charge should be just strong enough to separate
-   * nodes, but not so strong that they fly to the edges of the viewport.
-   * For ~50 nodes: charge ~ -80, linkDist ~ 50
-   * For ~200 nodes: charge ~ -60, linkDist ~ 40
-   * For ~500+ nodes: charge ~ -40, linkDist ~ 30
+   * Gentle force tuning for spacious, readable layout.
    */
   const dynamicCharge = useMemo(() => {
-    if (nodeCount <= 20) return -120;
-    if (nodeCount <= 80) return -90;
-    if (nodeCount <= 200) return -65;
-    if (nodeCount <= 400) return -50;
-    return -35;
+    if (nodeCount <= 20) return -180;
+    if (nodeCount <= 80) return -140;
+    if (nodeCount <= 200) return -100;
+    if (nodeCount <= 400) return -80;
+    return -60;
   }, [nodeCount]);
 
   const dynamicDistance = useMemo(() => {
-    if (nodeCount <= 20) return 70;
-    if (nodeCount <= 80) return 55;
-    if (nodeCount <= 200) return 40;
-    if (nodeCount <= 400) return 32;
-    return 25;
+    if (nodeCount <= 20) return 80;
+    if (nodeCount <= 80) return 65;
+    if (nodeCount <= 200) return 50;
+    if (nodeCount <= 400) return 40;
+    return 35;
   }, [nodeCount]);
 
-  /* Node visual radius: degree-scaled but reasonable.
-   * Small nodes = 4, hub nodes = up to 10. Never invisible, never giant. */
+  /* Node visual radius: degree-scaled but reasonable. */
   const nodeRadius = useCallback(
     (nodeId: string) => {
       const degree = nodeDegree.get(nodeId) || 1;
@@ -169,23 +117,64 @@ useEffect(() => {
     [nodeDegree],
   );
 
-  // Apply forces to 2D graph — including center gravity for disconnected clusters
+  // Apply forces to 2D graph — including collision force (NO OVERLAP) & gentle gravity
   useEffect(() => {
     const fg = fg2dRef.current;
     if (!fg || mode !== "2d") return;
     fg.d3Force("charge")?.strength(dynamicCharge);
     fg.d3Force("link")?.distance(dynamicDistance);
 
-    // Gravity: pull non-dragged nodes toward center safely
+    // 1. Collision Force: Hard physical boundary around every node & label to prevent overlap
+    const collideForce = (alpha: number) => {
+      const gData = fg.graphData();
+      if (!gData || !gData.nodes) return;
+      const nodes = gData.nodes;
+      const n = nodes.length;
+      for (let i = 0; i < n; i++) {
+        const a = nodes[i];
+        if (!Number.isFinite(a.x) || !Number.isFinite(a.y)) continue;
+        const ra = nodeRadius(a.id) + 14;
+        for (let j = i + 1; j < n; j++) {
+          const b = nodes[j];
+          if (!Number.isFinite(b.x) || !Number.isFinite(b.y)) continue;
+          const rb = nodeRadius(b.id) + 14;
+          const dx = b.x - a.x;
+          const dy = b.y - a.y;
+          const dist = Math.hypot(dx, dy) || 0.1;
+          const minDist = ra + rb;
+          if (dist < minDist) {
+            const overlap = ((minDist - dist) / dist) * 0.4 * alpha;
+            if (a.fx == null) {
+              a.x -= dx * overlap;
+              a.vx = (a.vx || 0) - dx * overlap;
+            }
+            if (a.fy == null) {
+              a.y -= dy * overlap;
+              a.vy = (a.vy || 0) - dy * overlap;
+            }
+            if (b.fx == null) {
+              b.x += dx * overlap;
+              b.vx = (b.vx || 0) + dx * overlap;
+            }
+            if (b.fy == null) {
+              b.y += dy * overlap;
+              b.vy = (b.vy || 0) + dy * overlap;
+            }
+          }
+        }
+      }
+    };
+    fg.d3Force("collide", collideForce);
+
+    // 2. Gentle Gravity: keep disconnected nodes in view without squishing
     const d3f = (fg as any).d3Force;
     if (d3f) {
       const gravityForce = (axis: "x" | "y") => {
-        const strength = 0.15;
+        const strength = 0.02; // Gentle center pull
         return (alpha: number) => {
           const gData = fg.graphData();
           if (!gData || !gData.nodes) return;
           gData.nodes.forEach((node: any) => {
-            // SKIP nodes currently being dragged
             if (node.fx != null || node.fy != null) return;
             const pos = node[axis];
             if (pos == null || !Number.isFinite(pos)) return;
@@ -199,7 +188,7 @@ useEffect(() => {
       fg.d3Force("gravityX", gravityForce("x"));
       fg.d3Force("gravityY", gravityForce("y"));
     }
-  }, [data, mode, dynamicCharge, dynamicDistance]);
+  }, [data, mode, dynamicCharge, dynamicDistance, nodeRadius]);
 
   // Apply forces to 3D graph
   const tuneForces = useCallback(() => {
@@ -208,9 +197,8 @@ useEffect(() => {
     fg.d3Force("charge")?.strength(dynamicCharge * 1.5);
     fg.d3Force("link")?.distance(dynamicDistance * 1.8);
 
-    // 3D gravity toward origin (safeguarded)
     const gravity3D = (axis: "x" | "y" | "z") => {
-      const strength = 0.15;
+      const strength = 0.02;
       return (alpha: number) => {
         const gData = fg.graphData();
         if (!gData || !gData.nodes) return;
@@ -405,7 +393,7 @@ useEffect(() => {
       {mode === "3d" ? (
         <ForceGraph3D
           fgRef={fg3dRef}
-          graphData={graphData}
+          graphData={data}
           width={width}
           height={height}
           backgroundColor="#090d16"
@@ -442,7 +430,17 @@ useEffect(() => {
               fitView(600);
             }
           }}
-          enableNodeDrag={false}
+          enableNodeDrag={true}
+          onNodeDrag={(node: any) => {
+            node.fx = node.x;
+            node.fy = node.y;
+            node.fz = node.z;
+          }}
+          onNodeDragEnd={(node: any) => {
+            node.fx = node.x;
+            node.fy = node.y;
+            node.fz = node.z;
+          }}
           enableNavigationControls={true}
           showNavInfo={false}
           onNodeClick={onNodeClick}
@@ -450,7 +448,7 @@ useEffect(() => {
       ) : (
         <ForceGraph2D
           fgRef={fg2dRef}
-          graphData={graphData}
+          graphData={data}
           nodeLabel="name"
           nodeAutoColorBy="type"
           nodeCanvasObject={nodeCanvasObject}
@@ -464,7 +462,7 @@ useEffect(() => {
           linkDirectionalArrowLength={5}
           linkDirectionalArrowRelPos={0.88}
           linkDirectionalArrowColor={() => "#6366f1"}
-          linkDirectionalParticles={2}
+          linkDirectionalParticles={nodeCount > 400 ? 0 : 2}
           linkDirectionalParticleSpeed={0.006}
           linkDirectionalParticleWidth={2.0}
           linkDirectionalParticleColor={() => "#818cf8"}
@@ -472,15 +470,26 @@ useEffect(() => {
           linkWidth={1.4}
           height={height}
           width={width}
-          cooldownTicks={50}
-          warmupTicks={15}
+          cooldownTicks={60}
+          warmupTicks={30}
           d3AlphaDecay={0.04}
           d3VelocityDecay={0.35}
           enableNodeDrag={true}
+          onNodeDrag={(node: any) => {
+            node.fx = node.x;
+            node.fy = node.y;
+          }}
+          onNodeDragEnd={(node: any) => {
+            node.fx = node.x;
+            node.fy = node.y;
+          }}
           enableZoomInteraction={true}
           onNodeClick={onNodeClick}
           onEngineStop={() => {
-            fitView(600);
+            if (!didInitialFit.current) {
+              didInitialFit.current = true;
+              fitView(600);
+            }
           }}
         />
       )}
