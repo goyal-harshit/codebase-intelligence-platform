@@ -444,10 +444,13 @@ export default function CodeGraph({
       });
       group.add(new THREE.Mesh(geometry, material));
 
-      // Level of detail: Build SpriteText textures ONLY for selected node, 1-hop connected neighbors, or top major hubs (degree >= 8)
+      // Level of detail: Build SpriteText textures for selected node, 1-hop connected neighbors, or degree >= 2 (so all clusters show names)
       const degree = nodeDegree.get(node.id) || 1;
-      const isMajorHub = degree >= 8;
-      const showLabel3D = isSelected || (selectedNode ? isHighlighted : isMajorHub);
+      const showLabel3D =
+        isSelected ||
+        (selectedNode
+          ? isHighlighted
+          : nodeCount <= 300 || degree >= 2);
 
       if (showLabel3D) {
         const sprite = new SpriteText(node.name || node.id);
