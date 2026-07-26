@@ -74,8 +74,15 @@ if (-not (Test-Path .env)) { Warn ".env missing - creating from .env.example"; C
 OK "Dependencies verified"
 
 if (Get-Command docker -ErrorAction SilentlyContinue) {
-  docker compose up -d arcadedb chroma 2>$null | Out-Null
-  if ($LASTEXITCODE -eq 0) { OK "Backing services (ArcadeDB, Chroma) started" } else { Warn "Could not start backing services" }
+  try {
+    $prev = $ErrorActionPreference; $ErrorActionPreference = "Continue"
+    docker compose up -d arcadedb chroma 2>&1 | Out-Null
+    $ErrorActionPreference = $prev
+    if ($LASTEXITCODE -eq 0) { OK "Backing services (ArcadeDB, Chroma) started" } else { Warn "Could not start backing services" }
+  } catch {
+    $ErrorActionPreference = $prev
+    Warn "Could not start backing services: $_"
+  }
 } else { Warn "Docker unavailable - ingestion needs ArcadeDB on :2480" }
 
 $BackendPort  = Get-FreePort 8100
