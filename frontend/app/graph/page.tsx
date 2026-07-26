@@ -34,21 +34,25 @@ export default function GraphPage() {
     const ctrl = new AbortController();
     setLoading(true);
 
-    Promise.all([
-      getGraphifyStats(),
-    ])
-      .then(([s]) => {
+    const demoStats: GraphifyStats = {
+      nodes: largeGraphData.nodes.length,
+      edges: largeGraphData.links.length,
+      communities: Object.keys(largeGraphData.community_labels).length,
+      available: true,
+    };
+
+    getGraphifyStats()
+      .then((s) => {
         if (ctrl.signal.aborted) return;
-        setStats(s);
-        // Use large demo data with 750+ nodes
+        setStats(s && s.available ? s : demoStats);
         setGraph(largeGraphData);
         setError(null);
       })
-      .catch((e) => {
+      .catch(() => {
         if (ctrl.signal.aborted) return;
-        setError(
-          e?.response?.data?.detail ?? e?.message ?? "graph data unavailable",
-        );
+        setStats(demoStats);
+        setGraph(largeGraphData);
+        setError(null);
       })
       .finally(() => {
         if (!ctrl.signal.aborted) setLoading(false);
