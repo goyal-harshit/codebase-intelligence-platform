@@ -5,8 +5,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 // @ts-ignore
 import * as THREE from "three";
 import SpriteText from "three-spritetext";
-// Import Web Worker for physics simulation
-const graphWorker = new Worker(new URL('../public/workers/graphWorker.js', import.meta.url));
 
 const ForceGraph3D = dynamic(
   async () => {
@@ -71,6 +69,8 @@ export default function CodeGraph({
   const [, setForceRender] = useState(0);
   // Local copy of graph data that will be mutated by the worker
   const [graphData, setGraphData] = useState<GraphData>(data);
+  const workerRef = useRef<Worker | null>(null);
+
 
   useEffect(() => {
   if (!ref.current) return;
@@ -86,10 +86,15 @@ export default function CodeGraph({
 // Initialise Web Worker and handle position updates
 // ---------------------------------------------------------------------
 useEffect(() => {
-  if (!graphWorker) return;
+  if (typeof window === "undefined") return;
+  if (!workerRef.current) {
+    workerRef.current = new Worker(new URL('../public/workers/graphWorker.js', import.meta.url));
+  }
+  const worker = workerRef.current;
+
   // Send initial graph data to the worker
   const payload = { nodes: data.nodes, links: data.links };
-  graphWorker.postMessage({ type: 'init', payload });
+  worker.postMessage({ type: 'init', payload });
 
   const handleMessage = (e: MessageEvent) => {
     const { type, payload } = e.data;
@@ -109,12 +114,13 @@ useEffect(() => {
       setForceRender(c => c + 1);
     }
   };
-  graphWorker.addEventListener('message', handleMessage);
+  worker.addEventListener('message', handleMessage);
   return () => {
-    graphWorker.removeEventListener('message', handleMessage);
-    graphWorker.postMessage({ type: 'stop' });
+    worker.removeEventListener('message', handleMessage);
+    worker.postMessage({ type: 'stop' });
   };
 }, [data]);
+
 
   const nodeDegree = useMemo(() => {
     const degree = new Map<string, number>();
