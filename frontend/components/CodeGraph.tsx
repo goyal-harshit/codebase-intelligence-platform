@@ -172,9 +172,9 @@ export default function CodeGraph({
       const gravityForce = (axis: "x" | "y") => {
         const strength = 0.02; // Gentle center pull
         return (alpha: number) => {
-          const gData = fg.graphData();
-          if (!gData || !gData.nodes) return;
-          gData.nodes.forEach((node: any) => {
+          const nodes = (typeof fg?.graphData === "function" ? fg.graphData()?.nodes : null) || data.nodes;
+          if (!nodes) return;
+          nodes.forEach((node: any) => {
             if (node.fx != null || node.fy != null) return;
             const pos = node[axis];
             if (pos == null || !Number.isFinite(pos)) return;
@@ -200,9 +200,9 @@ export default function CodeGraph({
     const gravity3D = (axis: "x" | "y" | "z") => {
       const strength = 0.02;
       return (alpha: number) => {
-        const gData = fg.graphData();
-        if (!gData || !gData.nodes) return;
-        gData.nodes.forEach((node: any) => {
+        const nodes = (typeof fg?.graphData === "function" ? fg.graphData()?.nodes : null) || data.nodes;
+        if (!nodes) return;
+        nodes.forEach((node: any) => {
           if (node.fx != null || node.fy != null || node.fz != null) return;
           const pos = node[axis];
           if (pos == null || !Number.isFinite(pos)) return;
@@ -216,7 +216,7 @@ export default function CodeGraph({
     fg.d3Force("gravityX", gravity3D("x"));
     fg.d3Force("gravityY", gravity3D("y"));
     fg.d3Force("gravityZ", gravity3D("z"));
-  }, [dynamicCharge, dynamicDistance]);
+  }, [dynamicCharge, dynamicDistance, data.nodes]);
 
   useEffect(() => {
     didInitialFit.current = false;
