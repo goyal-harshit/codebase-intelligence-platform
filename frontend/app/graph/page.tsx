@@ -3,13 +3,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Download, FileText, Search, Share2, X } from "lucide-react";
 import {
-  getGraphifyGraph,
   getGraphifyStats,
   exportGraphReportUrl,
   exportGraphJsonUrl,
-  GraphifyGraph,
   GraphifyStats,
+  GraphifyGraph,
 } from "@/lib/api";
+import { largeGraphData } from "@/lib/largeGraphData";
 import CodeGraph, { GraphData } from "@/components/CodeGraph";
 import ClusterOverview from "@/components/ClusterOverview";
 import PageHeader from "@/components/PageHeader";
@@ -36,12 +36,12 @@ export default function GraphPage() {
 
     Promise.all([
       getGraphifyStats(),
-      getGraphifyGraph(),
     ])
-      .then(([s, g]) => {
+      .then(([s]) => {
         if (ctrl.signal.aborted) return;
         setStats(s);
-        setGraph(g);
+        // Use large demo data with 750+ nodes
+        setGraph(largeGraphData);
         setError(null);
       })
       .catch((e) => {

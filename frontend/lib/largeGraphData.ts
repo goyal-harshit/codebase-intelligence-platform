@@ -1,15 +1,15 @@
 // largeGraphData.ts – static graph with ~800 nodes and mixed connectivity
-// Generated programmatically to keep the file size reasonable.
 
 export interface GraphNode {
   id: string;
   group: number; // cluster identifier (0‑4)
+  // optional extra metadata
   name?: string;
 }
 
 export interface GraphLink {
-  source: string;
-  target: string;
+  source: string; // node id
+  target: string; // node id
 }
 
 /**
@@ -47,8 +47,10 @@ function generateLargeGraph(nodeCount = 800): { nodes: GraphNode[]; links: Graph
   // Add intra‑cluster random links (to avoid a pure star topology)
   for (let i = 0; i < nodes.length; i++) {
     const a = nodes[i];
+    // only attempt links for non‑hub nodes
     if (a.id.startsWith('hub-')) continue;
     if (Math.random() < 0.1) {
+      // pick another node in the same cluster
       const candidates = nodes.filter(
         n => n.group === a.group && n.id !== a.id && !n.id.startsWith('hub-')
       );
@@ -59,7 +61,7 @@ function generateLargeGraph(nodeCount = 800): { nodes: GraphNode[]; links: Graph
     }
   }
 
-  // Add inter‑cluster bridges
+  // Add a small set of inter‑cluster bridges (sparse global connectivity)
   const bridgeCount = Math.max(5, Math.floor(clusters * 2));
   for (let i = 0; i < bridgeCount; i++) {
     const srcCluster = Math.floor(Math.random() * clusters);
@@ -69,7 +71,7 @@ function generateLargeGraph(nodeCount = 800): { nodes: GraphNode[]; links: Graph
     links.push({ source: src, target: dst });
   }
 
-  // Ensure ~20 % isolated nodes (no links)
+  // Ensure ~20 % isolated nodes (no links). Remove any links that might have connected them.
   const isolatedTarget = Math.floor(nodes.length * 0.2);
   const isolatedIds = nodes.slice(0, isolatedTarget).map(n => n.id);
   const filteredLinks = links.filter(
@@ -79,4 +81,5 @@ function generateLargeGraph(nodeCount = 800): { nodes: GraphNode[]; links: Graph
   return { nodes, links: filteredLinks };
 }
 
+// Export the generated graph as a constant for easy import.
 export const largeGraphData = generateLargeGraph();
