@@ -461,28 +461,28 @@ export default function CodeGraph({
           linkDirectionalArrowRelPos={0.88}
           linkDirectionalArrowColor={() => "#818cf8"}
           linkDirectionalParticles={(link: any) => {
-            if (!selectedNode) return nodeCount > 400 ? 0 : 2;
+            if (!selectedNode) return 0; // Disable heavy particle loops when no node selected
             const s = typeof link.source === "object" ? link.source.id : link.source;
             const t = typeof link.target === "object" ? link.target.id : link.target;
             return highlightLinks.has(`${s}->${t}`) || highlightLinks.has(`${t}->${s}`) ? 4 : 0;
           }}
           linkDirectionalParticleSpeed={0.008}
-          linkDirectionalParticleWidth={2.2}
+          linkDirectionalParticleWidth={2.0}
           linkDirectionalParticleColor={() => "#c084fc"}
           linkColor={(link: any) => {
-            if (!selectedNode) return "rgba(129, 140, 248, 0.55)";
+            if (!selectedNode) return nodeCount > 400 ? "rgba(99, 102, 241, 0.2)" : "rgba(129, 140, 248, 0.35)";
             const s = typeof link.source === "object" ? link.source.id : link.source;
             const t = typeof link.target === "object" ? link.target.id : link.target;
             return highlightLinks.has(`${s}->${t}`) || highlightLinks.has(`${t}->${s}`)
               ? "rgba(192, 132, 252, 0.95)"
-              : "rgba(15, 23, 42, 0.05)";
+              : "rgba(15, 23, 42, 0.04)";
           }}
-          linkOpacity={0.6}
+          linkOpacity={0.4}
           linkWidth={(link: any) => {
-            if (!selectedNode) return 1.0;
+            if (!selectedNode) return nodeCount > 400 ? 0.4 : 0.6;
             const s = typeof link.source === "object" ? link.source.id : link.source;
             const t = typeof link.target === "object" ? link.target.id : link.target;
-            return highlightLinks.has(`${s}->${t}`) || highlightLinks.has(`${t}->${s}`) ? 2.5 : 0.3;
+            return highlightLinks.has(`${s}->${t}`) || highlightLinks.has(`${t}->${s}`) ? 2.5 : 0.2;
           }}
           cooldownTicks={40}
           warmupTicks={20}
@@ -535,38 +535,38 @@ export default function CodeGraph({
             ctx.fillStyle = color;
             ctx.fill();
           }}
-          linkDirectionalArrowLength={5}
+          linkDirectionalArrowLength={nodeCount > 400 ? 0 : 4}
           linkDirectionalArrowRelPos={0.88}
           linkDirectionalArrowColor={() => "#6366f1"}
           linkDirectionalParticles={(link: any) => {
-            if (!selectedNode) return nodeCount > 400 ? 0 : 2;
+            if (!selectedNode) return 0; // Disable heavy particle loops when unselected
             const s = typeof link.source === "object" ? link.source.id : link.source;
             const t = typeof link.target === "object" ? link.target.id : link.target;
             return highlightLinks.has(`${s}->${t}`) || highlightLinks.has(`${t}->${s}`) ? 4 : 0;
           }}
           linkDirectionalParticleSpeed={0.008}
-          linkDirectionalParticleWidth={2.5}
+          linkDirectionalParticleWidth={2.2}
           linkDirectionalParticleColor={() => "#818cf8"}
           linkColor={(link: any) => {
-            if (!selectedNode) return "rgba(129, 140, 248, 0.6)";
+            if (!selectedNode) return nodeCount > 400 ? "rgba(99, 102, 241, 0.18)" : "rgba(129, 140, 248, 0.3)";
             const s = typeof link.source === "object" ? link.source.id : link.source;
             const t = typeof link.target === "object" ? link.target.id : link.target;
             return highlightLinks.has(`${s}->${t}`) || highlightLinks.has(`${t}->${s}`)
               ? "rgba(129, 140, 248, 0.95)"
-              : "rgba(30, 41, 59, 0.08)";
+              : "rgba(30, 41, 59, 0.05)";
           }}
           linkWidth={(link: any) => {
-            if (!selectedNode) return 1.4;
+            if (!selectedNode) return nodeCount > 400 ? 0.4 : 0.6;
             const s = typeof link.source === "object" ? link.source.id : link.source;
             const t = typeof link.target === "object" ? link.target.id : link.target;
-            return highlightLinks.has(`${s}->${t}`) || highlightLinks.has(`${t}->${s}`) ? 2.5 : 0.4;
+            return highlightLinks.has(`${s}->${t}`) || highlightLinks.has(`${t}->${s}`) ? 2.5 : 0.2;
           }}
           height={height}
           width={width}
-          cooldownTicks={60}
-          warmupTicks={30}
-          d3AlphaDecay={0.04}
-          d3VelocityDecay={0.35}
+          cooldownTicks={40}
+          warmupTicks={20}
+          d3AlphaDecay={0.08}
+          d3VelocityDecay={0.4}
           enableNodeDrag={true}
           onNodeDrag={(node: any) => {
             node.fx = node.x;
