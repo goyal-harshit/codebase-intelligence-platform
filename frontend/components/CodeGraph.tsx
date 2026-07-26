@@ -127,17 +127,23 @@ export default function CodeGraph({
     fg.d3Force("charge")?.strength(dynamicCharge);
     fg.d3Force("link")?.distance(dynamicDistance);
 
-    // Gravity: pull ALL nodes toward center so disconnected clusters
-    // sit neatly around the perimeter of the main graph.
+    // Gravity: pull non-dragged nodes toward center safely
     const d3f = (fg as any).d3Force;
     if (d3f) {
       const gravityForce = (axis: "x" | "y") => {
-        const strength = 0.25;
+        const strength = 0.15;
         return (alpha: number) => {
-          const nodes = fg.graphData().nodes;
-          nodes.forEach((node: any) => {
+          const gData = fg.graphData();
+          if (!gData || !gData.nodes) return;
+          gData.nodes.forEach((node: any) => {
+            // SKIP nodes currently being dragged
+            if (node.fx != null || node.fy != null) return;
+            const pos = node[axis];
+            if (pos == null || !Number.isFinite(pos)) return;
             const v = axis === "x" ? "vx" : "vy";
-            node[v] = (node[v] || 0) + (0 - (node[axis] || 0)) * strength * alpha;
+            const currentV = node[v];
+            const safeV = currentV != null && Number.isFinite(currentV) ? currentV : 0;
+            node[v] = safeV + (0 - pos) * strength * alpha;
           });
         };
       };
@@ -153,14 +159,20 @@ export default function CodeGraph({
     fg.d3Force("charge")?.strength(dynamicCharge * 1.5);
     fg.d3Force("link")?.distance(dynamicDistance * 1.8);
 
-    // 3D gravity toward origin
+    // 3D gravity toward origin (safeguarded)
     const gravity3D = (axis: "x" | "y" | "z") => {
-      const strength = 0.25;
+      const strength = 0.15;
       return (alpha: number) => {
-        const nodes = fg.graphData().nodes;
-        nodes.forEach((node: any) => {
+        const gData = fg.graphData();
+        if (!gData || !gData.nodes) return;
+        gData.nodes.forEach((node: any) => {
+          if (node.fx != null || node.fy != null || node.fz != null) return;
+          const pos = node[axis];
+          if (pos == null || !Number.isFinite(pos)) return;
           const v = `v${axis}`;
-          node[v] = (node[v] || 0) + (0 - (node[axis] || 0)) * strength * alpha;
+          const currentV = node[v];
+          const safeV = currentV != null && Number.isFinite(currentV) ? currentV : 0;
+          node[v] = safeV + (0 - pos) * strength * alpha;
         });
       };
     };
@@ -237,6 +249,7 @@ export default function CodeGraph({
      ────────────────────────────────────────────── */
   const nodeCanvasObject = useCallback(
     (node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
+      if (!Number.isFinite(node.x) || !Number.isFinite(node.y)) return;
       const label = node.name || node.id;
       const degree = nodeDegree.get(node.id) || 1;
       const r = nodeRadius(node.id);
